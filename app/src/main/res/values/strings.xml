@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">The Reformed Collective</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="confession">Confession</string>
+    <string name="creed">Creed</string>
+    <string name="catechism_help">Search Help:</string>
+    <string name="catechismPgh">
+  </string>
+    <string name="OK">OK</string>
+    <string name="def_theme">LightMode</string>
+    <string name="theme_summary">Appearance</string>
+    <string name="theme_dialog_title">Theme</string>
+    <string name="settings">Settings</string>
+    <string name="read_button_text">Read</string>
+    <string name="query_error">Entry required before search can be executed!</string>
+    <string name="Source_Text" formatted="true">All documents used in this application are public domain. A big thanks for inspiration and help for this app came from https://www.reformed.org/."</string>
+    <string name="View_Button">View</string>
+
+    <string name="confessionPgh" formatted="true">To exclude answers from results, hit the No Answers Checkbox under Search Options.\n
+    To exclude proofs from search, Hit no Proofs checkbox.</string>
+    <string name="creedPgh">Hit the home button to go back home</string>
+    <string name="confession_help">Catechism Page only:</string>
+    <string name="other_pgh">Select a theme by hitting Themes at the top of your screen</string>
+    <string name="catechism">Catechism</string>
+    <string name="action_share">Share this with...</string>
+    <string name="notes_section_help" formatted="true">The Notes Section is for saving your favorite sections of confessions, creeds
+and catechisms. Use this to take a quick note of a topic your searching, or add your comments on a particular chapter or article you\'re studying.</string>
+    <string name="notes_section_header">Notes Section</string>
+    <string name="theme_section">Theme Section</string>
+    <string name="theme_section_help" formatted="true">Hit the themes button at the top of the screen to change from light to dark mode</string>
+    <string name="notes_button_string">Notes</string>
+    <string name="facebook_app_id">301531087243095</string>
+    <string name="error_results">Search Error</string>
+    <string name="home_topic">Search again?</string>
+    <string name="save_note_message">Do you want to save any changes to your note?</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="save_button_text">Save</string>
+    <string name="exit_screen">Leave App?</string>
+    <string name="home_topic_body">Do you want to perform another search?</string>
+    <string name="exit_screen_body">Do you want to leave the app?</string>
+    <string name="search_results_title">Search Results</string>
+    <string name="intro_message">Welcome to the Reformed Collective Confession Search App!</string>
+    <string name="zero_results">No Results were found for</string>
+    <string name="help_line">For help, click on the help tab below.</string>
+    <string name="creedPageTitle">Creed Viewer</string>
+    <string name="zero_results_title">No Results were found</string>
+    <string name="search_status_sorting">Sorting started</string>
+    <string name="search_execution_begins">Search Execution Begins</string>
+    <string name="app_site">https://play.google.com/store/apps/details?id=com.confessionsearch.release1</string>
+    <string name="search_all_documents">Search All Documents?</string>
+    <string name="document_type">Document Type:</string>
+    <string name="Search">Search</string>
+    <string name="settings_page">Settings</string>
+    <string name="themeLabel_String">Set Theme:</string>
+    <string name="apply_theme_Text">Select a theme to apply</string>
+
+    <string name="reformed_index_search">Reformed Index Search</string>
+    <string name="search_by">Search By:</string>
+    <string name="topic_number">Topic/Number:</string>
+    <string name="search">Search</string>
+    <string name="help">Help</string>
+    <string name="dark_mode_title">Dark Mode</string>
+    <string name="sources">Sources:</string>
+    <string name="accessibility_checkbox_search_all">Search All Documents Checkbox</string>
+    <string name="document_list_spinner_desc">Document titles combo box</string>
+    <string name="no_proofs">No Proofs?</string>
+    <string name="topic">Topic</string>
+    <string name="question">Question</string>
+    <string name="read_document">Read Document</string>
+    <string name="no_answers">No Answers?</string>
+    <string name="document">Document:</string>
+    <string name="search_options">Search Options:</string>
+    <string name="title_activity_notes">notesActivity</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="subject">Subject:</string>
+    <string name="new_note">New Note</string>
+    <string name="enter_topic_here">Enter Topic Here</string>
+    <string name="notes">Notes:</string>
+    <string name="content">Content:</string>
+    <string name="new_Note_string_add">New Note</string>
+    <string name="enter_title_string">Enter Title Here</string>
+    <string name="enter_notes_string">Enter Notes Content Here</string>
+    <string name="save_note">Save Note</string>
+    <string name="edit_note">Edit Note</string>
+    <string name="share">Share</string>
+
+    <string name="messages_header">Messages</string>
+    <!-- Preference Titles -->
+    <string name="sync_header">Sync</string>
+    <string name="signature_title">Your signature</string>
+
+    <!-- Messages Preferences -->
+    <string name="reply_title">Default reply action</string>
+    <string name="sync_title">Sync email periodically</string>
+
+    <!-- Sync Preferences -->
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="other_stuff">Theme Section</string>
+    <string name="home_page">Home</string>
+    <string name="help_page">Help Page</string>
+    <string name="advanced_search_options">Advanced Search Options:</string>
+    <string name="search_documents_below">Search Documents Below</string>
+    <string-array name="themes">
+        <item>Dark</item>
+        <item>Light</item>
+        <item>Dark Red</item>
+        <item>Light Red</item>
+    </string-array>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+</resources>
