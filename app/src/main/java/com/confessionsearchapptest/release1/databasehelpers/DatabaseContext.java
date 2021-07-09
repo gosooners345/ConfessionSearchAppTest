@@ -10,7 +10,7 @@ import android.util.Log;
 import java.io.File;
 
 
-class DatabaseContext extends ContextWrapper {
+public class DatabaseContext extends ContextWrapper {
 
     private static final String DEBUG_CONTEXT = "DatabaseContext";
 

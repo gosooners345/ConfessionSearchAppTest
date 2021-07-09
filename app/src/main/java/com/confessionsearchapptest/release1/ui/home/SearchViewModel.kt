@@ -9,20 +9,32 @@ import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 
 class SearchViewModel : ViewModel() {
 
-private val documentTypes : MutableLiveData<List<DocumentType>>by lazy {
-    MutableLiveData<List<DocumentType>>().also
-    {
-        loadTypes()
-    }}
+private  var documentTypes : ArrayList<String?> = ArrayList()
 
-    fun getTypes(): LiveData<List<DocumentType>>
+
+/*MutableLiveData<ArrayList<DocumentType>>by lazy {
+    MutableLiveData<ArrayList<DocumentType>>().also{ loadTypes()}
+}*/
+fun setTypes(list : ArrayList<DocumentType?>)
+{
+    documentTypes.add("All")
+    for(type in list)
+        documentTypes.add(type!!.documentTypeName)
+
+}
+
+    fun getTypes(): ArrayList<String?>
     {
+        documentTypes.clear()
+
         return documentTypes
     }
 
-    private fun loadTypes() {
-        com.confessionsearchapptest.release1.MainActivity
-        TODO("Not yet implemented")
+     fun loadTypes(list: ArrayList<DocumentType?>) {
+        documentTypes.add("All")
+        for(type in list)
+            documentTypes.add(type!!.documentTypeName)
+
     }
 
 }

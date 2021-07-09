@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.confessionsearchapptest.release1.databasehelpers.DatabaseContext;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
