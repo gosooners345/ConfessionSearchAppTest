@@ -1,35 +1,90 @@
 package com.confessionsearchapptest.release1.searchhandlers
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
+import com.confessionsearchapptest.release1.data.documents.Document
 import com.confessionsearchapptest.release1.data.documents.DocumentList
+import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
+import com.confessionsearchapptest.release1.searchresults.SearchAdapter
+import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.*
 import java.util.regex.Pattern
 
 class SearchHandler : AppCompatActivity() {
-var query : String? = null
-    var documentList =DocumentList()
 
+    var masterList = DocumentList()
+    var searchFragment: SearchFragmentActivity? = null
 
+    var documentDB: SQLiteDatabase? = null
+    var docDBhelper: documentDBClassHelper? = null
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
+        val allDocsBool = intent.getBooleanExtra("AllDocs", false)
+        val answers = intent.getBooleanExtra("Answers", false)
+        val confession = intent.getBooleanExtra("Confession", false)
+        val catechism = intent.getBooleanExtra("Catechism", false)
+        val creed = intent.getBooleanExtra("Creed", false)
+        val searchAll = intent.getBooleanExtra("SearchAll", false)
+        val readerSearch = intent.getBooleanExtra("Reader", false)
+        val textSearch = intent.getBooleanExtra("Text", false)
+        val questionSearch = intent.getBooleanExtra("Question", false)
+        val proofs = intent.getBooleanExtra("Proofs", false)
+        val query = intent.getStringExtra("Query")
+        val fileName = intent.getStringExtra("FileName")
+        docDBhelper = documentDBClassHelper(this)
+        documentDB = docDBhelper!!.readableDatabase
 
+        search(
+            query,
+            allDocsBool,
+            answers,
+            confession,
+            catechism,
+            creed,
+            searchAll,
+            proofs,
+            readerSearch,
+            textSearch,
+            questionSearch,
+            fileName
+        )
 
     }
-    fun Search(query: String?) {
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun search(
+        query: String?,
+        allOpen: Boolean?,
+        answers: Boolean?,
+        confessionOpen: Boolean?,
+        catechismOpen: Boolean?,
+        creedOpen: Boolean?,
+        searchAll: Boolean?,
+        proofs: Boolean?,
+        readerSearch: Boolean?,
+        textSearch: Boolean?,
+        questionSearch: Boolean?,
+        fileName: String?
+    ) {
         var query = query
         var docID = 0
         var accessString = ""
@@ -40,17 +95,20 @@ var query : String? = null
         searchFragment = SearchFragmentActivity()
 
         //Filters for how searches are executed by document type and name
-        if (!searchAll) {
+        if (!searchAll!!) {
             accessString = String.format(" and documenttitle.documentName = '%s' ", fileName)
         }
         if (allOpen!!) {
             docID = 0
-            fileString = if (searchAll) "SELECT * FROM DocumentTitle" else String.format("Select * From DocumentTitle where DocumentTitle.DocumentName = '%s'", fileName)
+            fileString = if (searchAll!!) "SELECT * FROM DocumentTitle" else String.format(
+                "Select * From DocumentTitle where DocumentTitle.DocumentName = '%s'",
+                fileName
+            )
         }
 
         if (catechismOpen!!) {
             docID = 3
-            fileString = if (!searchAll) {
+            fileString = if (!searchAll!!) {
                 String.format(" documentTitle.DocumentTypeID = 3 AND DocumentName = '%s'", fileName)
             } else " documentTitle.DocumentTypeID = 3"
         } else if (confessionOpen!!) {
@@ -69,7 +127,16 @@ var query : String? = null
             }
         }
         //This fills the list with entries for filtering and sorting
-        masterList = documentDBHelper!!.getAllDocuments(fileString, fileName, docID, allOpen, documentDB, accessString, masterList, this)
+        masterList = docDBhelper!!.getAllDocuments(
+            fileString,
+            fileName,
+            docID,
+            allOpen,
+            documentDB,
+            accessString,
+            masterList,
+            this
+        )
         for (d in masterList) {
             if (d.documentText!!.contains("|") or d.proofs!!.contains("|")) {
                 d.proofs = formatter(d.proofs!!)
@@ -79,7 +146,7 @@ var query : String? = null
         //Search topics and filter them
         if (!readerSearch!! and textSearch!! and !questionSearch!!) {
             if (!query!!.isEmpty()) {
-                this.FilterResults(masterList, answers, proofs, query)
+                this.FilterResults(masterList, answers, proofs!!, query)
                 //Collections.reverse(masterList)
             } else {
                 if (masterList.size > 1) {
@@ -98,7 +165,7 @@ var query : String? = null
                 recreate()
             }
         } else if (readerSearch!! and !questionSearch!! and !textSearch!!) {
-            query = if (!searchAll) {
+            query = if (!searchAll!!) {
                 "Results for All"
             } else "View All"
         }
@@ -114,23 +181,33 @@ var query : String? = null
             //Returns an error if there are no results in the list
             if (masterList.size == 0) {
                 Log.i("Error", "No results found for Topic")
-                Toast.makeText(this, String.format("No Results were found for %s", query), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    String.format("No Results were found for %s", query),
+                    Toast.LENGTH_LONG
+                ).show()
                 setContentView(R.layout.error_page)
                 val errorMsg = findViewById<TextView>(R.id.errorTV)
-                errorMsg.text = String.format("""
+                errorMsg.text = String.format(
+                    """
     No results were found for %s 
     
     Go back to home page to search for another topic
-    """.trimIndent(), query)
+    """.trimIndent(), query
+                )
                 val alert = AlertDialog.Builder(this)
                 alert.setTitle("No Results found!")
-                alert.setMessage(String.format("""
+                alert.setMessage(
+                    String.format(
+                        """
     No Results were found for %s.
     
     Do you want to go back and search for another topic?
-    """.trimIndent(), query))
+    """.trimIndent(), query
+                    )
+                )
                 alert.setPositiveButton("Yes") { dialog, which ->
-                    intent = Intent(this@MainActivity, this@MainActivity.javaClass)
+                    intent = Intent(this, MainActivity.javaClass)
                     searchFragment = null
                     onStop()
                     finish()
@@ -142,6 +219,7 @@ var query : String? = null
             } else {
                 val document = masterList[masterList.size - 1]
                 setContentView(R.layout.search_results)
+                var header = ""
                 val saveFab = findViewById<ExtendedFloatingActionButton>(R.id.saveNote)
                 val fab = findViewById<ExtendedFloatingActionButton>(R.id.shareActionButton)
                 val chapterBox = findViewById<TextView>(R.id.chapterText)
@@ -156,24 +234,33 @@ var query : String? = null
                 tagBox.text = String.format("Tags: %s", document.tags)
                 if (chapterBox.text.toString().contains("Question")) {
                     header = "Question "
-                    chNumbBox.text = String.format("%s %s: %s", header, document.chNumber, document.chName)
+                    chNumbBox.text =
+                        String.format("%s %s: %s", header, document.chNumber, document.chName)
                 } else if (chapterBox.text.toString().contains("I. ")) {
                     header = "Chapter"
-                    chNumbBox.text = String.format("%s %s: %s", header, document.chNumber, document.chName)
+                    chNumbBox.text =
+                        String.format("%s %s: %s", header, document.chNumber, document.chName)
                 } else chNumbBox.text = String.format("%s", document.documentName)
                 val newLine = "\r\n"
-                shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
-                        + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
-                fab.setOnClickListener(shareContent)
-                fab.setBackgroundColor(Color.BLACK)
-                shareNote = ""
-                shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
-                        + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
-                saveFab.setOnClickListener(saveNewNote)
+                // shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
+                //     + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
+                // fab.setOnClickListener(shareContent)
+                // fab.setBackgroundColor(Color.BLACK)
+                // shareNote = ""
+                // shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
+                //       + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
+                // saveFab.setOnClickListener(saveNewNote)
             }
         }
     }
-    fun FilterResults(documentList: DocumentList, answers: Boolean?, proofs: Boolean, query: String?) {
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun FilterResults(
+        documentList: DocumentList,
+        answers: Boolean?,
+        proofs: Boolean,
+        query: String?
+    ) {
         val resultList = DocumentList()
 
         //Break document up into pieces to be searched for topic
@@ -188,7 +275,9 @@ var query : String? = null
                     var matchIndex = 0
                     //Tally up all matching sections
                     while (true) {
-                        val wordIndex = word.toUpperCase().indexOf(query!!.toUpperCase(), matchIndex)
+                        val wordIndex =
+                            word.uppercase(Locale.getDefault())
+                                .indexOf(query!!.uppercase(Locale.getDefault()), matchIndex)
                         if (wordIndex < 0) break
                         matchIndex = wordIndex + 1
                         document.matches = document.matches!! + 1
@@ -219,7 +308,12 @@ var query : String? = null
     }
 
     //Look for the matching chapter/question index
-    fun FilterResults(documentList: DocumentList, answers: Boolean?, proofs: Boolean?, indexNum: Int) {
+    fun FilterResults(
+        documentList: DocumentList,
+        answers: Boolean?,
+        proofs: Boolean?,
+        indexNum: Int
+    ) {
         val resultList = DocumentList()
         for (document in documentList) {
             if (document.chNumber!! == indexNum) {
@@ -238,14 +332,23 @@ var query : String? = null
         Collections.sort(resultList, Document.compareMatches)
         masterList = resultList
     }
+
     //Highlights topic entries in search results
     fun HighlightText(sourceStr: String?, query: String?): String {
         val replaceQuery = "<b>$query</b>"
         var resultString = ""
-        val replaceString = Pattern.compile(query, Pattern.CASE_INSENSITIVE)
-        val m = replaceString.matcher(sourceStr)
+        val replaceString = Pattern.compile(query!!, Pattern.CASE_INSENSITIVE)
+        val m = replaceString.matcher(sourceStr!!)
         resultString = m.replaceAll(replaceQuery)
         Log.d("Test", resultString)
         return resultString
     }
+    //Formats the code into a user friendly readable format
+    private fun formatter(formatString: String): String {
+        var formatString = formatString
+        formatString = formatString.replace("|", "<br><br>")
+        return formatString
+    }
+
+
 }

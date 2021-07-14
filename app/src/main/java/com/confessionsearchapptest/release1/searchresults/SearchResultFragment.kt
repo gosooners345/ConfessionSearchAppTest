@@ -10,7 +10,8 @@ import android.view.ViewGroup
 import android.widget.ShareActionProvider
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.confessionsearch.release1.NotesComposeActivity
+import com.confessionsearchapptest.release1.R
+
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class SearchResultFragment : Fragment() {
@@ -76,11 +77,11 @@ class SearchResultFragment : Fragment() {
         startActivity(Intent.createChooser(sendIntent, INTENTNAME))
     }
     var saveNewNote = View.OnClickListener {
-        val intent = Intent(context, NotesComposeActivity::class.java)
+       /* val intent = Intent(context, NotesComposeActivity::class.java)
         intent.putExtra("search_result_save", shareNote)
         intent.putExtra("activity_ID", ACTIVITY_ID)
         Log.i(TAG, "Opening new note to save entry")
-        startActivity(intent)
+        startActivity(intent)*/
     }
 
     companion object {

@@ -1,3 +1,4 @@
+/*
 package com.confessionsearchapptest.release1.ui.NotesActivity
 
 import android.app.Dialog
@@ -12,6 +13,9 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.confessionsearchapptest.release1.R
+import com.confessionsearchapptest.release1.data.notes.NoteRepository
+import com.confessionsearchapptest.release1.data.notes.Notes
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -34,17 +38,21 @@ class NotesComposeActivity : AppCompatActivity() {
     //Custom Editor Test Variables
     //Editor notesContentRichText;
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (MainActivity.themeID == R.style.LightMode) {
+       */
+/* if (MainActivity.themeID == R.style.LightMode) {
             setTheme(R.style.LightMode)
         }
         if (MainActivity.themeID == R.style.DarkMode) {
             setTheme(R.style.DarkMode)
-        }
+        }*//*
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.notes_compose_layout)
+      */
+/*  setContentView(R.layout.notes_compose_layout)
         notesContent = findViewById(R.id.contentEditText)
         notesSubject = findViewById(R.id.subjectTitleEditText)
-        noteRepository = NoteRepository(this)
+        noteRepository = NoteRepository(this)*//*
+
         //Load Notes
         if (!intentInfo) {
             notesSubject!!.setText(newNote!!.name)
@@ -71,7 +79,7 @@ class NotesComposeActivity : AppCompatActivity() {
         })
         saveButton = findViewById(R.id.saveNote)
         saveButton!!.setOnClickListener(SaveNote)
-        editButton = findViewById(R.id.editButton)
+        //editButton = findViewById(R.id.editButton)
         activityID = intent.getIntExtra("activity_ID", -1)
         editButton!!.setOnClickListener(editNote)
     }
@@ -209,4 +217,4 @@ class NotesComposeActivity : AppCompatActivity() {
         private const val EDIT_ON = 1
         private const val EDIT_OFF = 0
     }
-}
+}*/

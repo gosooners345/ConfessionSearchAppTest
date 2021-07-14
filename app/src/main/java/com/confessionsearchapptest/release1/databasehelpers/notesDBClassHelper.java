@@ -5,6 +5,9 @@ import android.content.Context;
 import androidx.room.*;
 import androidx.room.RoomDatabase;
 
+import com.confessionsearchapptest.release1.data.notes.NoteDao;
+import com.confessionsearchapptest.release1.data.notes.Notes;
+
 @Database(entities = {Notes.class},version = 1)
 public abstract class notesDBClassHelper extends RoomDatabase {
     public static final String DATABASE_NAME = "confessionsearchNotes_db";

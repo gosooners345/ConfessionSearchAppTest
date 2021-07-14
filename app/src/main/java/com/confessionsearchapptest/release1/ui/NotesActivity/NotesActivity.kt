@@ -1,5 +1,6 @@
-package com.confessionsearchapptest.release1.ui.NotesActivity
 
+package com.confessionsearchapptest.release1.ui.NotesActivity
+/*
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.confessionsearch.release1.NotesAdapter.OnNoteListener
+//import com.confessionsearch.release1.NotesAdapter.OnNoteListener
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.notes.NoteRepository
 import com.confessionsearchapptest.release1.data.notes.Notes
@@ -28,7 +29,8 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
        // if (MainActivity.themeID == R.style.DarkMode) setTheme(R.style.DarkMode_NoActionBar)
         super.onCreate(savedInstanceState)
         //set layout to notes list
-        setContentView(R.layout.activity_notes)
+*/
+/*        setContentView(R.layout.activity_notes)
         //not sure what this is useful for
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = "Notes"
@@ -43,35 +45,42 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
         notesList!!.adapter = adapter
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesList)
         //assign variable to reference for new note
-        fab = findViewById(R.id.newNote)
+        fab = findViewById(R.id.newNote)*//*
+
     }
 
     private fun fetchNotes() {
-        noteRepository!!.fetchNotes().observe(this, { notes ->
+*/
+/*        noteRepository!!.fetchNotes().observe(this, { notes ->
             if (MainActivity.notesArrayList.size > 0) MainActivity.notesArrayList.clear()
             if (notes != null) {
                 MainActivity.notesArrayList.addAll(notes)
             }
             adapter!!.notifyDataSetChanged()
         }
-        )
+        )*//*
+
     }
 
     //Fetch notes from storage
     fun NewNote(view: View?) {
-        val intent = Intent(applicationContext, NotesComposeActivity::class.java)
+       */
+/* val intent = Intent(applicationContext, NotesComposeActivity::class.java)
         intent.putExtra("activity_ID", ACTIVITY_ID)
-        startActivity(intent)
+        startActivity(intent)*//*
+
     }
 
     override fun onNoteClick(position: Int) {
-        MainActivity.notesArrayList[position]
+      */
+/*  MainActivity.notesArrayList[position]
         val title = MainActivity.notesArrayList[position].name
         val content = MainActivity.notesArrayList[position].content
         val intent = Intent(this, NotesComposeActivity::class.java)
         intent.putExtra("activity_ID", ACTIVITY_ID)
         intent.putExtra("note_selected", MainActivity.notesArrayList[position])
-        startActivity(intent)
+        startActivity(intent)*//*
+
     }
 
     var itemTouchHelperCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -80,14 +89,14 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            deleteNote(MainActivity.notesArrayList[viewHolder.adapterPosition])
+           // deleteNote(MainActivity.notesArrayList[viewHolder.adapterPosition])
         }
     }
 
     //Note deletion
     private fun deleteNote(note: Notes) {
-        MainActivity.notesArrayList.remove(note)
-        noteRepository!!.deleteNote(note)
+        //MainActivity.notesArrayList.remove(note)
+        //noteRepository!!.deleteNote(note)
         adapter!!.notifyDataSetChanged()
     }
 
@@ -99,4 +108,4 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
         var adapter: NotesAdapter? = null
         const val ACTIVITY_ID = 32
     }
-}
+}*/

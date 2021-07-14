@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.confessionsearchapptest.release1.data.documents.DocumentList
 
 class SearchFragmentActivity  //public ViewPager2 vp2;
     : AppCompatActivity() {

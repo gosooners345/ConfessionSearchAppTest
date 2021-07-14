@@ -1,3 +1,4 @@
+/*
 package com.confessionsearchapptest.release1.helpers;
 
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.confessionsearchapptest.release1.R;
 import com.confessionsearchapptest.release1.data.notes.Notes;
 
 import java.util.ArrayList;
@@ -75,3 +77,4 @@ onNoteListener.onNoteClick(getAdapterPosition());
         void onNoteClick(int position);
     }
 }
+*/

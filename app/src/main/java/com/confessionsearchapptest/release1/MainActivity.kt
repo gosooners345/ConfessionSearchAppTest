@@ -1,6 +1,8 @@
 package com.confessionsearchapptest.release1
 
 import android.app.Application
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +13,16 @@ import androidx.navigation.ui.setupWithNavController
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
+    /*private lateinit var binding: ActivityMainBinding*/
+public val context : Context = this
 //var documentDBHelper : documentDBClassHelper? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //documentDBHelper = documentDBClassHelper(this)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+var        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView

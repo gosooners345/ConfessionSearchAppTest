@@ -5,6 +5,7 @@ import android.view.View.OnLongClickListener
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
+import com.confessionsearchapptest.release1.R
 
 class ItemClickSupport private constructor(private val mRecyclerView: RecyclerView) {
     private var mOnItemClickListener: OnItemClickListener? = null
