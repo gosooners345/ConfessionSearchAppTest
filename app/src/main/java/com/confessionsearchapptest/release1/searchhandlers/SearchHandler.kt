@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -32,12 +33,17 @@ class SearchHandler : AppCompatActivity() {
 
     var masterList = DocumentList()
     var searchFragment: SearchFragmentActivity? = null
-
     var documentDB: SQLiteDatabase? = null
     var docDBhelper: documentDBClassHelper? = null
-    @SuppressLint("NewApi")
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    var shareList = ""
+
+
+
+
+
+  @SuppressLint("NewApi")
+    override fun onCreate(savedInstanceState: Bundle?){//, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState)
         val allDocsBool = intent.getBooleanExtra("AllDocs", false)
         val answers = intent.getBooleanExtra("Answers", false)
         val confession = intent.getBooleanExtra("Confession", false)
@@ -50,13 +56,9 @@ class SearchHandler : AppCompatActivity() {
         val proofs = intent.getBooleanExtra("Proofs", false)
         val query = intent.getStringExtra("Query")
         val fileName = intent.getStringExtra("FileName")
-        docDBhelper = documentDBClassHelper(this)
-        documentDB = docDBhelper!!.readableDatabase
 
-        search(
-            query,
-            allDocsBool,
-            answers,
+
+        search(query,allDocsBool,answers,
             confession,
             catechism,
             creed,
@@ -83,15 +85,21 @@ class SearchHandler : AppCompatActivity() {
         readerSearch: Boolean?,
         textSearch: Boolean?,
         questionSearch: Boolean?,
-        fileName: String?
+        fileName: String?//,        docHelper : documentDBClassHelper?,        docDB : SQLiteDatabase?
     ) {
+        Log.d("SearchMethod","SearchWorks")
         var query = query
         var docID = 0
         var accessString = ""
         var fileString = ""
+       // var docDBhelper = docHelper /*documentDBClassHelper(super.getApplicationContext())*/
+       // var documentDB = docDB //docDBhelper!!.readableDatabase
+docDBhelper = documentDBClassHelper(this)
+        documentDB= docDBhelper!!.readableDatabase
+
         //Boolean  proofs = true, answers = true, searchAll = false, viewDocs = false;
 
-        Log.d("Search()", getString(R.string.search_execution_begins))
+        Log.d("Search()", "Search Party Begins")
         searchFragment = SearchFragmentActivity()
 
         //Filters for how searches are executed by document type and name
@@ -173,20 +181,63 @@ class SearchHandler : AppCompatActivity() {
 
         //Displays the list of results
         if (masterList.size > 1) {
-            setContentView(R.layout.index_pager)
+           setContentView(R.layout.index_pager)
             val adapter = SearchAdapter(supportFragmentManager, masterList, query!!)
             val vp2 = findViewById<ViewPager>(R.id.resultPager)
             searchFragment!!.DisplayResults(masterList, vp2, adapter, query, 0)
         } else {
             //Returns an error if there are no results in the list
-            if (masterList.size == 0) {
+            if (masterList.size == 1) {
+                val document = masterList[masterList.size - 1]
+                try{
+
+               setContentView(R.layout.search_results)}
+                catch (ex : Exception)
+                {
+                    ex.printStackTrace()
+                    setContentView(R.layout.error_page)
+                }
+                var header = ""
+                val saveFab = findViewById<ExtendedFloatingActionButton>(R.id.saveNote)
+                val fab = findViewById<ExtendedFloatingActionButton>(R.id.shareActionButton)
+                val chapterBox = findViewById<TextView>(R.id.chapterText)
+                val proofBox = findViewById<TextView>(R.id.proofText)
+                val chNumbBox = findViewById<TextView>(R.id.confessionChLabel)
+                val docTitleBox = findViewById<TextView>(R.id.documentTitleLabel)
+                val tagBox = findViewById<TextView>(R.id.tagView)
+                proofBox.text = Html.fromHtml(document.proofs)
+                docTitleBox.text = document.documentName
+                docTitleBox.text = document.documentName
+                chapterBox.text = Html.fromHtml(document.documentText)
+                tagBox.text = String.format("Tags: %s", document.tags)
+                if (chapterBox.text.toString().contains("Question")) {
+                    header = "Question "
+                    chNumbBox.text =
+                        String.format("%s %s: %s", header, document.chNumber, document.chName)
+                } else if (chapterBox.text.toString().contains("I. ")) {
+                    header = "Chapter"
+                    chNumbBox.text =
+                        String.format("%s %s: %s", header, document.chNumber, document.chName)
+                } else chNumbBox.text = String.format("%s", document.documentName)
+                val newLine = "\r\n"
+                 shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
+                     + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
+                 fab.setOnClickListener(shareContent)
+                // fab.setBackgroundColor(Color.BLACK)
+                var shareNote = ""
+                 shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
+                       + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
+                // saveFab.setOnClickListener(saveNewNote)
+            }
+
+             else {
                 Log.i("Error", "No results found for Topic")
                 Toast.makeText(
                     this,
                     String.format("No Results were found for %s", query),
                     Toast.LENGTH_LONG
                 ).show()
-                setContentView(R.layout.error_page)
+                super.setContentView(R.layout.error_page)
                 val errorMsg = findViewById<TextView>(R.id.errorTV)
                 errorMsg.text = String.format(
                     """
@@ -216,43 +267,8 @@ class SearchHandler : AppCompatActivity() {
                 alert.setNegativeButton("No") { dialog, which -> dialog.dismiss() }
                 val dialog: Dialog = alert.create()
                 if (!isFinishing) dialog.show()
-            } else {
-                val document = masterList[masterList.size - 1]
-                setContentView(R.layout.search_results)
-                var header = ""
-                val saveFab = findViewById<ExtendedFloatingActionButton>(R.id.saveNote)
-                val fab = findViewById<ExtendedFloatingActionButton>(R.id.shareActionButton)
-                val chapterBox = findViewById<TextView>(R.id.chapterText)
-                val proofBox = findViewById<TextView>(R.id.proofText)
-                val chNumbBox = findViewById<TextView>(R.id.confessionChLabel)
-                val docTitleBox = findViewById<TextView>(R.id.documentTitleLabel)
-                val tagBox = findViewById<TextView>(R.id.tagView)
-                proofBox.text = Html.fromHtml(document.proofs)
-                docTitleBox.text = document.documentName
-                docTitleBox.text = document.documentName
-                chapterBox.text = Html.fromHtml(document.documentText)
-                tagBox.text = String.format("Tags: %s", document.tags)
-                if (chapterBox.text.toString().contains("Question")) {
-                    header = "Question "
-                    chNumbBox.text =
-                        String.format("%s %s: %s", header, document.chNumber, document.chName)
-                } else if (chapterBox.text.toString().contains("I. ")) {
-                    header = "Chapter"
-                    chNumbBox.text =
-                        String.format("%s %s: %s", header, document.chNumber, document.chName)
-                } else chNumbBox.text = String.format("%s", document.documentName)
-                val newLine = "\r\n"
-                // shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
-                //     + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
-                // fab.setOnClickListener(shareContent)
-                // fab.setBackgroundColor(Color.BLACK)
-                // shareNote = ""
-                // shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
-                //       + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
-                // saveFab.setOnClickListener(saveNewNote)
-            }
-        }
-    }
+        }}}
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun FilterResults(
@@ -332,6 +348,14 @@ class SearchHandler : AppCompatActivity() {
         Collections.sort(resultList, Document.compareMatches)
         masterList = resultList
     }
+    var shareContent = View.OnClickListener {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        val INTENTNAME = "SHARE"
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareList)
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, INTENTNAME))
+    }
 
     //Highlights topic entries in search results
     fun HighlightText(sourceStr: String?, query: String?): String {
@@ -350,5 +374,10 @@ class SearchHandler : AppCompatActivity() {
         return formatString
     }
 
+    override fun onBackPressed() {
+this.finish()
+        super.onBackPressed()
+
+    }
 
 }

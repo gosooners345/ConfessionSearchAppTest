@@ -7,17 +7,15 @@
     android:layout_x="2dp"
     android:layout_y="2dp"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:nestedScrollingEnabled="true"
-    app:cardBackgroundColor="?attr/background"
+
     app:cardCornerRadius="2dp"
     app:cardElevation="3dp"
     app:layout_scrollFlags="scroll">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/background">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/result_screen"
@@ -183,7 +181,7 @@
                 android:text="@string/save_note"
 
 
-                app:icon="@android:drawable/ic_menu_save"
+
 
                 app:layout_constraintBottom_toTopOf="@id/shareActionButton"
                 app:layout_constraintEnd_toEndOf="parent"

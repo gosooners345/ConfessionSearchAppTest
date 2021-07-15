@@ -1,6 +1,7 @@
 package com.confessionsearchapptest.release1.ui.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
@@ -17,7 +18,9 @@ import androidx.appcompat.widget.ShareActionProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
+
 import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentHomeBinding
@@ -30,7 +33,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 import kotlin.collections.ArrayList
-
 class SearchFragment : Fragment() {
 
     private lateinit var searchViewModel: SearchViewModel
@@ -174,25 +176,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    var searchQueryListener: SearchView.OnQueryTextListener =
-        object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(entry: String): Boolean {
-                query = entry
-                if (!readerSearch!!) {
-                    if (query!!.isEmpty()) Toast.makeText(
-                        context,
-                        R.string.query_error,
-                        Toast.LENGTH_LONG
-                    ).show() else Search(query)
-                } else Search(query)
-                return false
-            }
 
-            //nothing happens here
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
-            }
-        }
 
 
     var optionListener = ChipGroup.OnCheckedChangeListener { group, checkedId ->
@@ -208,7 +192,7 @@ class SearchFragment : Fragment() {
             textSearch = true
             questionSearch = false
             readerSearch = false
-            searchFAB!!.text = resources.getString(R.string.Search)
+            //searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.questionChip) {
             searchBox!!.isEnabled = true
@@ -219,16 +203,19 @@ class SearchFragment : Fragment() {
             textSearch = false
             readerSearch = false
             questionSearch = true
-            searchFAB!!.text = resources.getString(R.string.Search)
+            //searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.readDocsChip) {
-            searchFAB!!.text = resources.getString(R.string.read_button_text)
+            //searchFAB!!.text = resources.getString(R.string.read_button_text)
             textSearch = false
             questionSearch = false
             readerSearch = true
         }
 
     }
+
+
+    //Submission key
     var searchButtonListener = View.OnClickListener {
         val query: String
         if (!readerSearch!!) {
@@ -257,7 +244,25 @@ class SearchFragment : Fragment() {
             false
         }
     }
+    var searchQueryListener: SearchView.OnQueryTextListener =
+        object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(entry: String): Boolean {
+                query = entry
+                if (!readerSearch!!) {
+                    if (query!!.isEmpty()) Toast.makeText(
+                        context,
+                        R.string.query_error,
+                        Toast.LENGTH_LONG
+                    ).show() else Search(query)
+                } else Search(query)
+                return false
+            }
 
+            //nothing happens here
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        }
     /* fun ErrorMessage(message: String?) {
          //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
          val errorBar = Snackbar.make(findViewById(R.id.layout_super), message!!, BaseTransientBottomBar.LENGTH_SHORT)
@@ -344,9 +349,13 @@ class SearchFragment : Fragment() {
 
 
     // 7-13-21 Take the data from the search form and package it in a format to put in the search handler
+    @SuppressLint("NewApi")
     fun Search(query: String?) {
-        var searchIntent = Intent(super.getContext(), SearchHandler::class.java)
+
+        var searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
+        //val parentActivity = super.getActivity()
         val stringQuery = query
+        Log.d("Test",context.toString())
         //Document Type Filtering
         searchIntent.putExtra("AllDocs", allOpen)
         searchIntent.putExtra("Confession", confessionOpen)
@@ -365,9 +374,20 @@ class SearchFragment : Fragment() {
         searchIntent.putExtra("Query", stringQuery)
         //FileName
         searchIntent.putExtra("FileName",fileName)
+searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
 
+//        MainActivity.IntentList.add(searchIntent)
+        //This doesn't work. I'm not sure why it's not loading.
+       requireContext().startActivity(searchIntent)
 
-        startActivity(searchIntent)
+        //super.startActivity(searchIntent)
+//val searchHandler = SearchHandler()
+        //Following Code returns null reference exception when SetContentView is called
+        //MainActivity.searchHandler!!.search(query,allOpen,answers,confessionOpen,catechismOpen,creedOpen,searchAll,proofs,readerSearch,textSearch,questionSearch,fileName,docDBhelper,documentDB)
     }
+companion object{
+    const val ACTIVITY_ID = 32
+}
 
 }
+
