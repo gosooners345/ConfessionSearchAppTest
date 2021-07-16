@@ -115,6 +115,7 @@ class SearchFragment : Fragment() {
         optionGroup = root.findViewById(R.id.option_group)
         //Search Button Initialization
         searchButton = root.findViewById(R.id.searchFAB)
+
         searchButton!!.setOnClickListener(searchButtonListener)
         //Search Box Initialization
         searchBox = root.findViewById(R.id.searchView1)
@@ -192,7 +193,7 @@ class SearchFragment : Fragment() {
             textSearch = true
             questionSearch = false
             readerSearch = false
-            //searchFAB!!.text = resources.getString(R.string.Search)
+           // searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.questionChip) {
             searchBox!!.isEnabled = true
@@ -206,7 +207,7 @@ class SearchFragment : Fragment() {
             //searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.readDocsChip) {
-            //searchFAB!!.text = resources.getString(R.string.read_button_text)
+         //   searchFAB!!.text = resources.getString(R.string.read_button_text)
             textSearch = false
             questionSearch = false
             readerSearch = true

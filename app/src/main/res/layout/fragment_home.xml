@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
- <!--   <ScrollView
+   <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-
+tools:context=".ui.home.SearchFragment"
         android:id="@+id/layoutMain"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:background="?attr/background"
+
         android:isScrollContainer="true"
         android:overScrollMode="always"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbarStyle="outsideInset"
-        android:scrollbars="vertical">-->
+        android:scrollbars="vertical">
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     tools:context=".ui.home.SearchFragment"
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <com.google.android.material.chip.ChipGroup
@@ -35,7 +31,6 @@
                 android:padding="5dp"
                 app:layout_constraintStart_toStartOf="@id/searchByLabel"
                 app:layout_constraintTop_toBottomOf="@+id/searchByLabel"
-
                 >
 
 
@@ -47,10 +42,12 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:chipIconVisible="true"
                     android:checkable="true"
+                    android:padding="5dp"
                     app:closeIconEnabled="false" />
 
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
+                    android:padding="5dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/questionChip"
                     android:text="@string/question"
@@ -63,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/readDocsChip"
+                    android:padding="5dp"
                     android:text="@string/read_document"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:chipIconVisible="true"
@@ -78,8 +76,6 @@
                 app:selectionRequired="false"
                 android:layoutDirection="locale"
                 android:padding="5dp"
-
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/optionLabel">
 
@@ -88,6 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
+                    android:padding="5dp"
                     android:text="@string/no_answers"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     app:chipIconVisible="true"
@@ -95,6 +92,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/proofChip"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
@@ -105,6 +103,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/searchAllChip"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
@@ -211,18 +210,19 @@
                 tools:layout_conversion_absoluteHeight="24dp"
                 tools:layout_conversion_absoluteWidth="125dp" />
 
-            <TextView
-                android:id="@+id/appTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/search_documents_below"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_conversion_absoluteHeight="30dp"
-                tools:layout_conversion_absoluteWidth="230dp" />
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/search_documents_below"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="30dp"
+        tools:layout_conversion_absoluteWidth="230dp" />
             <TextView
 
                 android:id="@+id/searchByLabel"
@@ -231,6 +231,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:labelFor="@id/option_group"
                 android:text="@string/search_options"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -243,11 +245,9 @@
 
             <TextView
                 android:id="@+id/topicLabel"
-
                 android:layout_width="95dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="7dp"
-
                 android:gravity="center_vertical"
                 android:labelFor="@id/searchView1"
                 android:text="@string/topic_number"
@@ -260,66 +260,36 @@
 
             <TextView
                 android:id="@+id/typeTVLabel"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:labelFor="@id/documentTypeSpinner"
                 android:text="@string/document_type"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-
                 app:layout_constraintStart_toStartOf="@+id/topicLabel"
                 app:layout_constraintTop_toBottomOf="@+id/topicLabel"
                 tools:layout_conversion_absoluteHeight="60dp"
                 tools:layout_conversion_absoluteWidth="83dp" />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/searchFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/searchFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/search"
+        app:fabSize="auto"
+        app:icon="@drawable/ic_fab_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chip_group"
+      />
 
-                android:layout_gravity="bottom|right"
-
-                android:layout_marginEnd="8dp"
-
-                android:layout_marginBottom="90dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/search"
-
-                app:fabSize="auto"
-
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chip_group"
-                tools:layout_conversion_absoluteHeight="56dp"
-                tools:layout_conversion_absoluteWidth="142dp" />
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/notesExtFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="bottom|right"
-
-                android:layout_marginEnd="8dp"
-
-                android:layout_marginBottom="30dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/notes_button_string"
-                app:fabSize="auto"
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchFAB"
-                tools:layout_conversion_absoluteHeight="56dp"
-                tools:layout_conversion_absoluteWidth="142dp" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-<!--</ScrollView>-->
+</ScrollView>
 
 
 
