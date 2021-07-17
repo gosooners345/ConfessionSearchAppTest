@@ -1,4 +1,4 @@
-/*
+
 package com.confessionsearchapptest.release1.ui.NotesActivity
 
 import android.app.Dialog
@@ -38,20 +38,13 @@ class NotesComposeActivity : AppCompatActivity() {
     //Custom Editor Test Variables
     //Editor notesContentRichText;
     override fun onCreate(savedInstanceState: Bundle?) {
-       */
-/* if (MainActivity.themeID == R.style.LightMode) {
-            setTheme(R.style.LightMode)
-        }
-        if (MainActivity.themeID == R.style.DarkMode) {
-            setTheme(R.style.DarkMode)
-        }*//*
 
         super.onCreate(savedInstanceState)
-      */
-/*  setContentView(R.layout.notes_compose_layout)
+
+  setContentView(R.layout.notes_compose_layout)
         notesContent = findViewById(R.id.contentEditText)
         notesSubject = findViewById(R.id.subjectTitleEditText)
-        noteRepository = NoteRepository(this)*//*
+        noteRepository = NoteRepository(this)
 
         //Load Notes
         if (!intentInfo) {
@@ -106,9 +99,9 @@ class NotesComposeActivity : AppCompatActivity() {
                 if (isNewNote) {
                     noteRepository!!.insertNote(newNote)
                 } else noteRepository!!.updateNote(newNote)
-                if (activityID == 32) NotesActivity.adapter!!.notifyDataSetChanged()
+                if (activityID == 32) NotesFragment.adapter!!.notifyDataSetChanged()
                 Log.i(TAG, "Saving note to storage")
-                Snackbar.make(findViewById(R.id.masterLayout), "Note Saved", BaseTransientBottomBar.LENGTH_LONG).show()
+                //Snackbar.make(findViewById(R.id.masterLayout), "Note Saved", BaseTransientBottomBar.LENGTH_LONG).show()
             }
             //Close this activity out and head back to parent screen
             finish()
@@ -171,7 +164,7 @@ class NotesComposeActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         mode = savedInstanceState.getInt("mode")
         if (mode == EDIT_ON) {
-            Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
+           // Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
         }
     }
 
@@ -179,14 +172,14 @@ class NotesComposeActivity : AppCompatActivity() {
         notesContent!!.isEnabled = false
         notesSubject!!.isEnabled = false
         mode = EDIT_OFF
-        Snackbar.make(findViewById(R.id.masterLayout), "Save Note", BaseTransientBottomBar.LENGTH_SHORT).show()
+        //Snackbar.make(findViewById(R.id.masterLayout), "Save Note", BaseTransientBottomBar.LENGTH_SHORT).show()
     }
 
     private fun EnableEdit() {
         notesContent!!.isEnabled = true
         notesSubject!!.isEnabled = true
         mode = EDIT_ON
-        Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
+    //    Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -217,4 +210,4 @@ class NotesComposeActivity : AppCompatActivity() {
         private const val EDIT_ON = 1
         private const val EDIT_OFF = 0
     }
-}*/
+}

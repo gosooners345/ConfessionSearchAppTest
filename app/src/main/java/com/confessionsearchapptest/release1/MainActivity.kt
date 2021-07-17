@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
+import com.confessionsearchapptest.release1.data.notes.Notes
 import com.confessionsearchapptest.release1.databinding.ActivityMainBinding
 import com.confessionsearchapptest.release1.searchhandlers.SearchHandler
 
@@ -53,21 +54,13 @@ public val context : Context = this
        }
 
     }
- fun makeThisWork(intentList : ArrayList<Intent>)
- {
-     for(intent in intentList)
-     {
-         startActivity(intent)
-     }
- }
 
 
     companion object {
-val IntentList : ArrayList<Intent> = ArrayList()
+        var notesArrayList = ArrayList<Notes>()
 
 
-
-        }
+    }
 
 
     }

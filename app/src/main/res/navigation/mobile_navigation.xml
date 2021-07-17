@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_notes"
         android:name="com.confessionsearchapptest.release1.ui.NotesActivity.NotesFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/notes"
         tools:layout="@layout/fragment_notes" />
 
 

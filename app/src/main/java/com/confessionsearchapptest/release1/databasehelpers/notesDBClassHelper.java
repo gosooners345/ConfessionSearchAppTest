@@ -13,7 +13,7 @@ public abstract class notesDBClassHelper extends RoomDatabase {
     public static final String DATABASE_NAME = "confessionsearchNotes_db";
     private static notesDBClassHelper instance;
 
-    static notesDBClassHelper getInstance(final Context context) {
+    public static notesDBClassHelper getInstance(final Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), notesDBClassHelper.class, DATABASE_NAME).build();
             return instance;

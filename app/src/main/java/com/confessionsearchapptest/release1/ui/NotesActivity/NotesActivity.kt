@@ -25,9 +25,6 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
     var fab: ExtendedFloatingActionButton? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         //set theme to app theme
-      //  if (MainActivity.themeID == R.style.LightMode) setTheme(R.style.LightMode_NoActionBar)
-       // if (MainActivity.themeID == R.style.DarkMode) setTheme(R.style.DarkMode_NoActionBar)
-        super.onCreate(savedInstanceState)
         //set layout to notes list
 */
 /*        setContentView(R.layout.activity_notes)
@@ -48,17 +45,17 @@ class NotesActivity : AppCompatActivity(), NotesAdapter.OnNoteListener {
         fab = findViewById(R.id.newNote)*//*
 
     }
-
+//ViewModel
     private fun fetchNotes() {
-*/
-/*        noteRepository!!.fetchNotes().observe(this, { notes ->
+
+        noteRepository!!.fetchNotes().observe(this, { notes ->
             if (MainActivity.notesArrayList.size > 0) MainActivity.notesArrayList.clear()
             if (notes != null) {
                 MainActivity.notesArrayList.addAll(notes)
             }
             adapter!!.notifyDataSetChanged()
         }
-        )*//*
+        )
 
     }
 

@@ -1,4 +1,3 @@
-/*
 package com.confessionsearchapptest.release1.helpers;
 
 import android.content.Context;
@@ -16,15 +15,13 @@ import com.confessionsearchapptest.release1.data.notes.Notes;
 import java.util.ArrayList;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
-private OnNoteListener onNoteListener;
+    private OnNoteListener onNoteListener;
     private ArrayList<Notes> noteList = new ArrayList<>();
-    public NotesAdapter(ArrayList<Notes> importNotes, OnNoteListener onNoteListener)
-    {
-        noteList=importNotes;
+
+    public NotesAdapter(ArrayList<Notes> importNotes, OnNoteListener onNoteListener) {
+        noteList = importNotes;
         this.onNoteListener = onNoteListener;
     }
-
-
 
 
     @NonNull
@@ -33,9 +30,9 @@ private OnNoteListener onNoteListener;
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View noteView=inflater.inflate(R.layout.notes_item_layout,parent,false);
+        View noteView = inflater.inflate(R.layout.notes_item_layout, parent, false);
 
-        return new ViewHolder(noteView,onNoteListener);
+        return new ViewHolder(noteView, onNoteListener);
     }
 
     @Override
@@ -55,26 +52,27 @@ private OnNoteListener onNoteListener;
 
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView contentView;
         public TextView subjectView;
-OnNoteListener onNoteListener;
+        OnNoteListener onNoteListener;
+
         public ViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-        subjectView = itemView.findViewById(R.id.content_Title);
-        contentView = itemView.findViewById(R.id.content_text);
-        this.onNoteListener=onNoteListener;
+            subjectView = itemView.findViewById(R.id.content_Title);
+            contentView = itemView.findViewById(R.id.content_text);
+            this.onNoteListener = onNoteListener;
 
-        itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-onNoteListener.onNoteClick(getAdapterPosition());
+            onNoteListener.onNoteClick(getAdapterPosition());
         }
     }
-    public interface OnNoteListener{
+
+    public interface OnNoteListener {
         void onNoteClick(int position);
     }
 }
-*/

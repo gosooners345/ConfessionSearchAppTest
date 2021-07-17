@@ -4,11 +4,13 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.confessionsearchapptest.release1.databasehelpers.notesDBClassHelper;
+
 import java.util.List;
 
 public class NoteRepository {
 
-/*    private notesDBClassHelper notesDB;
+    private notesDBClassHelper notesDB;
 
     public NoteRepository(Context context)
     {
@@ -27,5 +29,5 @@ new InsertAsync(notesDB.getNoteDao()).execute(note);
 
     public LiveData<List<Notes>>fetchNotes(){
         return notesDB.getNoteDao().getNotes();
-    }*/
+    }
 }
