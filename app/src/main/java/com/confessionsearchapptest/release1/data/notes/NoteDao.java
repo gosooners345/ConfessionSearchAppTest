@@ -3,6 +3,7 @@ package com.confessionsearchapptest.release1.data.notes;
 import androidx.lifecycle.LiveData;
 import androidx.room.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //Thanks to Mitch at SQLite Learning for providing code to help set up this interface here
@@ -11,8 +12,11 @@ public interface NoteDao {
 
     @Insert
     long[] insertNotes(Notes... notes);
+   
+
     @Query("SELECT * FROM notes")
-    LiveData<List<Notes>> getNotes();
+    LiveData<List<Notes>>fetchNotes();
+
     @Delete
     int delete(Notes... notes);
     @Update

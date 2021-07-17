@@ -72,7 +72,7 @@ class NotesComposeActivity : AppCompatActivity() {
         })
         saveButton = findViewById(R.id.saveNote)
         saveButton!!.setOnClickListener(SaveNote)
-        //editButton = findViewById(R.id.editButton)
+        editButton = findViewById(R.id.editButton)
         activityID = intent.getIntExtra("activity_ID", -1)
         editButton!!.setOnClickListener(editNote)
     }

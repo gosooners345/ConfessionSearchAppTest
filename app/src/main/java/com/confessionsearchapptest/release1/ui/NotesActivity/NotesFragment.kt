@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.confessionsearchapptest.release1.MainActivity
+import com.confessionsearchapptest.release1.R
+import com.confessionsearchapptest.release1.data.notes.NoteRepository
 import com.confessionsearchapptest.release1.data.notes.Notes
 import com.confessionsearchapptest.release1.databinding.FragmentNotesBinding
 import com.confessionsearchapptest.release1.helpers.NotesAdapter
@@ -40,10 +45,17 @@ class NotesFragment : Fragment(),NotesAdapter.OnNoteListener {
 
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        notesViewModel.noteRepository = NoteRepository(context)
+        fetchNotes()
+        notesList = root.findViewById(R.id.notesListView)
+        adapter = NotesAdapter(MainActivity.notesArrayList, this)
+        notesList!!.layoutManager = LinearLayoutManager(context)
+        notesList!!.itemAnimator = DefaultItemAnimator()
+        notesList!!.adapter = adapter
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesList)
+        fab = root.findViewById(R.id.newNote)
 
-
-
-        return root
+         return root
     }
 
     override fun onDestroyView() {
@@ -72,15 +84,21 @@ class NotesFragment : Fragment(),NotesAdapter.OnNoteListener {
           notesViewModel.deleteNote(MainActivity.notesArrayList[viewHolder.adapterPosition])
         }
     }
+    private fun fetchNotes() {
 
-
-
-    fun NewNote(view: View?) {
-        val intent = Intent(context, NotesComposeActivity::class.java)
-        intent.putExtra("activity_ID", ACTIVITY_ID)
-        startActivity(intent)
+        notesViewModel.noteRepository!!.fetchNotes().observe(viewLifecycleOwner, { notes ->
+            if (MainActivity.notesArrayList.size > 0) MainActivity.notesArrayList.clear()
+            if (notes != null) {
+                MainActivity.notesArrayList.addAll(notes)
+            }
+            adapter!!.notifyDataSetChanged()
+        }
+        )
 
     }
+
+
+
 
 
 

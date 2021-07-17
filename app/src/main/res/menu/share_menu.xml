@@ -6,7 +6,7 @@
     <item
         android:id="@+id/shareAction"
         android:title="Share"
-        android:icon="@drawable/share_dark_drawable"
+
         app:showAsAction="always"
 
       ></item>

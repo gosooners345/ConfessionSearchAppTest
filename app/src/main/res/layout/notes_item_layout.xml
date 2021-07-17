@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?attr/background">
+   >
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/noteLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/background"
-        android:backgroundTint="?attr/background">
+        >
 
         <TextView
             android:id="@+id/subject_display"
@@ -22,7 +21,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/subject"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="?android:attr/textColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

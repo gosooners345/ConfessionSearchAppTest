@@ -10,12 +10,12 @@ import com.confessionsearchapptest.release1.ui.NotesActivity.NotesFragment.Compa
 
 class NotesViewModel : ViewModel() {
     var noteRepository: NoteRepository? = null
+//var notesList :ArrayList<Notes?> = ArrayList()
 
-
-    private val _text = MutableLiveData<String>().apply {
+   /* private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
     }
-    val text: LiveData<String> = _text
+    val text: LiveData<String> = _text*/
 
 
 
@@ -28,17 +28,6 @@ class NotesViewModel : ViewModel() {
     }
 
     //Load Notes from Database
-    private fun fetchNotes() {
 
-        noteRepository!!.fetchNotes().observe(this, { notes ->
-            if (MainActivity.notesArrayList.size > 0) MainActivity.notesArrayList.clear()
-            if (notes != null) {
-                MainActivity.notesArrayList.addAll(notes)
-            }
-            adapter!!.notifyDataSetChanged()
-        }
-        )
-
-    }
 
 }
