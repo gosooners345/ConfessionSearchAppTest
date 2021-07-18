@@ -1,10 +1,8 @@
 package com.confessionsearchapptest.release1.ui.home
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -16,21 +14,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
 
 import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentHomeBinding
 import com.confessionsearchapptest.release1.searchhandlers.SearchHandler
-import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import java.util.*
 import kotlin.collections.ArrayList
 class SearchFragment : Fragment() {
@@ -40,7 +33,7 @@ class SearchFragment : Fragment() {
     var documentDB: SQLiteDatabase? = null
     var docDBhelper: documentDBClassHelper? = null
     var shareProvider: ShareActionProvider? = null
-
+private var translationSpinner : Spinner? = null
     private var documentTypeSpinner: Spinner? = null
     private var documentNameSpinner: Spinner? = null
     var helpButton: ExtendedFloatingActionButton? = null
@@ -78,11 +71,13 @@ class SearchFragment : Fragment() {
     var questionChip: Chip? = null
     var readDocsChip: Chip? = null
     var docTypeSpinnerAdapter: ArrayAdapter<String>? = null
+    var bibleTranslationAdapter: ArrayAdapter<String>? = null
     var docTitleSpinnerAdapter: ArrayAdapter<String>? = null
+    var bibleTransList : ArrayList<String?> = ArrayList()
     var docTitleList: ArrayList<String?> = ArrayList()
     var docTypes: ArrayList<String?> = ArrayList()
     var searchBox: SearchView? = null
-
+var translationAbbrevTitle =""
     //var documentDB: SQLiteDatabase? = null
 
     var chipGroup: ChipGroup? = null
@@ -106,9 +101,10 @@ class SearchFragment : Fragment() {
         searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         // Load database
         docDBhelper = documentDBClassHelper(super.getContext())
-        documentDB = docDBhelper!!.readableDatabase
+        documentDB=docDBhelper!!.readableDatabase
         //Load Types and Load Spinners
         searchViewModel.loadTypes(docDBhelper!!.getAllDocTypes(documentDB))
+
         val root: View = binding.root//View.inflate(context,R.layout.fragment_home,container)
         //Chip Group Initialization
         chipGroup = root.findViewById(R.id.chip_group)
@@ -139,6 +135,7 @@ class SearchFragment : Fragment() {
         //Spinner Initialization
         documentTypeSpinner = root.findViewById(R.id.documentTypeSpinner)
         documentNameSpinner = root.findViewById(R.id.documentNameSpinner)
+        translationSpinner = root.findViewById(R.id.bibleTranslationSpinner)
         //Adapter and Spinner Assignments
         docTypes = searchViewModel.getTypes()
         docTypeSpinnerAdapter = ArrayAdapter(
@@ -150,7 +147,7 @@ class SearchFragment : Fragment() {
         documentTypeSpinner!!.onItemSelectedListener = spinnerItemSelectedListener
         type = ""
         //Load Document Titles into Doc Title list for preparation
-        searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB))
+        searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB!!))
         docTitleList = searchViewModel.getTitles()
         docTitleSpinnerAdapter = ArrayAdapter(
             requireContext(),
@@ -158,6 +155,18 @@ class SearchFragment : Fragment() {
             docTitleList
         )
         documentNameSpinner!!.onItemSelectedListener = docTitleSpinner
+
+        //Bible Translation Spinner Initialization
+        searchViewModel.loadTranslations(docDBhelper!!.getAllBibleTranslations(documentDB!!))
+        bibleTransList = searchViewModel.getTranslations()
+        bibleTranslationAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.support_simple_spinner_dropdown_item,
+            bibleTransList
+        )
+        translationSpinner!!.adapter=bibleTranslationAdapter
+        translationSpinner!!.onItemSelectedListener = translationSpinnerItemSelectedListener
+
         searchBox!!.setOnKeyListener(submissionKey)
         topicChip!!.performClick()
 
@@ -169,6 +178,7 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
+
     private var checkBox = CompoundButton.OnCheckedChangeListener { compoundButton, _ ->
         when (compoundButton.id) {
             R.id.proofChip -> proofs = !proofChip!!.isChecked
@@ -176,10 +186,6 @@ class SearchFragment : Fragment() {
             R.id.searchAllChip -> searchAll = searchAllChip!!.isChecked
         }
     }
-
-
-
-
     var optionListener = ChipGroup.OnCheckedChangeListener { group, checkedId ->
         val enter = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)
         //val searchFab = root.findViewById<ExtendedFloatingActionButton>(R.id.searchFAB)
@@ -214,8 +220,6 @@ class SearchFragment : Fragment() {
         }
 
     }
-
-
     //Submission key
     var searchButtonListener = View.OnClickListener {
         val query: String
@@ -264,14 +268,22 @@ class SearchFragment : Fragment() {
                 return false
             }
         }
-    /* fun ErrorMessage(message: String?) {
-         //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-         val errorBar = Snackbar.make(findViewById(R.id.layout_super), message!!, BaseTransientBottomBar.LENGTH_SHORT)
-         errorBar.setAnchorView(R.id.relativeLayout)
-         errorBar.show()
-     }*/
 
     //Spinner Listeners
+            // Bible Translation Spinner Listener
+    var translationSpinnerItemSelectedListener : AdapterView.OnItemSelectedListener = object :
+    AdapterView.OnItemSelectedListener{
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            run{
+            translationAbbrevTitle = String.format("%s",parent!!.selectedItem.toString())
+            }
+                    }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            translationAbbrevTitle = parent!!.selectedItem.toString()
+        }
+    }
+    //Document type spinner listener
     var spinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
         @SuppressLint("ResourceAsColor")
@@ -280,7 +292,7 @@ class SearchFragment : Fragment() {
                 val docTitles: ArrayList<String?> = ArrayList()
                 type = parent.selectedItem.toString()
                 //Gets all document titles and places them in a list
-                for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB)) {
+                for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB!!)) {
                     docTitles!!.add(docTitle.documentName!!)
                 }
                 docTitleSpinnerAdapter = ArrayAdapter(
@@ -333,13 +345,6 @@ class SearchFragment : Fragment() {
     var docTitleSpinner: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
         override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-            /* try {
-                 if (themeName!!) //if(themeName.contains("Dark"))
-                     (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
-             } catch (ex: Exception) {*/
-            //documentNameSpinner!!.onItemSelectedListener = this
-            //documentNameSpinner!!.setSelection(0)
-            //}
             fileName = String.format("%s", adapterView.selectedItem.toString())
         }
 
@@ -356,7 +361,7 @@ class SearchFragment : Fragment() {
         var searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
         //val parentActivity = super.getActivity()
         val stringQuery = query
-        Log.d("Test",context.toString())
+        Log.d("Test", context.toString())
         //Document Type Filtering
         searchIntent.putExtra("AllDocs", allOpen)
         searchIntent.putExtra("Confession", confessionOpen)
@@ -374,17 +379,9 @@ class SearchFragment : Fragment() {
         //Query Holder
         searchIntent.putExtra("Query", stringQuery)
         //FileName
-        searchIntent.putExtra("FileName",fileName)
-searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
-
-//        MainActivity.IntentList.add(searchIntent)
-        //This doesn't work. I'm not sure why it's not loading.
-       requireContext().startActivity(searchIntent)
-
-        //super.startActivity(searchIntent)
-//val searchHandler = SearchHandler()
-        //Following Code returns null reference exception when SetContentView is called
-        //MainActivity.searchHandler!!.search(query,allOpen,answers,confessionOpen,catechismOpen,creedOpen,searchAll,proofs,readerSearch,textSearch,questionSearch,fileName,docDBhelper,documentDB)
+        searchIntent.putExtra("FileName", fileName)
+        searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
+        requireContext().startActivity(searchIntent)
     }
 companion object{
     const val ACTIVITY_ID = 32

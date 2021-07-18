@@ -140,11 +140,11 @@ docDBhelper = documentDBClassHelper(this)
             fileName,
             docID,
             allOpen,
-            documentDB,
+            documentDB!!,
             accessString,
             masterList,
             this
-        )
+        )!!
         for (d in masterList) {
             if (d.documentText!!.contains("|") or d.proofs!!.contains("|")) {
                 d.proofs = formatter(d.proofs!!)

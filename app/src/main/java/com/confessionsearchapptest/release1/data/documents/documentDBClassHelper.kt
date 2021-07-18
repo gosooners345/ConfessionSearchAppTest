@@ -1,338 +1,500 @@
-package com.confessionsearchapptest.release1.data.documents;
+package com.confessionsearchapptest.release1.data.documents
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
+import android.content.Context
+import android.database.Cursor
 
-import com.confessionsearchapptest.release1.databasehelpers.DatabaseContext;
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
+import com.confessionsearchapptest.release1.databasehelpers.DatabaseContext
+import android.widget.Toast
+import android.database.sqlite.SQLiteException
+import android.database.sqlite.SQLiteDatabase
+import kotlin.jvm.Synchronized
+import android.database.sqlite.SQLiteQueryBuilder
+import com.confessionsearchapptest.release1.data.bible.BibleTranslation
+import com.confessionsearchapptest.release1.data.bible.BibleContentsList
+import android.os.Environment
+import android.util.Log
+import java.io.File
+import java.lang.Exception
+import java.util.ArrayList
 
-import java.io.File;
-import java.util.ArrayList;
+class documentDBClassHelper : SQLiteAssetHelper {
+    var context: Context? = null
 
-public class documentDBClassHelper extends SQLiteAssetHelper {
-    //DATABASE INFORMATION
-    private static final String DATABASE_NAME = "confessionSearchDB.sqlite3";
-    private static final Integer DATABASE_VERSION = 1;
-    private static final String DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS.concat("/"+DATABASE_NAME);
-
-    //TABLE INFO
-    private static final String TABLE_DOCUMENT = "Document";
-    private static final String TABLE_DOCUMENTTYPE = "DocumentType";
-    private static final String TABLE_DOCUMENTTITLE = "DocumentTitle";
-
-static SQLiteDatabase db;
-public Context context;
-    //DOCUMENT TABLE COLUMNS
-    private static final String KEY_DOCDETAILID_ID = "DocDetailID";
-    private static final String KEY_DOCUMENT_ID_FK = "DocumentID";
-    private static final String KEY_DOC_INDEX_NUM = "DocIndexNum";
-    private static final String KEY_CHAPTER_NAME = "ChName";
-    private static final String KEY_CHAPTER_TEXT = "ChText";
-    private static final String KEY_CHAPTER_PROOFS = "ChProofs";
-    private static final String KEY_DOCUMENT_TAGS = "ChTags";
-    private static final String KEY_MATCHES = "ChMatches";
-
-    //DOCUMENT TITLE TABLE
-    private static final String KEY_DOCUMENTTITLE_ID = "DocumentID";
-    private static final String KEY_DOCUMENTTITLE_NAME = "DocumentName";
-    public static final String KEY_DOCUMENT_TITLE_TYPE_ID_FK = "DocumentTypeID";
-
-    //DOCUMENT TYPE TABLE
-    private static final String KEY_DOCUMENT_TYPE_ID = "DocumentTypeID";
-    private static final String KEY_DOCUMENT_TYPE_NAME = "DocumentTypeName";
-
-    public documentDBClassHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-this.context= context;
-
+    constructor(context: Context?) : super(context, DATABASE_NAME, null, DATABASE_VERSION) {
+        this.context = context
     }
 
-documentDBClassHelper(final  Context context, String databaseName){
-             super(new DatabaseContext(context),databaseName,null,DATABASE_VERSION);
-    try{
-        String myPath =DATABASE_PATH; //"assets/databases/"+DATABASE_NAME;// DATABASE_PATH;
-        File dbFile = new File(myPath);
-        if(dbFile.exists()) {
-            Toast.makeText(context, "DBExists", Toast.LENGTH_LONG).show();
-
-        }
-        else {
-            Toast.makeText(context, "Db doesn't exist", Toast.LENGTH_LONG).show();
-
+    internal constructor(context: Context?, databaseName: String?) : super(
+        DatabaseContext(context),
+        databaseName,
+        null,
+        DATABASE_VERSION
+    ) {
+        try {
+            val myPath = DATABASE_PATH
+            val dbFile = File(myPath)
+            if (dbFile.exists()) {
+                Toast.makeText(context, "DBExists", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Db doesn't exist", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: SQLiteException) {
+            Log.d("Database doesn't exist", e.message!!)
         }
     }
-    catch (SQLiteException  e)
-    {Log.d("Database doesn't exist",e.getMessage());}
+
+    override fun getWritableDatabase(): SQLiteDatabase {
+        return super.getWritableDatabase()
     }
 
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        return super.getWritableDatabase();
-
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
     }
 
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-
+    @Synchronized
+    override fun getReadableDatabase(): SQLiteDatabase {
+        return super.getReadableDatabase()
     }
 
-    @Override
-    public synchronized SQLiteDatabase getReadableDatabase() {
-        return super.getReadableDatabase();
-    }
+    // Cursors
+    val documentTypes: Cursor
+        get() {
+            val db = readableDatabase
+            Log.d("CHECKDB", readableDatabase.path)
+            val docTypes = SQLiteQueryBuilder()
+            val docTypeSQLQuery = arrayOf(KEY_DOCUMENT_TYPE_ID, KEY_DOCUMENT_TYPE_NAME)
+            val tables = TABLE_DOCUMENTTYPE
+            docTypes.tables = tables
+            val c = docTypes.query(db, docTypeSQLQuery, null, null, null, null, null)
+            c.moveToFirst()
+            return c
+        }
+    val bibleTranslations: Cursor
+        get() {
+            val db = readableDatabase
+            Log.d("BIBLECHK", readableDatabase.path)
+            val bibleTranslations = SQLiteQueryBuilder()
+            val bibleTranslationSQLQuery = arrayOf(
+                KEY_BIBLE_TRANSLATION_ID,
+                KEY_BIBLE_TRANSLATION_TITLE,
+                KEY_BIBLE_TRANSLATION_ABBREV
+            )
+            val tables = TABLE_BIBLETRANSLATION
+            bibleTranslations.tables = tables
+            val c =
+                bibleTranslations.query(db, bibleTranslationSQLQuery, null, null, null, null, null)
+            c.moveToFirst()
+            return c
+        }
 
-
-
-    public Cursor getDocumentTypes(){
-        SQLiteDatabase db = getReadableDatabase();
-        Log.d("CHECKDB",getReadableDatabase().getPath());
-        SQLiteQueryBuilder docTypes = new SQLiteQueryBuilder();
-        String[] docTypeSQLQuery = {KEY_DOCUMENT_TYPE_ID,KEY_DOCUMENT_TYPE_NAME};
-        String tables = TABLE_DOCUMENTTYPE;
-docTypes.setTables(tables);
-Cursor c =docTypes.query(db,docTypeSQLQuery,null,null,null,null,null);
-
-c.moveToFirst();
-        return c;
-    }
-
-
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion != newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE);
-            onCreate(db);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE)
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT)
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE)
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLECONTENTS)
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLETRANSLATION)
+            db.execSQL("CREATE TABLE  " + TABLE_DOCUMENTTITLE)
+            db.execSQL("CREATE TABLE  " + TABLE_DOCUMENT)
+            db.execSQL("CREATE TABLE " + TABLE_DOCUMENTTYPE)
+            db.execSQL("CREATE TABLE " + TABLE_BIBLECONTENTS)
+            db.execSQL("CREATE TABLE " + TABLE_BIBLETRANSLATION)
+            onCreate(db)
         }
-
     }
 
-    private static documentDBClassHelper sInstance;
-
-    public static synchronized documentDBClassHelper getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new documentDBClassHelper(context.getApplicationContext());
-        }
-        return sInstance;
-    }
-
-
-    //QUERY SQL STATEMENTS FOR SEARCH
-    public ArrayList<DocumentType> getAllDocTypes(SQLiteDatabase dbTypes) {
-        ArrayList<DocumentType> types = new ArrayList<DocumentType>();
-        String commandText = "SELECT * FROM DocumentType";
-
-
-        Cursor cursor =getDocumentTypes();// getReadableDatabase().rawQuery(commandText, null);
+    //Get Bible translations
+    fun getAllBibleTranslations(dbBibles: SQLiteDatabase?): ArrayList<BibleTranslation> {
+        val translations = ArrayList<BibleTranslation>()
+        val commandText = "SELECT * FROM BibleTranslation"
+        val cursor = bibleTranslations
         try {
-            if(cursor.moveToFirst())
-           for(int i = 0; i < cursor.getCount();i++,cursor.moveToNext())
-           {
-
-                    DocumentType newType = new DocumentType();
-                    newType.setDocumentTypeID(cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENT_TYPE_ID)));
-                    newType.setDocumentTypeName(cursor.getString(cursor.getColumnIndex(KEY_DOCUMENT_TYPE_NAME)));
-                    types.add(newType);
-            }
-
-        } catch (Exception e) {
-            Log.d("ERROR", "Error retrieving entries from DB");
-        } finally {
-            if (cursor != null && !cursor.isClosed()) cursor.close();
-            {
-                cursor.close();
-            }    //
-        }
-        return types;
-    }
-
-    public ArrayList<DocumentTitle> getAllDocTitles(String type,SQLiteDatabase dbType) {
-        ArrayList<DocumentTitle> documentTitles = new ArrayList<DocumentTitle>();
-       Integer typeID=0;
-        String commandText;
-        if (type == "")
-            type ="ALL";
-        switch (type.toUpperCase())
-        {
-            case "ALL":commandText = "SELECT * FROM DocumentTitle";break;
-            //case"ALL": commandText="SELECT * FROM DocumentTitle"; break;
-            default:commandText = LayoutString(type.toUpperCase());
-        }
-
-switch (type.toUpperCase())
-{ case "CREED":typeID=1; break;
-    case "CONFESSION":typeID=2;break;
-    case  "CATECHISM":typeID=3;break;
-    case "ALL":typeID=0;break;}
-
-
-       // SQLiteDatabase db =dbType; //getReadableDatabase();
-        Cursor cursor = dbType.rawQuery(commandText,null);
-        try{
-            if (cursor.moveToFirst()){
-               for(int i = 0;i<cursor.getCount();i++,cursor.moveToNext())
-                {
-                    DocumentTitle newTitle = new DocumentTitle();
-                    newTitle.setDocumentTypeID(cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENT_TITLE_TYPE_ID_FK)));
-                newTitle.setDocumentID(cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENTTITLE_ID)));
-                newTitle.setDocumentName(cursor.getString(cursor.getColumnIndex(KEY_DOCUMENTTITLE_NAME)));
-               if (newTitle.getDocumentTypeID()==typeID || typeID ==0)
-                                    documentTitles.add(newTitle);
-
-               else
-                    continue;
-              // documentTitles.add(newTitle);
-                }
-
-            }
-            cursor.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("Error","Error Retrieving the entries from DocumentTitle Table");
-        }
-        finally{
-            if (cursor != null && !cursor.isClosed()) cursor.close();
-            {
-                cursor.close();
-            }
-        }
-
-return  documentTitles;
-    }
-//Fetch documents for processing
-    public DocumentList getAllDocuments(String fileString,String fileName,Integer docID, Boolean allDocs,SQLiteDatabase dbList,String access,DocumentList docList,Context context) {
-        Cursor cursor;
-        DocumentList documentList = new DocumentList();
-//SQLiteDatabase db =dbList;// getReadableDatabase();
-        String commandText, docCommandText, accessString;
-        int documentIndex = 0;
-        accessString = DataTableAccess(access);
-//SQL Query Execution
-//Identify what needs selected
-        if (docID != 0) {
-            commandText = TableAccess(fileString);
-        } else
-            commandText = fileString;
-        docCommandText = accessString;
-//Add entries to Document List
-        ArrayList<DocumentTitle> docTitle = new ArrayList<DocumentTitle>();
-        ArrayList<Integer> docIds = new ArrayList<>();
-        ArrayList<String> docTitleList = new ArrayList<>();
-        cursor = dbList.rawQuery(commandText, null);
-       //cursor1 =
-
-        try {
-
             if (cursor.moveToFirst()) {
-                for (int i = 0; i < cursor.getCount(); i++, cursor.moveToNext()) {
-                    DocumentTitle addDoc = new DocumentTitle();
-                    addDoc.setDocumentName(cursor.getString(cursor.getColumnIndex(KEY_DOCUMENTTITLE_NAME)));
-                    addDoc.setDocumentTypeID(cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENT_TITLE_TYPE_ID_FK)));
-                    addDoc.setDocumentID(cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENTTITLE_ID)));
-                    docTitle.add(addDoc);
-
+                var i = 0
+                while (i < cursor.count) {
+                    val newTranslation = BibleTranslation()
+                    newTranslation.bibleTranslationID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_TRANSLATION_ID
+                        )
+                    )
+                    newTranslation.bibleTranslationName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_TRANSLATION_TITLE
+                        )
+                    )
+                    newTranslation.bibleTranslationAbbrev = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_TRANSLATION_ABBREV
+                        )
+                    )
+                    translations.add(newTranslation)
+                    i++
+                    cursor.moveToNext()
                 }
             }
-            cursor.close();
-for(Integer y =0; y<docTitle.size();y++)
-{
-    docIds.add(docTitle.get(y).getDocumentID());
-    docTitleList.add(docTitle.get(y).getDocumentName());
-}
-            Cursor cursor1;
-            cursor1 = dbList.rawQuery(docCommandText, null);
-
-            Log.d("Size of Query List", String.valueOf(((cursor1.getColumnIndexOrThrow(KEY_DOCDETAILID_ID)))));
-            if (cursor1.moveToFirst()) {
-
-                for (int i = 0; i < cursor1.getCount(); i++, cursor1.moveToNext()) {
-                    Document doc = new Document();
-                    doc.setChName(cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_NAME)));
-                    doc.setChNumber(cursor1.getInt(cursor1.getColumnIndex(KEY_DOC_INDEX_NUM)));
-                    doc.setDocumentID(cursor1.getInt(cursor1.getColumnIndex(KEY_DOCUMENT_ID_FK)));
-
-
-    {
-
-            documentIndex =docIds.indexOf(doc.getDocumentID());
-    Log.d("DocumentIndex","Document Index is "+documentIndex);
-    if(documentIndex>-1)
-        doc.setDocumentName(docTitle.get(documentIndex).getDocumentName());
-    Log.d("DocumentTitle","Document Title: " + doc.getDocumentName());
-    }
-
-doc.setChName(cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_NAME)));
-                    doc.setProofs((cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_PROOFS))));
-                    doc.setDocDetailID(cursor1.getInt(cursor1.getColumnIndex(KEY_DOCDETAILID_ID)));
-                    doc.setDocumentText((cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_TEXT))));
-                    doc.setTags(cursor1.getString(cursor1.getColumnIndex(KEY_DOCUMENT_TAGS)));
-                    doc.setMatches(cursor1.getInt(cursor1.getColumnIndex(KEY_MATCHES)));
-                    documentList.add(doc);
-                }
-            }
-            cursor1.close();
-            Log.d("Size of List", String.valueOf(documentList.size()));
-
-            docList = documentList;
-return docList;
-
-        } catch (Exception e) {
-            Log.d("ERROR", e.getMessage());
+        } catch (e: Exception) {
+            Log.e("Error", "Error Retrieving Entries from DB")
         } finally {
-            if (cursor != null && !cursor.isClosed()) cursor.close();
-            {
-                cursor.close(); return docList;
+            if (cursor != null && !cursor.isClosed) cursor.close()
+        }
+        return translations
+    }
+
+    //Get Bible Contents
+    //QUERY SQL STATEMENTS FOR SEARCH
+    fun getAllDocTypes(dbTypes: SQLiteDatabase?): ArrayList<DocumentType> {
+        val types = ArrayList<DocumentType>()
+        val commandText = "SELECT * FROM DocumentType"
+        val cursor = documentTypes
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+                while (i < cursor.count) {
+                    val newType = DocumentType()
+                    newType.documentTypeID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENT_TYPE_ID
+                        )
+                    )
+                    newType.documentTypeName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENT_TYPE_NAME
+                        )
+                    )
+                    types.add(newType)
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+        } catch (e: Exception) {
+            Log.d("ERROR", "Error retrieving entries from DB")
+        } finally {
+            if (cursor != null && !cursor.isClosed) cursor.close()
+            run { cursor.close() } //
+        }
+        return types
+    }
+
+    fun getAllVerses(
+        translationID: Int?,
+        bibleList: SQLiteDatabase?,
+        accessString: String?,
+        translationName: String?,
+        bookName: String?
+    ): BibleContentsList {
+        var cursor: Cursor
+        val verseList = BibleContentsList()
+        var commandText: String
+        var docCommandtext: String
+        return verseList
+    }
+
+    fun getAllVerses(
+        translationID: Int?,
+        bibleList: SQLiteDatabase?,
+        accessString: String?,
+        translationName: String?,
+        bookName: String?,
+        chapNum: Int?
+    ): BibleContentsList {
+        var cursor: Cursor
+        return BibleContentsList()
+    }
+
+    fun getVerses(
+        translationID: Int?,
+        bibleList: SQLiteDatabase?,
+        accessString: String?,
+        translationName: String?,
+        bookName: String?,
+        chapNum: Int?,
+        verseNum: Int?
+    ): BibleContentsList {
+        var cursor: Cursor
+
+        return BibleContentsList()
+    }
+
+    fun getAllDocTitles(type: String, dbType: SQLiteDatabase): ArrayList<DocumentTitle> {
+        var type = type
+        val documentTitles = ArrayList<DocumentTitle>()
+        var typeID = 0
+        val commandText: String
+        if (type === "") type = "ALL"
+        commandText = when (type.toUpperCase()) {
+            "ALL" -> "SELECT * FROM DocumentTitle"
+            else -> LayoutString(type.toUpperCase())
+        }
+        when (type.toUpperCase()) {
+            "CREED" -> typeID = 1
+            "CONFESSION" -> typeID = 2
+            "CATECHISM" -> typeID = 3
+            "ALL" -> typeID = 0
+        }
+
+        // SQLiteDatabase db =dbType; //getReadableDatabase();
+        val cursor = dbType.rawQuery(commandText, null)
+        try {
+            if (cursor!!.moveToFirst()) {
+                var i = 0
+                while (i < cursor.count) {
+                    val newTitle = DocumentTitle()
+                    newTitle.documentTypeID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENT_TITLE_TYPE_ID_FK
+                        )
+                    )
+                    newTitle.documentID = cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENTTITLE_ID))
+                    newTitle.documentName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENTTITLE_NAME
+                        )
+                    )
+                    if (newTitle.documentTypeID === typeID || typeID == 0) documentTitles.add(
+                        newTitle
+                    ) else {
+                        i++
+                        cursor.moveToNext()
+                        continue
+                    }
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            Log.d("Error", "Error Retrieving the entries from DocumentTitle Table")
+        } finally {
+            if (cursor != null && !cursor.isClosed) cursor.close()
+            run { cursor!!.close() }
+        }
+        return documentTitles
+    }
+
+    //Fetch documents for processing
+    fun getAllDocuments(
+        fileString: String,
+        fileName: String?,
+        docID: Int,
+        allDocs: Boolean?,
+        dbList: SQLiteDatabase,
+        access: String?,
+        docList: DocumentList?,
+        context: Context?
+    ): DocumentList? {
+        var docList = docList
+        val cursor: Cursor?
+        val documentList = DocumentList()
+        val commandText: String
+        val docCommandText: String
+        val accessString: String
+        var documentIndex = 0
+        accessString = DataTableAccess(access)
+        //SQL Query Execution
+//Identify what needs selected
+        commandText = if (docID != 0) {
+            TableAccess(fileString)
+        } else fileString
+        docCommandText = accessString
+        //Add entries to Document List
+        val docTitle = ArrayList<DocumentTitle>()
+        val docIds = ArrayList<Int?>()
+        val docTitleList = ArrayList<String?>()
+        cursor = dbList.rawQuery(commandText, null)
+        //cursor1 =
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+                while (i < cursor.count) {
+                    val addDoc = DocumentTitle()
+                    addDoc.documentName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENTTITLE_NAME
+                        )
+                    )
+                    addDoc.documentTypeID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_DOCUMENT_TITLE_TYPE_ID_FK
+                        )
+                    )
+                    addDoc.documentID = cursor.getInt(cursor.getColumnIndex(KEY_DOCUMENTTITLE_ID))
+                    docTitle.add(addDoc)
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            for (y in docTitle.indices) {
+                docIds.add(docTitle[y].documentID)
+                docTitleList.add(docTitle[y].documentName)
+            }
+            val cursor1: Cursor
+            cursor1 = dbList.rawQuery(docCommandText, null)
+            Log.d(
+                "Size of Query List", cursor1.getColumnIndexOrThrow(KEY_DOCDETAILID_ID)
+                    .toString()
+            )
+            if (cursor1.moveToFirst()) {
+                var i = 0
+                while (i < cursor1.count) {
+                    val doc = Document()
+                    doc.chName = cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_NAME))
+                    doc.chNumber = cursor1.getInt(cursor1.getColumnIndex(KEY_DOC_INDEX_NUM))
+                    doc.documentID = cursor1.getInt(cursor1.getColumnIndex(KEY_DOCUMENT_ID_FK))
+                    run {
+                        documentIndex = docIds.indexOf(doc.documentID)
+                        Log.d("DocumentIndex", "Document Index is $documentIndex")
+                        if (documentIndex > -1) doc.documentName =
+                            docTitle[documentIndex].documentName
+                        Log.d("DocumentTitle", "Document Title: " + doc.documentName)
+                    }
+                    doc.chName = cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_NAME))
+                    doc.proofs = cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_PROOFS))
+                    doc.docDetailID = cursor1.getInt(cursor1.getColumnIndex(KEY_DOCDETAILID_ID))
+                    doc.documentText = cursor1.getString(cursor1.getColumnIndex(KEY_CHAPTER_TEXT))
+                    doc.tags = cursor1.getString(cursor1.getColumnIndex(KEY_DOCUMENT_TAGS))
+                    doc.matches = cursor1.getInt(cursor1.getColumnIndex(KEY_MATCHES))
+                    documentList.add(doc)
+                    i++
+                    cursor1.moveToNext()
+                }
+            }
+            cursor1.close()
+            Log.d("Size of List", documentList.size.toString())
+            docList = documentList
+            return docList
+        } catch (e: Exception) {
+            Log.d("ERROR", e.message!!)
+        } finally {
+            if (cursor != null && !cursor.isClosed) cursor.close()
+            run {
+                cursor.close()
+                return docList
             }
         }
-
-
-
     }
-    public String Formatter(String formatString)
-    {
-        Integer x =0;
-        String formatter = "";
-        String[] words;
-        words = formatString.split("|");
-        for(Integer i = 0; i <= words.length - 1; i++)
-        {
-            formatter+=words[i];
-            formatter+="\r\n\n";
+
+    fun Formatter(formatString: String): String {
+        var formatString = formatString
+        val x = 0
+        var formatter = ""
+        val words: Array<String>
+        words = formatString.split("|").toTypedArray()
+        for (i in 0..words.size - 1) {
+            formatter += words[i]
+            formatter += "\r\n\n"
         }
-        formatString = formatter;
-        return formatString;
-    }
-    public String LayoutString(String docType) {
-        String docType1 = String.format("SELECT DocumentType.*, DocumentTitle.* FROM DocumentTitle NATURAL JOIN DocumentType WHERE DocumentTitle.DocumentTypeID = DocumentType.DocumentTypeId AND DocumentType.DocumentTypeName = '%s'", docType);
-        return docType1;
+        formatString = formatter
+        return formatString
     }
 
-    public String DataTableAccess(String documentName) {
-        String document = String.format("SELECT Documenttitle.documentName, " +
-                "document.*, documenttitle.documentid FROM " +
-                "documentTitle NATURAL JOIN document WHERE document.DocumentID = DocumentTitle.DocumentID %s", documentName);
-        return document;
+    fun LayoutString(docType: String?): String {
+        return String.format(
+            "SELECT DocumentType.*, DocumentTitle.* FROM DocumentTitle NATURAL JOIN DocumentType WHERE DocumentTitle.DocumentTypeID = DocumentType.DocumentTypeId AND DocumentType.DocumentTypeName = '%s'",
+            docType
+        )
     }
 
-    public String TableAccess(String tableName) {
-        String table1;
-        if (tableName != "")
-            table1 = String.format("SELECT documenttitle.* FROM documenttitle WHERE %s", tableName);
-        else
-            table1 = "Select documenttype.*,documenttitle.* from documenttitle natural join documenttype where documenttitle.documenttypeid = documenttype.documenttypeid";
-        return table1;
+    fun DataTableAccess(documentName: String?): String {
+        return String.format(
+            "SELECT Documenttitle.documentName, " +
+                    "document.*, documenttitle.documentid FROM " +
+                    "documentTitle NATURAL JOIN document WHERE document.DocumentID = DocumentTitle.DocumentID %s",
+            documentName
+        )
+    }
+
+    fun BibleContentAccess(translationName: String?): String {
+        return String.format(
+            "SELECT BibleTranslations.*," +
+                    "BibleContents.* FROM BibleTranslations NATURAL JOIN BibleContents WHERE BibleContents.TranslationID = BibleTranslations.TranslationID And BibleTranslations.TranslationName = '%s'",
+            translationName
+        )
+    }
+
+    fun BibleTranslationAccess(TranslationName: String?, BookName: String?): String {
+        return String.format(
+            BibleContentAccess(TranslationName) + "And BibleContents.BookName = '%s'",
+            BookName
+        )
+    }
+
+    fun BibleChapterAccess(
+        TranslationName: String?,
+        BookName: String?,
+        ChapterNumber: Int
+    ): String {
+        return String.format(
+            BibleTranslationAccess(
+                TranslationName,
+                BookName
+            ) + "BibleContents.ChapterNum =" + ChapterNumber
+        )
+    }
+
+    fun TableAccess(tableName: String): String {
+        val table1: String
+        table1 = if (tableName !== "") String.format(
+            "SELECT documenttitle.* FROM documenttitle WHERE %s",
+            tableName
+        ) else "Select documenttype.*,documenttitle.* from documenttitle natural join documenttype where documenttitle.documenttypeid = documenttype.documenttypeid"
+        return table1
+    }
+
+    companion object {
+        //DATABASE INFORMATION
+        private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
+        private const val DATABASE_VERSION = 3
+        private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
+
+        //TABLE INFO
+        private const val TABLE_DOCUMENT = "Document"
+        private const val TABLE_DOCUMENTTYPE = "DocumentType"
+        private const val TABLE_DOCUMENTTITLE = "DocumentTitle"
+        private const val TABLE_BIBLETRANSLATION = "BibleTranslations"
+        private const val TABLE_BIBLECONTENTS = "BibleContents"
+        var db: SQLiteDatabase? = null
+
+        //DOCUMENT TABLE COLUMNS
+        private const val KEY_DOCDETAILID_ID = "DocDetailID"
+        private const val KEY_DOCUMENT_ID_FK = "DocumentID"
+        private const val KEY_DOC_INDEX_NUM = "DocIndexNum"
+        private const val KEY_CHAPTER_NAME = "ChName"
+        private const val KEY_CHAPTER_TEXT = "ChText"
+        private const val KEY_CHAPTER_PROOFS = "ChProofs"
+        private const val KEY_DOCUMENT_TAGS = "ChTags"
+        private const val KEY_MATCHES = "ChMatches"
+
+        //DOCUMENT TITLE TABLE
+        private const val KEY_DOCUMENTTITLE_ID = "DocumentID"
+        private const val KEY_DOCUMENTTITLE_NAME = "DocumentName"
+        const val KEY_DOCUMENT_TITLE_TYPE_ID_FK = "DocumentTypeID"
+
+        //DOCUMENT TYPE TABLE
+        private const val KEY_DOCUMENT_TYPE_ID = "DocumentTypeID"
+        private const val KEY_DOCUMENT_TYPE_NAME = "DocumentTypeName"
+
+        //BIBLE TRANSLATION TABLE
+        private const val KEY_BIBLE_TRANSLATION_ID = "TranslationID"
+        private const val KEY_BIBLE_TRANSLATION_TITLE = "TranslationTitle"
+        private const val KEY_BIBLE_TRANSLATION_ABBREV = "TranslationAbbrev"
+
+        //BIBLE CONTENTS TABLE
+        private const val KEY_BIBLE_CONTENTS_ENTRY_ID = "EntryID"
+        private const val KEY_BIBLE_CONTENTS_TRANSLATION_ID_FK = "TranslationID"
+        private const val KEY_BIBLE_CONTENTS_BOOKNAME = "BookName"
+        private const val KEY_BIBLE_CONTENTS_CHAPTERNUMBER = "ChapterNum"
+        private const val KEY_BIBLE_CONTENTS_VERSENUMBER = "VerseNumber"
+        private const val KEY_BIBLE_CONTENTS_VERSETEXT = "VerseText"
+        private var sInstance: documentDBClassHelper? = null
+        @Synchronized
+        fun getInstance(context: Context): documentDBClassHelper? {
+            if (sInstance == null) {
+                sInstance = documentDBClassHelper(context.applicationContext)
+            }
+            return sInstance
+        }
     }
 }
-
-
-

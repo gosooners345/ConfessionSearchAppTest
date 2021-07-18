@@ -135,23 +135,23 @@ tools:context=".ui.home.SearchFragment"
                 tools:layout_conversion_absoluteHeight="53dp"
                 tools:layout_conversion_absoluteWidth="53dp" />
 
-            <Spinner
-                android:id="@+id/documentTypeSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginEnd="4dp"
-                android:dropDownWidth="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:spinnerMode="dropdown"
-                app:layout_constraintEnd_toEndOf="@+id/searchView1"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/typeTVLabel"
-                app:layout_constraintTop_toBottomOf="@+id/searchView1"
-                tools:layout_conversion_absoluteHeight="24dp"
-                tools:layout_conversion_absoluteWidth="269dp" />
+    <Spinner
+        android:id="@+id/documentTypeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:dropDownWidth="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@+id/searchView1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/typeTVLabel"
+        app:layout_constraintTop_toBottomOf="@+id/searchView1"
+        tools:layout_conversion_absoluteHeight="24dp"
+        tools:layout_conversion_absoluteWidth="269dp" />
 
     <Spinner
         android:id="@+id/documentNameSpinner"
@@ -159,8 +159,6 @@ tools:context=".ui.home.SearchFragment"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
 
-
-        android:layout_marginTop="9dp"
 
         android:contentDescription="@string/document_list_spinner_desc"
         android:dropDownWidth="wrap_content"
@@ -178,7 +176,30 @@ tools:context=".ui.home.SearchFragment"
         tools:layout_conversion_absoluteHeight="24dp"
         tools:layout_conversion_absoluteWidth="270dp" />
 
-            <TextView
+    <Spinner
+        android:id="@+id/bibleTranslationSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+
+
+        android:contentDescription="Bible Translations"
+        android:dropDownWidth="wrap_content"
+
+        android:focusable="true"
+        android:paddingEnd="5dp"
+
+        android:spinnerMode="dialog"
+        android:textAlignment="viewEnd"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@+id/documentTypeSpinner"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/bibleTranslationLabel"
+        app:layout_constraintTop_toBottomOf="@+id/documentNameSpinner"
+        tools:layout_conversion_absoluteHeight="24dp"
+        tools:layout_conversion_absoluteWidth="270dp" />
+
+    <TextView
                 android:id="@+id/confessionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -193,6 +214,21 @@ tools:context=".ui.home.SearchFragment"
                 app:layout_constraintTop_toBottomOf="@+id/typeTVLabel"
                 tools:layout_conversion_absoluteHeight="24dp"
                 tools:layout_conversion_absoluteWidth="86dp" />
+    <TextView
+        android:id="@+id/bibleTranslationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:labelFor="@id/bibleTranslationSpinner"
+        android:text="@string/bible_label"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/confessionLabel"
+        app:layout_constraintTop_toBottomOf="@+id/confessionLabel"
+        tools:layout_conversion_absoluteHeight="24dp"
+        tools:layout_conversion_absoluteWidth="86dp" />
 
             <TextView
                 android:id="@+id/optionLabel"
@@ -206,7 +242,7 @@ tools:context=".ui.home.SearchFragment"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/documentNameSpinner"
+                app:layout_constraintTop_toBottomOf="@+id/bibleTranslationLabel"
                 tools:layout_conversion_absoluteHeight="24dp"
                 tools:layout_conversion_absoluteWidth="125dp" />
 
