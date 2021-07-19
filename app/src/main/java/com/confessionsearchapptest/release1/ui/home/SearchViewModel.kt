@@ -37,7 +37,7 @@ class SearchViewModel : ViewModel() {
     fun loadTranslations(list: java.util.ArrayList<BibleTranslation>)
     {
         for (translation in list)
-            bibleTranslationList.add(translation!!.bibleTranslationAbbrev)
+            bibleTranslationList.add(translation!!.bibleTranslationName)
     }
 
     fun getTranslations(): ArrayList<String?>{

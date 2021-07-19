@@ -14,6 +14,7 @@ import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import android.os.Environment
 import android.util.Log
+import com.confessionsearchapptest.release1.data.bible.BibleContents
 import java.io.File
 import java.lang.Exception
 import java.util.ArrayList
@@ -176,46 +177,160 @@ class documentDBClassHelper : SQLiteAssetHelper {
         }
         return types
     }
-
+//Book Specific Filtering
     fun getAllVerses(
-        translationID: Int?,
         bibleList: SQLiteDatabase?,
-        accessString: String?,
         translationName: String?,
         bookName: String?
     ): BibleContentsList {
-        var cursor: Cursor
-        val verseList = BibleContentsList()
-        var commandText: String
-        var docCommandtext: String
-        return verseList
-    }
+        var cursor: Cursor?
+        var cursor2 : Cursor?
+        var accessString: String? = BibleTranslationAccess(translationName,bookName)
+        cursor=bibleList!!.rawQuery(accessString,null)
+        try{
 
+            if(cursor.moveToFirst())
+            {
+                var i =0
+                while(i<cursor.count)
+                {
+                 val addBibleContent =BibleContents()
+                    addBibleContent.TranslationID=cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_TRANSLATION_ID_FK))
+
+                    addBibleContent.BookName=cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_BOOKNAME))
+                    addBibleContent.ChapterNum = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                    addBibleContent.VerseNumber = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSENUMBER))
+                    addBibleContent.VerseText = cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSETEXT))
+                    BibleContentsList().add(addBibleContent)
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            return BibleContentsList()
+        }
+        catch (exception : Exception)
+        {
+exception.printStackTrace()
+            cursor.close()
+            return BibleContentsList()
+        }
+
+
+    }
+//Chapter specific filtering
     fun getAllVerses(
-        translationID: Int?,
         bibleList: SQLiteDatabase?,
-        accessString: String?,
         translationName: String?,
         bookName: String?,
         chapNum: Int?
     ): BibleContentsList {
-        var cursor: Cursor
-        return BibleContentsList()
-    }
+        var cursor: Cursor?
+        var cursor2 : Cursor?
+        var accessString: String? = BibleChapterAccess(translationName,bookName,chapNum)
+        cursor=bibleList!!.rawQuery(accessString,null)
+        try{
+            if (cursor.moveToFirst()){
+                var i =0
+                while(i<cursor.count)
+                {
+                    val addBibleContent =BibleContents()
+                    addBibleContent.TranslationID=cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_TRANSLATION_ID_FK))
 
+                    addBibleContent.BookName=cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_BOOKNAME))
+                    addBibleContent.ChapterNum = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                    addBibleContent.VerseNumber = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSENUMBER))
+                    addBibleContent.VerseText = cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSETEXT))
+
+                    BibleContentsList().add(addBibleContent)
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            return BibleContentsList()
+            }
+
+        catch (exception : Exception)
+        {
+            exception.printStackTrace()
+            cursor.close()
+            return BibleContentsList()
+        }
+
+    }
+//Verse specific filtering
     fun getVerses(
-        translationID: Int?,
         bibleList: SQLiteDatabase?,
-        accessString: String?,
         translationName: String?,
         bookName: String?,
         chapNum: Int?,
         verseNum: Int?
     ): BibleContentsList {
-        var cursor: Cursor
+        var cursor: Cursor?
+        var cursor2: Cursor?
+        var accessString: String? = BibleVerseAccess(translationName, bookName, chapNum, verseNum)
+        cursor = bibleList!!.rawQuery(accessString, null)
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+                while (i < cursor.count) {
+                    val addBibleContent = BibleContents()
+                    addBibleContent.TranslationID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_TRANSLATION_ID_FK
+                        )
+                    )
 
-        return BibleContentsList()
+                    addBibleContent.BookName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_BOOKNAME
+                        )
+                    )
+                    addBibleContent.ChapterNum = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                        )
+                    )
+                    addBibleContent.VerseNumber = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_VERSENUMBER
+                        )
+                    )
+                    addBibleContent.VerseText = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_VERSETEXT
+                        )
+                    )
+
+                    BibleContentsList().add(addBibleContent)
+                    i++
+                    cursor.moveToNext()
+                    TODO("When more translations are approved, the app will need to filter against those translations")
+                }
+            }
+            cursor.close()
+            return BibleContentsList()
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            cursor.close()
+            return BibleContentsList()
+        }
     }
+
+
+    fun getVersesForProofs(){
+        TODO("This is for future implementation with the Transition from static proofs to dynamic proofs allowing the user to select their own translation")}
 
     fun getAllDocTitles(type: String, dbType: SQLiteDatabase): ArrayList<DocumentTitle> {
         var type = type
@@ -424,7 +539,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
     fun BibleChapterAccess(
         TranslationName: String?,
         BookName: String?,
-        ChapterNumber: Int
+        ChapterNumber: Int?
     ): String {
         return String.format(
             BibleTranslationAccess(
@@ -433,6 +548,11 @@ class documentDBClassHelper : SQLiteAssetHelper {
             ) + "BibleContents.ChapterNum =" + ChapterNumber
         )
     }
+    fun BibleVerseAccess(TranslationName: String?,BookName: String?,ChapterNumber: Int?,VerseNumber: Int?): String{
+        return String.format(BibleChapterAccess(TranslationName,BookName,ChapterNumber)+"BibleContents.VerseNumber ="+VerseNumber)
+    }
+
+
 
     fun TableAccess(tableName: String): String {
         val table1: String

@@ -6,8 +6,14 @@
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/activity_main.xml" value="0.12613981762917933" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/content_notes.xml" value="0.1703125" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/error_page.xml" value="0.2609375" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_bible_book_selector.xml" value="0.134375" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_bible_chapter_selector.xml" value="0.134375" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_bible_form.xml" value="0.134375" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_bible_verse_selector.xml" value="0.134375" />
+        <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_bible_view_results.xml" value="0.134375" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_dashboard.xml" value="0.1" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_home.xml" value="0.16" />
         <entry key="..\:/Users/Brandon Guerin/AndroidStudioProjects/ConfessionSearchAppTest/app/src/main/res/layout/fragment_notes.xml" value="0.1" />
