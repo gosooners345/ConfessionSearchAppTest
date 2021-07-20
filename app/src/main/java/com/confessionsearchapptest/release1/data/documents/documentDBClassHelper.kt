@@ -223,6 +223,50 @@ exception.printStackTrace()
 
 
     }
+
+    fun getAllBooks(
+        bibleList: SQLiteDatabase?,
+        translationName: String?
+    ): BibleContentsList {
+        var cursor: Cursor?
+        var accessString: String? = BibleContentAccess(translationName!!)
+        cursor=bibleList!!.rawQuery(accessString,null)
+        try{
+
+            if(cursor.moveToFirst())
+            {
+                var i =0
+                while(i<cursor.count)
+                {
+                    val addBibleContent =BibleContents()
+                    addBibleContent.TranslationID=cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_TRANSLATION_ID_FK))
+
+                    addBibleContent.BookName=cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_BOOKNAME))
+                    addBibleContent.ChapterNum = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                    addBibleContent.VerseNumber = cursor.getInt(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSENUMBER))
+                    addBibleContent.VerseText = cursor.getString(cursor.getColumnIndex(
+                        KEY_BIBLE_CONTENTS_VERSETEXT))
+                    BibleContentsList().add(addBibleContent)
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            return BibleContentsList()
+        }
+        catch (exception : Exception)
+        {
+            exception.printStackTrace()
+            cursor.close()
+            return BibleContentsList()
+        }
+
+
+    }
 //Chapter specific filtering
     fun getAllVerses(
         bibleList: SQLiteDatabase?,
@@ -327,6 +371,7 @@ exception.printStackTrace()
             return BibleContentsList()
         }
     }
+
 
 
     fun getVersesForProofs(){
