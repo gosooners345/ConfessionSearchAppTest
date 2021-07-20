@@ -91,15 +91,16 @@ class documentDBClassHelper : SQLiteAssetHelper {
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion != newVersion) {
+
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLECONTENTS)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLETRANSLATION)
-            db.execSQL("CREATE TABLE  " + TABLE_DOCUMENTTITLE)
+           db.execSQL("CREATE TABLE  " + TABLE_DOCUMENTTITLE)
             db.execSQL("CREATE TABLE  " + TABLE_DOCUMENT)
             db.execSQL("CREATE TABLE " + TABLE_DOCUMENTTYPE)
-            db.execSQL("CREATE TABLE " + TABLE_BIBLECONTENTS)
+             db.execSQL("CREATE TABLE " + TABLE_BIBLECONTENTS)
             db.execSQL("CREATE TABLE " + TABLE_BIBLETRANSLATION)
             onCreate(db)
         }
@@ -228,6 +229,7 @@ exception.printStackTrace()
         bibleList: SQLiteDatabase?,
         translationName: String?
     ): BibleContentsList {
+        var bookList =BibleContentsList()
         var cursor: Cursor?
         var accessString: String? = BibleContentAccess(translationName!!)
         cursor=bibleList!!.rawQuery(accessString,null)
@@ -250,13 +252,13 @@ exception.printStackTrace()
                         KEY_BIBLE_CONTENTS_VERSENUMBER))
                     addBibleContent.VerseText = cursor.getString(cursor.getColumnIndex(
                         KEY_BIBLE_CONTENTS_VERSETEXT))
-                    BibleContentsList().add(addBibleContent)
+                    bookList.add(addBibleContent)
                     i++
                     cursor.moveToNext()
                 }
             }
             cursor.close()
-            return BibleContentsList()
+            return bookList
         }
         catch (exception : Exception)
         {
@@ -313,6 +315,7 @@ exception.printStackTrace()
         }
 
     }
+
 //Verse specific filtering
     fun getVerses(
         bibleList: SQLiteDatabase?,
@@ -569,7 +572,7 @@ exception.printStackTrace()
     fun BibleContentAccess(translationName: String?): String {
         return String.format(
             "SELECT BibleTranslations.*," +
-                    "BibleContents.* FROM BibleTranslations NATURAL JOIN BibleContents WHERE BibleContents.TranslationID = BibleTranslations.TranslationID And BibleTranslations.TranslationName = '%s'",
+                    "BibleContents.* FROM BibleTranslations NATURAL JOIN BibleContents WHERE BibleContents.TranslationID = BibleTranslations.TranslationID And BibleTranslations.TranslationTitle = '%s'",
             translationName
         )
     }
@@ -611,7 +614,7 @@ exception.printStackTrace()
     companion object {
         //DATABASE INFORMATION
         private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 1
         private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
 
         //TABLE INFO

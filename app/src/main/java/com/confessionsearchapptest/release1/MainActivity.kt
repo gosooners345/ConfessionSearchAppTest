@@ -46,7 +46,7 @@ public val context : Context = this
            // menu should be considered as top level destinations.
            val appBarConfiguration = AppBarConfiguration(
                setOf(
-                   R.id.navigation_home, R.id.navigation_notes
+                   R.id.navigation_home, R.id.navigation_notes,R.id.navigation_bible
                )
            )
            setupActionBarWithNavController(navController, appBarConfiguration)
