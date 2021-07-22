@@ -123,7 +123,7 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
     var bibleChSelectorListener : AdapterView.OnItemSelectedListener = object : AdapterView.OnItemSelectedListener{
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             bibleCh= parent!!.selectedItem.toString().toInt()
-            bibleViewModel.loadVerses(docDBhelper!!.getAllVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh))
+            bibleViewModel.loadVerseNumbers(docDBhelper!!.getAllVerseNumbers(documentDB!!,bibleTranslation,bibleBook,bibleCh))
             bibleVerseNumList = bibleViewModel.getVerseNumbers()
             bibleVerseNumAdapter= ArrayAdapter(requireContext(),R.layout.support_simple_spinner_dropdown_item,bibleVerseNumList)
             bibleVerseSelector!!.adapter=bibleVerseNumAdapter

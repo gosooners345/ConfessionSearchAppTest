@@ -244,8 +244,12 @@ class documentDBClassHelper : SQLiteAssetHelper {
     ): ArrayList<Int?> {
         val bookList = BibleContentsList()
         var chInt = 0
+        var accessString: String?
         val ChList = ArrayList<Int?>()
-        val accessString: String? = BookChapterNumberAccess(bookName)
+
+       accessString  = BookChapterNumberAccess(bookName)
+
+
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
@@ -277,7 +281,50 @@ if(chInt<addBibleContent.ChapterNum!!)
             return ChList
         }
     }
+    fun getAllVerseNumbers(
+        bibleList: SQLiteDatabase?,
+        translationName: String?,
+        bookName: String?,chapNum: Int?
+    ): ArrayList<Int?> {
+        val bookList = BibleContentsList()
+        var verseInt = 0
+        var accessString: String?
+        val verseList = ArrayList<Int?>()
 
+        accessString  = BookChapterVerseAccess(chapNum,bookName)
+
+
+        val cursor = bibleList!!.rawQuery(accessString, null)
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+                verseInt = cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSENUMBER))
+                verseList.add(verseInt)
+                while (i < cursor.count) {
+                    val addBibleContent = BibleContents()
+
+                    addBibleContent.VerseNumber = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_VERSENUMBER
+                        )
+                    )
+
+                    if(verseInt<addBibleContent.VerseNumber!!)
+                    {
+                        verseInt = addBibleContent.VerseNumber!!
+                        verseList.add(addBibleContent.VerseNumber)}
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            return verseList
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            cursor.close()
+            return verseList
+        }
+    }
 
 
 //get bible books
@@ -635,15 +682,18 @@ if(chInt<addBibleContent.ChapterNum!!)
         )
     }
 
-    fun BookChapterVerseAccess(bookID : Int?):String{
+    /*fun BookChapterVerseAccess(book : Int?):String{
         return "SELECT BibleTranslations.*, BibleBooks.*, BibleContents.* from BibleBooks Natural Join BibleContents Natural Join BibleTranslations Where " +
                 "BibleContents.BookNumber = BibleBooks.BookID and BibleContents.TranslationID = BibleTranslations.TranslationID  And BibleBooks.BookID ="+bookID
-    }
+    }*/
 
     fun BookChapterNumberAccess(bookName: String?) : String{
         return String.format("SELECT BibleTranslations.*, BibleBooks.*, BibleContents.* from BibleContents NATURAL JOIN BibleBooks Natural Join BibleTranslations " +
                 "Where BibleContents.BookNumber = BibleBooks.BookID And BibleContents.TranslationID = BibleTranslations.TranslationID And BibleBooks.BookName = '%s'",bookName)
 
+    }
+    fun BookChapterVerseAccess(chapNum: Int?,bookName: String?) : String{
+        return BookChapterNumberAccess(bookName)+" And BibleContents.ChapterNum = " + chapNum
     }
 
 
