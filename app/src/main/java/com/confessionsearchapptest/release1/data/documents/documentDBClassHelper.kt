@@ -243,12 +243,15 @@ class documentDBClassHelper : SQLiteAssetHelper {
         bookName: String?
     ): ArrayList<Int?> {
         val bookList = BibleContentsList()
+        var chInt = 0
         val ChList = ArrayList<Int?>()
         val accessString: String? = BookChapterNumberAccess(bookName)
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
+                chInt = cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                ChList.add(chInt)
                 while (i < cursor.count) {
                     val addBibleContent = BibleContents()
 
@@ -258,8 +261,10 @@ class documentDBClassHelper : SQLiteAssetHelper {
                         )
                     )
 
-
-                    ChList.add(addBibleContent.ChapterNum)
+if(chInt<addBibleContent.ChapterNum!!)
+{
+    chInt = addBibleContent.ChapterNum!!
+    ChList.add(addBibleContent.ChapterNum)}
                     i++
                     cursor.moveToNext()
                 }
@@ -410,12 +415,13 @@ class documentDBClassHelper : SQLiteAssetHelper {
                 }
             }
             cursor.close()
-            return biblebookList
+
         } catch (exception: Exception) {
             exception.printStackTrace()
             cursor.close()
-            return biblebookList
+
         }
+    return biblebookList
     }
     //Probably Useless code
     fun getBibleChapters(
@@ -645,7 +651,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
     fun BibleContentAccess(translationName: String?): String {
         return String.format(
             "SELECT BibleTranslations.*," +
-                    "BibleContents.*,FROM BibleTranslations NATURAL JOIN BibleContents WHERE BibleContents.TranslationID = BibleTranslations.TranslationID And BibleTranslations.TranslationTitle = '%s'",
+                    "BibleContents.* FROM BibleTranslations NATURAL JOIN BibleContents WHERE BibleContents.TranslationID = BibleTranslations.TranslationID And BibleTranslations.TranslationTitle = '%s'",
             translationName
         )
     }
