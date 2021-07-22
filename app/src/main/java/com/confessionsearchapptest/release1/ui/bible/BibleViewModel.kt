@@ -1,6 +1,7 @@
 package com.confessionsearchapptest.release1.ui.bible
 
 import androidx.lifecycle.ViewModel
+import com.confessionsearchapptest.release1.data.bible.BibleBooks
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 
@@ -17,15 +18,16 @@ class BibleViewModel : ViewModel() {
         return bibleBookList
     }
 
-    fun loadBooks(list: BibleContentsList) {
-       var bookName = list[0].BookName!!
-        bibleBookList.add(bookName)
+    fun loadBooks(list: ArrayList<BibleBooks>) {
+      // var bookName = list[0].BookName!!
+        //bibleBookList.add(bookName)
         for (book in list)
         {
-            if(book.BookName!=bookName) {
+            bibleBookList.add(book.BookName)
+            /*if(book.BookName!=bookName) {
              bookName=book.BookName!!
                 bibleBookList.add(book.BookName!!)
-            }
+            }*/
         }
     }
 
@@ -33,18 +35,12 @@ class BibleViewModel : ViewModel() {
         return bibleChapterList
     }
 
-    fun loadChapters(list: BibleContentsList) {
+    fun loadChapters(list: ArrayList<Int?>) {
 
 
-        for (chapter in list) {
-            var chNum = chapter.ChapterNum
-            bibleChapterList.add(chNum)
-            if (chapter.ChapterNum!! > chNum!!) {
+            //var num = chapter.ChapterNum
+            bibleChapterList=list
 
-                bibleChapterList.add(chapter.ChapterNum!!)
-                chNum=chapter.ChapterNum!!
-            }
-        }
     }
     fun getVerseNumbers(): ArrayList<Int?> {
         return bibleVerseNumList
