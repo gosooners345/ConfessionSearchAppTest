@@ -24,7 +24,8 @@ class documentDBClassHelper : SQLiteAssetHelper {
     var context: Context? = null
 
     constructor(context: Context?) : super(context, DATABASE_NAME, null, DATABASE_VERSION) {
-        this.context = context
+        this.context = context 
+        //setForcedUpgrade();
     }
 
     internal constructor(context: Context?, databaseName: String?) : super(
@@ -94,7 +95,9 @@ class documentDBClassHelper : SQLiteAssetHelper {
 // Needs to be fixed to allow for smooth upgrades
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion != newVersion) {
-
+//context.deleteDatabase(DATABASE_NAME)
+            //new documentDBClassHelper(context)
+            
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE)
@@ -108,6 +111,9 @@ class documentDBClassHelper : SQLiteAssetHelper {
             db.execSQL("CREATE TABLE " + TABLE_BIBLETRANSLATION)
             db.execSQL("CREATE TABLE " + TABLE_BIBLE_BOOKS)
             onCreate(db)
+        }
+        else
+        {//super.onUpgrade(db,oldVersion,newVersion)
         }
     }
 
