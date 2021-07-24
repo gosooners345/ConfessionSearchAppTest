@@ -246,6 +246,8 @@ docDBhelper = documentDBClassHelper(this)
     Go back to home page to search for another topic
     """.trimIndent(), query
                 )
+                //Beautify this section by using Awesome Dialog
+                
                 val alert = AlertDialog.Builder(this)
                 alert.setTitle("No Results found!")
                 alert.setMessage(
