@@ -71,7 +71,7 @@ class SearchHandler : AppCompatActivity() {
         )
 
     }
-
+//Search Method used for application
     @RequiresApi(Build.VERSION_CODES.N)
     fun search(
         query: String?,
@@ -85,15 +85,13 @@ class SearchHandler : AppCompatActivity() {
         readerSearch: Boolean?,
         textSearch: Boolean?,
         questionSearch: Boolean?,
-        fileName: String?//,        docHelper : documentDBClassHelper?,        docDB : SQLiteDatabase?
+        fileName: String?
     ) {
         Log.d("SearchMethod","SearchWorks")
         var query = query
         var docID = 0
         var accessString = ""
         var fileString = ""
-       // var docDBhelper = docHelper /*documentDBClassHelper(super.getApplicationContext())*/
-       // var documentDB = docDB //docDBhelper!!.readableDatabase
 docDBhelper = documentDBClassHelper(this)
         documentDB= docDBhelper!!.readableDatabase
 
