@@ -25,7 +25,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
 
     constructor(context: Context?) : super(context, DATABASE_NAME, null, DATABASE_VERSION) {
         this.context = context 
-        //setForcedUpgrade();
+        setForcedUpgrade()
     }
 
     internal constructor(context: Context?, databaseName: String?) : super(
@@ -523,7 +523,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
     companion object {
         //DATABASE INFORMATION
         private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 6
         private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
 
         //TABLE INFO
