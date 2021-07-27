@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven{url = uri("https://jitpack.io")}
     }
 
     dependencies {
@@ -15,11 +16,7 @@ buildscript {
     }
 }
 
-allprojects{
-    repositories{google()
-        maven{url = uri("https:jitpack.io")}
-    }
-}
+
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)

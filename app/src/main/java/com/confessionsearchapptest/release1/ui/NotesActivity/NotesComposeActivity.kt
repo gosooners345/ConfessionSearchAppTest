@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.confessionsearchapptest.release1.R
@@ -19,6 +21,7 @@ import com.confessionsearchapptest.release1.data.notes.Notes
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.vdx.designertoast.DesignerToast
 
 class NotesComposeActivity : AppCompatActivity() {
     var notesSubject: EditText? = null
@@ -101,6 +104,8 @@ class NotesComposeActivity : AppCompatActivity() {
                 } else noteRepository!!.updateNote(newNote)
                 if (activityID == 32) NotesFragment.adapter!!.notifyDataSetChanged()
                 Log.i(TAG, "Saving note to storage")
+                DesignerToast.Success(applicationContext,"Saved Note to Storage!", Gravity.BOTTOM,Toast.LENGTH_LONG)
+
                 //Snackbar.make(findViewById(R.id.masterLayout), "Note Saved", BaseTransientBottomBar.LENGTH_LONG).show()
             }
             //Close this activity out and head back to parent screen

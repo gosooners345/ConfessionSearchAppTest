@@ -11,12 +11,14 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Html
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
@@ -25,7 +27,9 @@ import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.searchresults.SearchAdapter
 import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
+import com.example.awesomedialog.*
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.vdx.designertoast.DesignerToast
 import java.util.*
 import java.util.regex.Pattern
 
@@ -230,11 +234,12 @@ docDBhelper = documentDBClassHelper(this)
 
              else {
                 Log.i("Error", "No results found for Topic")
-                Toast.makeText(
+                DesignerToast.Error(
                     this,
                     String.format("No Results were found for %s", query),
+                    Gravity.CENTER,
                     Toast.LENGTH_LONG
-                ).show()
+                )
                 super.setContentView(R.layout.error_page)
                 val errorMsg = findViewById<TextView>(R.id.errorTV)
                 errorMsg.text = String.format(
@@ -257,16 +262,25 @@ docDBhelper = documentDBClassHelper(this)
     """.trimIndent(), query
                     )
                 )
-                alert.setPositiveButton("Yes") { dialog, which ->
-                    intent = Intent(this, MainActivity.javaClass)
-                    searchFragment = null
-                    onStop()
-                    finish()
-                    startActivity(intent)
-                }
-                alert.setNegativeButton("No") { dialog, which -> dialog.dismiss() }
-                val dialog: Dialog = alert.create()
-                if (!isFinishing) dialog.show()
+                val awesomeDialog = AwesomeDialog.build(this)
+                    .title(
+                        "No Results Found!",
+                        titleColor = ContextCompat.getColor(this, android.R.color.holo_red_light)
+                    )
+                    .body(
+                        "No results were found. Do you want to go back and search for another topic?",
+                        color = ContextCompat.getColor(this, android.R.color.holo_red_light)
+                    )
+                    .background(R.drawable.layout_rounded_white)
+                    .onPositive("Yes") {
+                        this.onBackPressed()
+                    }
+                    .onNegative("No") {
+
+                    }
+                    .position(AwesomeDialog.POSITIONS.CENTER)
+
+                if (!isFinishing) awesomeDialog.show()
         }}}
 
 

@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
@@ -24,6 +21,7 @@ import com.confessionsearchapptest.release1.searchhandlers.SearchHandler
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.vdx.designertoast.DesignerToast
 import java.util.*
 import kotlin.collections.ArrayList
 class SearchFragment : Fragment() {
@@ -226,7 +224,12 @@ var translationAbbrevTitle =""
         if (!readerSearch!!) {
             query = searchBox!!.query.toString()
             if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/
-                Toast.makeText(super.getContext(), R.string.query_error, Toast.LENGTH_LONG).show()
+                DesignerToast.Error(
+                    super.getContext(),
+                    "Enter A topic in the search field!",
+                    Gravity.BOTTOM,
+                    Toast.LENGTH_LONG
+                )
             else Search(query)
         } else {
             query = ""
