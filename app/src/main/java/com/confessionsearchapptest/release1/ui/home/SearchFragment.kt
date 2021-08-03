@@ -251,11 +251,10 @@ MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,Res
         if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
             query = searchBox.query.toString()
             Log.d("View", String.format("%s", event.displayLabel))
-            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else Toast.makeText(
-                super.getContext(),
-                R.string.query_error,
-                Toast.LENGTH_LONG
-            ).show()
+            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  MotionToast.makeText(
+                        context,
+                        "Enter a value in the Search Field",
+MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,ResourcesCompat.getFont(context,R.font.helevetica_regular))
 /*ErrorMessage(resources.getString(R.string.query_error))*/
             true
         } else {
