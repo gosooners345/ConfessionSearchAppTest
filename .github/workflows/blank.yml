@@ -36,21 +36,14 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug
       - name: Release Using GitHub
-        uses: ShaunLWM/action-release-debugapk@master
+        uses: underwindfall/create-release-with-debugapk@v2.0.0
         env:
-          GITHUB_TOKEN: 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
-          APP_FOLDER: app
-          RELEASE_TITLE: New build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0
+          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_name: Example.apk
+          asset_content_type: application/zip
           
 
   
-      
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
