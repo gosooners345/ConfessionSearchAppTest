@@ -147,7 +147,7 @@ class NotesComposeActivity : AppCompatActivity() {
             .title("Save your work?")
             .body("Save your notes here")
             .background(R.drawable.layout_rounded_white)
-            .onPositive("Yes){
+            .onPositive("Yes"){
             saveButton!!.performClick()}
             .onNegative("No"){finish()}
             .position(AwesomeDialog.POSITIONS.CENTER)
