@@ -142,21 +142,15 @@ class NotesComposeActivity : AppCompatActivity() {
     //back button
     override fun onBackPressed() {
         if (mode == EDIT_OFF) {
-            val alert = AlertDialog.Builder(this)
-            alert.setTitle("Save your work?")
-            alert.setMessage(String.format(resources.getString(R.string.save_note_message)))
-            alert.setPositiveButton(resources.getString(R.string.save_button_text)) { dialog, which ->
-                dialog.dismiss()
-                saveButton!!.performClick()
-            }
-            alert.setNegativeButton("No") { dialog, which ->
-                dialog.dismiss()
-                finish()
-            }
-            alert.setCancelable(true)
-            alert.setNeutralButton(R.string.cancel_button) { dialogInterface, i -> dialogInterface.dismiss() }
-            val dialog: Dialog = alert.create()
-            if (!isFinishing) dialog.show()
+            val awesomeDialog = AwesomeDialog.build(this)
+            .title("Save your work?"), titleColor = ContextCompat.getColor(this,android.R.color.holo_red_light))
+            .body("Save your notes here",color = ContextCompat.getColor(this,android.r.color.holo_red_light))
+            .background(R.drawable.layout_rounded_white)
+            .onPositive(String.format(resources.getString(R.string.save_note_message))){
+            saveButton!!.performClick()}
+            .onNegative("No"){finish()}
+            .position(AwesomeDialog.POSITIONS.CENTER)
+            if (!isFinishing) awesomeDialog.show()
         } else DisableEdit()
     }
 
