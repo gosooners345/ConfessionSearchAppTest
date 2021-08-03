@@ -100,7 +100,7 @@ class NotesFragment : Fragment(),NotesAdapter.OnNoteListener {
 
 
 var newNoteListener = View.OnClickListener{
-    val intent = Intent(applicationContext, NotesComposeActivity::class.java)
+    val intent = Intent(context, NotesComposeActivity::class.java)
         intent.putExtra("activity_ID", ACTIVITY_ID)
         startActivity(intent)
 }
