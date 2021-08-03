@@ -224,12 +224,22 @@ var translationAbbrevTitle =""
         if (!readerSearch!!) {
             query = searchBox!!.query.toString()
             if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/
-                DesignerToast.Error(
+            {  DesignerToast.Error(
                     super.getContext(),
                     "Enter A topic in the search field!",
                     Gravity.BOTTOM,
                     Toast.LENGTH_LONG
+                    
                 )
+             MotionToast.makeText(
+                        context,
+                        "Enter a value in the Search Field",
+MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,ResourcesCompat.getFont(context,R.font.helevetica_regular))
+            }
+                 MotionToast.makeText(
+                        context,
+                        "Enter a value in the Search Field",
+MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,ResourcesCompat.getFont(context,R.font.helevetica_regular))
             else Search(query)
         } else {
             query = ""
@@ -257,11 +267,11 @@ var translationAbbrevTitle =""
             override fun onQueryTextSubmit(entry: String): Boolean {
                 query = entry
                 if (!readerSearch!!) {
-                    if (query!!.isEmpty()) Toast.makeText(
+                    if (query!!.isEmpty()) MotionToast.makeText(
                         context,
-                        R.string.query_error,
-                        Toast.LENGTH_LONG
-                    ).show() else Search(query)
+                        "Enter a value in the Search Field",
+MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,ResourcesCompat.getFont(context,R.font.helevetica_regular))
+                    else Search(query)
                 } else Search(query)
                 return false
             }
