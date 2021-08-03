@@ -264,7 +264,7 @@ var translationAbbrevTitle =""
                 query = entry
                 if (!readerSearch!!) {
                     if (query!!.isEmpty()) DesignerToast.Error(
-                    super.getContext(),
+                    requireContext(),
                     "Enter A topic in the search field!",
                     Gravity.BOTTOM,
                     Toast.LENGTH_LONG
