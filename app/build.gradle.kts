@@ -48,6 +48,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation ("com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("com.github.gabriel-TheCode:AestheticDialogs:1.3.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     implementation("com.github.chnouman:AwesomeDialog:1.0.5")
     implementation("com.github.vedraj360:DesignerToast:0.1.3")
