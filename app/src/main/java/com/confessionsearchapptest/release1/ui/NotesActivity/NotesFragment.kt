@@ -54,6 +54,7 @@ class NotesFragment : Fragment(),NotesAdapter.OnNoteListener {
         notesList!!.adapter = adapter
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesList)
         fab = root.findViewById(R.id.newNote)
+        fab!!.setOnClickListener(newNoteListener)
 
          return root
     }
@@ -98,7 +99,11 @@ class NotesFragment : Fragment(),NotesAdapter.OnNoteListener {
     }
 
 
-
+var newNoteListener = View.OnClickListener{
+    val intent = Intent(applicationContext, NotesComposeActivity::class.java)
+        intent.putExtra("activity_ID", ACTIVITY_ID)
+        startActivity(intent)
+}
 
 
 
