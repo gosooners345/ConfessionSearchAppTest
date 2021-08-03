@@ -144,8 +144,8 @@ class NotesComposeActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (mode == EDIT_OFF) {
             val awesomeDialog = AwesomeDialog.build(this)
-            .title("Save your work?"), titleColor = ContextCompat.getColor(this,android.R.color.holo_red_light))
-            .body("Save your notes here",color = ContextCompat.getColor(this,android.r.color.holo_red_light))
+            .title("Save your work?")
+            .body("Save your notes here")
             .background(R.drawable.layout_rounded_white)
             .onPositive(String.format(resources.getString(R.string.save_note_message))){
             saveButton!!.performClick()}
