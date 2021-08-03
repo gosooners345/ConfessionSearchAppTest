@@ -231,15 +231,9 @@ var translationAbbrevTitle =""
                     Toast.LENGTH_LONG
                     
                 )
-             MotionToast.makeText(
-                        context,
-                        "Enter a value in the Search Field",
-MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
+            
             }
-                 MotionToast.makeText(
-                        context,
-                        "Enter a value in the Search Field",
-MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
+                 
             else Search(query)
         } else {
             query = ""
@@ -251,10 +245,13 @@ MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
         if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
             query = searchBox.query.toString()
             Log.d("View", String.format("%s", event.displayLabel))
-            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  MotionToast.makeText(
-                        context,
-                        "Enter a value in the Search Field",
-MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
+            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  DesignerToast.Error(
+                    super.getContext(),
+                    "Enter A topic in the search field!",
+                    Gravity.BOTTOM,
+                    Toast.LENGTH_LONG
+                    
+                )
 /*ErrorMessage(resources.getString(R.string.query_error))*/
             true
         } else {
@@ -266,10 +263,13 @@ MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
             override fun onQueryTextSubmit(entry: String): Boolean {
                 query = entry
                 if (!readerSearch!!) {
-                    if (query!!.isEmpty()) MotionToast.makeText(
-                        context,
-                        "Enter a value in the Search Field",
-MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION)
+                    if (query!!.isEmpty()) DesignerToast.Error(
+                    super.getContext(),
+                    "Enter A topic in the search field!",
+                    Gravity.BOTTOM,
+                    Toast.LENGTH_LONG
+                    
+                )
                     else Search(query)
                 } else Search(query)
                 return false
