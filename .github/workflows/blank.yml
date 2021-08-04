@@ -35,12 +35,7 @@ jobs:
         run: ./gradlew build
       - name: Build Debug APK
         run: ./gradlew assembleDebug
-      - name:  'Automated Version Bump'
-        uses:  'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag-prefix:  'v'
+      
       - name: Release Using GitHub
         uses: underwindfall/create-release-with-debugapk@v2.0.0
         env:
