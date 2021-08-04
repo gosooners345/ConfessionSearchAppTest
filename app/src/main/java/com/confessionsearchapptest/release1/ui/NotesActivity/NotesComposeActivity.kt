@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.notes.NoteRepository
 import com.confessionsearchapptest.release1.data.notes.Notes
@@ -23,6 +24,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.vdx.designertoast.DesignerToast
+import www.sanju.motiontoast.MotionToast
 
 class NotesComposeActivity : AppCompatActivity() {
     var notesSubject: EditText? = null
@@ -105,8 +107,13 @@ class NotesComposeActivity : AppCompatActivity() {
                 } else noteRepository!!.updateNote(newNote)
                 if (activityID == 32) NotesFragment.adapter!!.notifyDataSetChanged()
                 Log.i(TAG, "Saving note to storage")
-                DesignerToast.Success(applicationContext,"Saved Note to Storage!", Gravity.BOTTOM,Toast.LENGTH_LONG)
-
+               // DesignerToast.Success(applicationContext,"Saved Note to Storage!", Gravity.BOTTOM,Toast.LENGTH_LONG)
+                MotionToast.createToast(this@NotesComposeActivity,"Save Work","Notes Saved",
+                    MotionToast.TOAST_SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM
+                    ,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
                 //Snackbar.make(findViewById(R.id.masterLayout), "Note Saved", BaseTransientBottomBar.LENGTH_LONG).show()
             }
             //Close this activity out and head back to parent screen
@@ -143,6 +150,7 @@ class NotesComposeActivity : AppCompatActivity() {
     //back button
     override fun onBackPressed() {
         if (mode == EDIT_OFF) {
+
             val awesomeDialog = AwesomeDialog.build(this)
             .title("Save your work?")
             .body("Save your notes here")
@@ -164,6 +172,12 @@ class NotesComposeActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         mode = savedInstanceState.getInt("mode")
         if (mode == EDIT_ON) {
+            MotionToast.createToast(this@NotesComposeActivity,"Resume Writing","Notes resumed",
+                MotionToast.TOAST_SUCCESS,
+                MotionToast.GRAVITY_BOTTOM
+                ,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
            // Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
         }
     }
@@ -172,6 +186,12 @@ class NotesComposeActivity : AppCompatActivity() {
         notesContent!!.isEnabled = false
         notesSubject!!.isEnabled = false
         mode = EDIT_OFF
+        MotionToast.createToast(this@NotesComposeActivity,"Disable Editing","Editing Disabled",
+            MotionToast.TOAST_SUCCESS,
+            MotionToast.GRAVITY_BOTTOM
+            ,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
         //Snackbar.make(findViewById(R.id.masterLayout), "Save Note", BaseTransientBottomBar.LENGTH_SHORT).show()
     }
 
@@ -179,6 +199,12 @@ class NotesComposeActivity : AppCompatActivity() {
         notesContent!!.isEnabled = true
         notesSubject!!.isEnabled = true
         mode = EDIT_ON
+        MotionToast.createToast(this@NotesComposeActivity,"Enable Editing","Editing Enabled",
+            MotionToast.TOAST_SUCCESS,
+            MotionToast.GRAVITY_BOTTOM
+            ,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
     //    Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
     }
 
