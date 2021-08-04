@@ -10,6 +10,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.confessionsearchapptest.release1.R
@@ -22,6 +23,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.vdx.designertoast.DesignerToast
+import www.sanju.motiontoast.MotionToast
 import java.util.*
 import kotlin.collections.ArrayList
 class SearchFragment : Fragment() {
@@ -224,13 +226,14 @@ var translationAbbrevTitle =""
         if (!readerSearch!!) {
             query = searchBox!!.query.toString()
             if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/
-            {  DesignerToast.Error(
+            { /* DesignerToast.Error(
                     super.getContext(),
                     "Enter A topic in the search field!",
                     Gravity.BOTTOM,
                     Toast.LENGTH_LONG
-                    
-                )
+                )*/
+                MotionToast.createToast(this.requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
+                    ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(super.requireContext(),R.font.helvetica_regular))
             
             }
                  
@@ -245,13 +248,8 @@ var translationAbbrevTitle =""
         if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
             query = searchBox.query.toString()
             Log.d("View", String.format("%s", event.displayLabel))
-            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  DesignerToast.Error(
-                    super.getContext(),
-                    "Enter A topic in the search field!",
-                    Gravity.BOTTOM,
-                    Toast.LENGTH_LONG
-                    
-                )
+            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  MotionToast.createToast(this.requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
+                ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(super.requireContext(),R.font.helvetica_regular))
 /*ErrorMessage(resources.getString(R.string.query_error))*/
             true
         } else {
@@ -263,13 +261,8 @@ var translationAbbrevTitle =""
             override fun onQueryTextSubmit(entry: String): Boolean {
                 query = entry
                 if (!readerSearch!!) {
-                    if (query!!.isEmpty()) DesignerToast.Error(
-                    requireContext(),
-                    "Enter A topic in the search field!",
-                    Gravity.BOTTOM,
-                    Toast.LENGTH_LONG
-                    
-                )
+                    if (query!!.isEmpty()) MotionToast.createToast(requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
+                        ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(requireContext(),R.font.helvetica_regular))
                     else Search(query)
                 } else Search(query)
                 return false
