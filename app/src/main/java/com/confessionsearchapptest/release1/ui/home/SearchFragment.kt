@@ -363,7 +363,7 @@ var translationAbbrevTitle =""
     @SuppressLint("NewApi")
     fun Search(query: String?) {
 
-        var searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
+        val searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
         //val parentActivity = super.getActivity()
         val stringQuery = query
         Log.d("Test", context.toString())

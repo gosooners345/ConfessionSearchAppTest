@@ -1,5 +1,6 @@
 package com.confessionsearchapptest.release1.ui.bible
 
+import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentBibleFormBinding
+import com.confessionsearchapptest.release1.searchresults.BibleReaderSearchResults
 
 @Suppress("MemberVisibilityCanBePrivate")
 class BibleFragment : Fragment() {
@@ -145,9 +147,18 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
         }
     }
     var submitFabClicker=View.OnClickListener {
-        bibleViewModel.loadVerses(docDBhelper!!.getAllVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum))
-
-
+        bibleViewModel.loadVerses(
+            docDBhelper!!.getAllVerses(
+                documentDB!!,
+                bibleTranslation,
+                bibleBook,
+                bibleCh,
+                bibleVerseNum
+            )
+        )
+        val bibleVerses = bibleViewModel.getVerses()
+        val bibleIntent = Intent(context, BibleReaderSearchResults::class.java)
+bibleIntent.putExtra("BibleList",bibleVerses)
 
 
     }
