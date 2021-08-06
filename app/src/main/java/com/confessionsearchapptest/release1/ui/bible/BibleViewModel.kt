@@ -44,9 +44,9 @@ class BibleViewModel : ViewModel() {
         return bibleVerseList
     }
 
-    fun loadVerses(list: BibleContentsList) {
+    fun loadVerses(list: ArrayList<String?>) {
         for (verse in list)
-            bibleVerseList.add(verse.VerseText)
+            bibleVerseList.add(verse)
     }
 
     fun getTranslations(): ArrayList<String?> {

@@ -233,6 +233,8 @@ class documentDBClassHelper : SQLiteAssetHelper {
             return ChList
         }
     }
+
+
     //Bible Reader Related Method,Safe
     fun getAllVerseNumbers(
         bibleList: SQLiteDatabase?,
@@ -274,6 +276,51 @@ class documentDBClassHelper : SQLiteAssetHelper {
             return verseList
         } catch (exception: Exception) {
             exception.printStackTrace()
+            cursor.close()
+            return verseList
+        }
+    }
+    fun getAllVerses(
+        bibleList: SQLiteDatabase?,
+        translationName: String?,
+        bookName: String?,chapNum: Int?,verseNum: Int?
+    ): ArrayList<String?> {
+        val bookList = BibleContentsList()
+        var verseText = ""
+        var accessString: String?
+        val verseList = ArrayList<String?>()
+//SQL Statement for Verse numbers
+        accessString  = VerseAccess(verseNum,chapNum,bookName)
+
+
+        val cursor = bibleList!!.rawQuery(accessString, null)
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+                verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+                verseList.add(verseText)
+                while (i < cursor.count) {
+                    val addBibleContent = BibleContents()
+
+                    addBibleContent.VerseText = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_VERSETEXT
+                        )
+                    )
+                    // Filters out excessive verses so we don't duplicate entries
+                    /*if(verseInt<addBibleContent.VerseNumber!!)
+                    {
+                        verseInt = addBibleContent.VerseNumber!!
+                        verseList.add(addBibleContent.VerseNumber)}*/
+                    i++
+                    cursor.moveToNext()
+                }
+            }
+            cursor.close()
+            return verseList
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+
             cursor.close()
             return verseList
         }

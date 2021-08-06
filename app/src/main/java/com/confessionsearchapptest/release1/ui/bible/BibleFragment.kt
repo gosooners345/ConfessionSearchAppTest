@@ -14,6 +14,7 @@ import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentBibleFormBinding
 
+@Suppress("MemberVisibilityCanBePrivate")
 class BibleFragment : Fragment() {
 
     private var _binding: FragmentBibleFormBinding? = null
@@ -60,7 +61,7 @@ bibleTransList = bibleViewModel.getTranslations()
         bibleSelectorSpinner!!.adapter = bibleSelectorAdapter
         bibleSelectorSpinner!!.onItemSelectedListener=bibleSelectorSpinnerListener
 bibleBookSelectorComboBox = root.findViewById(R.id.bibleBookSelector)
-bibleChapterSpinner = root.findViewById(R.id.biblechapterspinner)
+bibleChapterSpinner = root.findViewById(R.id.bibleChapterSpinner)
         bibleVerseSelector = root.findViewById(R.id.verseSpinner)
        bibleTranslation = bibleSelectorSpinner!!.selectedItem.toString()
 
@@ -142,5 +143,12 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
         override fun onNothingSelected(parent: AdapterView<*>?) {
             bibleVerseNum = parent!!.selectedItem.toString().toInt()
         }
+    }
+    var submitFabClicker=View.OnClickListener {
+        bibleViewModel.loadVerses(docDBhelper!!.getAllVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum))
+
+
+
+
     }
 }
