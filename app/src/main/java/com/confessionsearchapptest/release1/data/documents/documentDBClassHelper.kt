@@ -504,6 +504,12 @@ class documentDBClassHelper : SQLiteAssetHelper {
     fun BookChapterVerseAccess(chapNum: Int?,bookName: String?) : String{
         return BookChapterNumberAccess(bookName)+" And BibleContents.ChapterNum = " + chapNum
     }
+    fun VerseAccess(verseNum: Int?,chapterNum:Int?,bookName: String?) :String
+    {if (verseNum!! > 0)
+        return BookChapterVerseAccess(chapterNum,bookName)+"And BibleContents.VerseNum = " + verseNum
+        else
+            return BookChapterVerseAccess(chapterNum,bookName)
+    }
     
 //Bible Book Retrieval , Bible Reader Related Method
     fun BibleBookAccess():String{

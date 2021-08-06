@@ -13,21 +13,15 @@ class BibleViewModel : ViewModel() {
     private var bibleVerseNumList: ArrayList<Int?> = ArrayList()
     private var bibleVerseList: ArrayList<String?> = ArrayList()
 
-    fun getBooks(): ArrayList<String?> {
-
+    fun getBooks(): ArrayList<String?>
+    {
         return bibleBookList
     }
 
-    fun loadBooks(list: ArrayList<BibleBooks>) {
-      // var bookName = list[0].BookName!!
-        //bibleBookList.add(bookName)
-        for (book in list)
-        {
+    fun loadBooks(list: ArrayList<BibleBooks>)
+    {
+        for (book in list) {
             bibleBookList.add(book.BookName)
-            /*if(book.BookName!=bookName) {
-             bookName=book.BookName!!
-                bibleBookList.add(book.BookName!!)
-            }*/
         }
     }
 
@@ -36,11 +30,7 @@ class BibleViewModel : ViewModel() {
     }
 
     fun loadChapters(list: ArrayList<Int?>) {
-
-
-            //var num = chapter.ChapterNum
             bibleChapterList=list
-
     }
     fun getVerseNumbers(): ArrayList<Int?> {
         return bibleVerseNumList

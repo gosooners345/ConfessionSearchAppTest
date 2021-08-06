@@ -121,4 +121,5 @@ and catechisms. Use this to take a quick note of a topic your searching, or add 
     <string name="title_dashboard">Dashboard</string>
     <string name="bible_label">Bible Translation:</string>
     <string name="bible_translation">Bible Translation:</string>
+    <string name="submit">Submit</string>
 </resources>
