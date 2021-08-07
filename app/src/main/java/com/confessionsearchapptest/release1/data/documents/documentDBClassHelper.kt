@@ -331,7 +331,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
         bibleList: SQLiteDatabase?,
         translationName: String?,
         bookName: String?,chapNum: Int?,verseNum: Int?
-    ): BibleContentsList() {
+    ): BibleContentsList {
         val bookList = BibleContentsList()
         var verseText = ""
         var accessString: String?
