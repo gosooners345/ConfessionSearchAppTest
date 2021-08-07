@@ -8,7 +8,8 @@ import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 class BibleViewModel : ViewModel() {
     private var bibleBookList: ArrayList<String?> = ArrayList()
     private var bibleTranslationList: ArrayList<String?> = ArrayList()
-
+    //private var bibleContentList = ArrayList<BibleContents> = ArrayList()
+    private var bibleContentList=BibleContentsList()
     private var bibleChapterList: ArrayList<Int?> = ArrayList()
     private var bibleVerseNumList: ArrayList<Int?> = ArrayList()
     private var bibleVerseList: ArrayList<String?> = ArrayList()
@@ -58,6 +59,13 @@ class BibleViewModel : ViewModel() {
         for(translation in list)
             bibleTranslationList.add(translation.bibleTranslationName)
     }
-
+fun loadBibleList(list : BibleContentsList())
+    {
+        bibleContentList = list
+    }
+    fun getBibleList():BibleContentsList()
+    {
+    return bibleContentList
+    }
 
 }
