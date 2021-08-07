@@ -325,6 +325,57 @@ class documentDBClassHelper : SQLiteAssetHelper {
             return verseList
         }
     }
+    
+    //Bible Contents List 
+        fun getChaptersandVerses(
+        bibleList: SQLiteDatabase?,
+        translationName: String?,
+        bookName: String?,chapNum: Int?,verseNum: Int?
+    ): BibleContentsList() {
+        val bookList = BibleContentsList()
+        var verseText = ""
+        var accessString: String?
+        val verseList = ArrayList<String?>()
+        //This allows the database to filter out requests without the need for multiple functions
+            if(verseNum!! ==0 && chapterNum!!>0)
+            {accessString = BookChapterVerseAccess(chapNum,bookName)}
+        else if(chapterNum!! == 0 && verseNum!! == 0)
+            {accessString =BookChapterNumberAccess(bookName)}
+         else
+         accessString  = VerseAccess(verseNum,chapNum,bookName)
+
+               val cursor = bibleList!!.rawQuery(accessString, null)
+        try {
+            if (cursor.moveToFirst()) {
+                var i = 0
+   //             verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+     //           verseList.add(verseText)
+                while (i < cursor.count) {
+                    val addBibleContent = BibleContents()
+
+              bookList.add(addBibleContent)
+                    
+                    // Filters out excessive verses so we don't duplicate entries
+                    /*if(verseInt<addBibleContent.VerseNumber!!)
+                    {
+                        verseInt = addBibleContent.VerseNumber!!
+                        verseList.add(addBibleContent.VerseNumber)}*/
+                    i++
+                    cursor.moveToNext()
+                
+            }
+            cursor.close()
+            return bookList
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+
+            cursor.close()
+            return bookList
+        }
+    }
+    
+    
+    
 //get bible books, Bible Reader Related
     fun getAllBooks(
         bibleList: SQLiteDatabase?
