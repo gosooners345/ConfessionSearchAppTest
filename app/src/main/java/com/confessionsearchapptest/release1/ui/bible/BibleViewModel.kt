@@ -59,11 +59,11 @@ class BibleViewModel : ViewModel() {
         for(translation in list)
             bibleTranslationList.add(translation.bibleTranslationName)
     }
-fun loadBibleList(list : BibleContentsList())
+fun loadBibleList(list : BibleContentsList)
     {
         bibleContentList = list
     }
-    fun getBibleList():BibleContentsList()
+    fun getBibleList():BibleContentsList
     {
     return bibleContentList
     }
