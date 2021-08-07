@@ -337,9 +337,9 @@ class documentDBClassHelper : SQLiteAssetHelper {
         var accessString: String?
         val verseList = ArrayList<String?>()
         //This allows the database to filter out requests without the need for multiple functions
-            if(verseNum!! ==0 && chapterNum!!>0)
+            if(verseNum!! ==0 && chapNum!!>0)
             {accessString = BookChapterVerseAccess(chapNum,bookName)}
-        else if(chapterNum!! == 0 && verseNum!! == 0)
+        else if(chapNum!! == 0 && verseNum!! == 0)
             {accessString =BookChapterNumberAccess(bookName)}
          else
          accessString  = VerseAccess(verseNum,chapNum,bookName)
