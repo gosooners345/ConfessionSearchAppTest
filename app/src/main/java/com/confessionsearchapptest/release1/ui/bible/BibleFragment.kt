@@ -147,18 +147,9 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
         }
     }
     var submitFabClicker=View.OnClickListener {
-        bibleViewModel.loadVerses(
-            docDBhelper!!.getAllVerses(
-                documentDB!!,
-                bibleTranslation,
-                bibleBook,
-                bibleCh,
-                bibleVerseNum
-            )
-        )
-        val bibleVerses = bibleViewModel.getVerses()
         val bibleIntent = Intent(context, BibleReaderSearchResults::class.java)
-bibleIntent.putExtra("BibleList",bibleVerses)
+bibleViewModel.loadBibleList(docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
+
 
 
     }
