@@ -363,10 +363,10 @@ class documentDBClassHelper : SQLiteAssetHelper {
                     i++
                     cursor.moveToNext()
                 
-            }
+            }}
             cursor.close()
             return bookList
-        }} catch (exception: Exception) {
+        } catch (exception: Exception) {
             exception.printStackTrace()
 
             cursor.close()
