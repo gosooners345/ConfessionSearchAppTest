@@ -53,7 +53,7 @@ val translationName = intent.getStringExtra("Translation")
     }
     
     
-    @RequiresApi(Build.VERSION_CODES.N)
+   
     fun bibleReader( bibleBook : String?, bibleCh : Int?, bibleVerseNum : Int? , bibleTranslation : String?)
      {
          Log.d("BibleReader","Debut")
