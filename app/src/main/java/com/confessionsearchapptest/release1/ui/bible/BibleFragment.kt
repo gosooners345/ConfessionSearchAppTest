@@ -25,6 +25,7 @@ var documentDB : SQLiteDatabase? = null
     var docDBhelper : documentDBClassHelper?= null
     var bibleTransList : ArrayList<String?> = ArrayList()
     var bibleTranslation =""
+    var submitButton :  ExtendedFloatingActionButton? = null
 
       var bibleCh =0
      var bibleVerseNum=0
@@ -66,7 +67,8 @@ bibleBookSelectorComboBox = root.findViewById(R.id.bibleBookSelector)
 bibleChapterSpinner = root.findViewById(R.id.bibleChapterSpinner)
         bibleVerseSelector = root.findViewById(R.id.verseSpinner)
        bibleTranslation = bibleSelectorSpinner!!.selectedItem.toString()
-
+submitButton = root.findViewById(R.id.submitFAB)
+submitButton!!.setOnClickListener(submitFabClicker)
 
         return root
 
