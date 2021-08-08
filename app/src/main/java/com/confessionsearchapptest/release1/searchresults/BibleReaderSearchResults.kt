@@ -22,7 +22,7 @@ import android.content.Intent
 import com.confessionsearchapptest.release1.MainActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.example.awesomedialog.*
-import androidx.annotation.RequiresApi
+
 import androidx.core.content.ContextCompat
 import java.util.*
 import java.util.regex.Pattern
@@ -40,7 +40,7 @@ var bibleVP : ViewPager?=null
     var documentDB : SQLiteDatabase? = null
     var header = ""
 
-    @SuppressLint("NewApi")
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 val bibleBookName = intent.getStringExtra("BookName")
