@@ -31,7 +31,8 @@ class BibleViewModel : ViewModel() {
     }
 
     fun loadChapters(list: ArrayList<Int?>) {
-            bibleChapterList=list
+           bibleChapterList.add(0)
+ bibleChapterList.addAll(list)
     }
     fun getVerseNumbers(): ArrayList<Int?> {
         return bibleVerseNumList
@@ -51,7 +52,8 @@ class BibleViewModel : ViewModel() {
     }
 
     fun getTranslations(): ArrayList<String?> {
-        return bibleTranslationList
+       
+ return bibleTranslationList
     }
 
     fun loadTranslations(list: ArrayList<BibleTranslation>)
