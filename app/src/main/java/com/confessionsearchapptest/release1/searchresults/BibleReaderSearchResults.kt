@@ -62,7 +62,7 @@ val translationName = intent.getStringExtra("Translation")
          bibleVerseList = docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
           DesignerToast.Success(
                     this,
-                    String.format("Results found: ",bibleVerseList.count()),
+                    String.format("Results found: "+bibleVerseList.count()),
                     Gravity.CENTER,
                     Toast.LENGTH_LONG
                 )
