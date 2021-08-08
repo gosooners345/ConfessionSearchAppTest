@@ -19,7 +19,6 @@ import android.widget.TextView
 import android.text.Html
 import android.util.Log
 import android.content.Intent
-import com.confessionsearchapptest.release1.MainActivity
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.example.awesomedialog.*
 
@@ -44,7 +43,7 @@ var bibleVP : ViewPager?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 val bibleBookName = intent.getStringExtra("BookName")
-val bibleChaperNum = intent.getIntExtra("Chapter",0)
+val bibleChapterNum = intent.getIntExtra("Chapter",0)
 val bibleVerseNum = intent.getIntExtra("VerseNum",0)
 val translationName = intent.getStringExtra("Translation")
  bibleReader(bibleBookName,bibleChapterNum,bibleVerseNum,translationName)
@@ -63,7 +62,7 @@ val translationName = intent.getStringExtra("Translation")
          bibleVerseList = docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
           DesignerToast.Success(
                     this,
-                    String.format("Results found: ",bibleVerseList.count),
+                    String.format("Results found: ",bibleVerseList.count()),
                     Gravity.CENTER,
                     Toast.LENGTH_LONG
                 )
