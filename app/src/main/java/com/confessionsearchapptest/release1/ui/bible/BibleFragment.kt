@@ -1,10 +1,11 @@
 package com.confessionsearchapptest.release1.ui.bible
-
+import com.vdx.designertoast.DesignerToast
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -150,6 +151,7 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
         }
     }
     var submitFabClicker=View.OnClickListener {
+   try{
         val bibleIntent = Intent(context, BibleReaderSearchResults::class.java)
 //bibleViewModel.loadBibleList(docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
 bibleIntent.putExtra("Translation",bibleTranslation)
@@ -157,7 +159,16 @@ bibleIntent.putExtra("BookName",bibleBook)
 bibleIntent.putExtra("Chapter",bibleCh)
 bibleIntent.putExtra("VerseNum",bibleVerseNum)
 requireContext().startActivity(bibleIntent)
-
+   }
+   catch(ex: Exception)
+        {
+             DesignerToast.Error(
+                    requireContext(),
+                    String.format(ex.cause() + ":" + ex.message()),
+                    Gravity.CENTER,
+                    Toast.LENGTH_LONG
+                )
+        }
 
     }
     companion object{
