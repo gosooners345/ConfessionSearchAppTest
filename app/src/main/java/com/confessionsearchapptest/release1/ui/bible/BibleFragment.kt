@@ -120,7 +120,9 @@ bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
         override fun onNothingSelected(parent: AdapterView<*>?) {
             bibleBook= String.format("%s",parent!!.selectedItem.toString())
             bibleViewModel.loadChapters(docDBhelper!!.getAllChapters(documentDB,bibleTranslation,bibleBook))
-            bibleChapterList = bibleViewModel.getChapters()
+             bibleChapterList.add(0)
+            bibleChapterList.addAll(bibleViewModel.getChapters())
+            //bibleChapterList = bibleViewModel.getChapters()
             bibleChNumAdapter= ArrayAdapter(requireContext(),R.layout.support_simple_spinner_dropdown_item,bibleChapterList)
             bibleChapterSpinner!!.adapter=bibleChNumAdapter
             bibleChapterSpinner!!.onItemSelectedListener=bibleChSelectorListener
