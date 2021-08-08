@@ -164,7 +164,7 @@ requireContext().startActivity(bibleIntent)
         {
              DesignerToast.Error(
                     requireContext(),
-                    String.format(ex.stackTrace()),
+                    String.format(ex.message()!!.toString()),
                     Gravity.CENTER,
                     Toast.LENGTH_LONG
                 )
