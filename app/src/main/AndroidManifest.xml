@@ -27,6 +27,10 @@
     android:label="Search Results"
     android:parentActivityName=".MainActivity"/>
     </application>
+<activity android:name=".searchresults.BibleReaderSearchResults"
+    android:label="Bible Reader"
+    android:parentActivityName=".MainActivity"/>
+    </application>
 
 
 </manifest>
