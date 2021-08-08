@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vdx.designertoast.DesignerToast
 import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import android.os.Build
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import android.widget.TextView
@@ -21,7 +22,6 @@ import android.util.Log
 import android.content.Intent
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.example.awesomedialog.*
-import com.vdx.designertoast.DesignerToast
 import androidx.core.content.ContextCompat
 import java.util.*
 import java.util.regex.Pattern
