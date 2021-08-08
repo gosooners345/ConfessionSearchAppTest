@@ -71,7 +71,7 @@ val translationName = intent.getStringExtra("Translation")
        ex.printStackTrace()
         DesignerToast.Error(
                     this,
-                    String.format(ex.Message()),
+                    String.format("ERROR"),
                     Gravity.CENTER,
                     Toast.LENGTH_LONG
                 )
