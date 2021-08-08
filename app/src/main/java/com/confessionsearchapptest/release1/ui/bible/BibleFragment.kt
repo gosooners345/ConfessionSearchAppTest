@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
