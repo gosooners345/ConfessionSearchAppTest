@@ -8,19 +8,18 @@ import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 class BibleViewModel : ViewModel() {
     private var bibleBookList: ArrayList<String?> = ArrayList()
     private var bibleTranslationList: ArrayList<String?> = ArrayList()
+
     //private var bibleContentList = ArrayList<BibleContents> = ArrayList()
-    private var bibleContentList=BibleContentsList()
+    private var bibleContentList = BibleContentsList()
     private var bibleChapterList: ArrayList<Int?> = ArrayList()
     private var bibleVerseNumList: ArrayList<Int?> = ArrayList()
     private var bibleVerseList: ArrayList<String?> = ArrayList()
 
-    fun getBooks(): ArrayList<String?>
-    {
+    fun getBooks(): ArrayList<String?> {
         return bibleBookList
     }
 
-    fun loadBooks(list: ArrayList<BibleBooks>)
-    {
+    fun loadBooks(list: ArrayList<BibleBooks>) {
         for (book in list) {
             bibleBookList.add(book.BookName)
         }
@@ -31,15 +30,18 @@ class BibleViewModel : ViewModel() {
     }
 
     fun loadChapters(list: ArrayList<Int?>) {
-           bibleChapterList.add(0)
- bibleChapterList.addAll(list)
+        bibleChapterList.add(0)
+        bibleChapterList.addAll(list)
     }
+
     fun getVerseNumbers(): ArrayList<Int?> {
         return bibleVerseNumList
     }
 
     fun loadVerseNumbers(list: ArrayList<Int?>) {
-       bibleVerseNumList = list
+        bibleVerseNumList.add(0)
+        bibleVerseNumList.addAll(list)
+
     }
 
     fun getVerses(): ArrayList<String?> {
@@ -52,22 +54,21 @@ class BibleViewModel : ViewModel() {
     }
 
     fun getTranslations(): ArrayList<String?> {
-       
- return bibleTranslationList
+
+        return bibleTranslationList
     }
 
-    fun loadTranslations(list: ArrayList<BibleTranslation>)
-    {
-        for(translation in list)
+    fun loadTranslations(list: ArrayList<BibleTranslation>) {
+        for (translation in list)
             bibleTranslationList.add(translation.bibleTranslationName)
     }
-fun loadBibleList(list : BibleContentsList)
-    {
+
+    fun loadBibleList(list: BibleContentsList) {
         bibleContentList = list
     }
-    fun getBibleList():BibleContentsList
-    {
-    return bibleContentList
+
+    fun getBibleList(): BibleContentsList {
+        return bibleContentList
     }
 
 }
