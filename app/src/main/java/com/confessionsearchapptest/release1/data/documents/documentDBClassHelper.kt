@@ -604,7 +604,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
     }
     fun VerseAccess(verseNum: Int?,chapterNum:Int?,bookName: String?) :String
     {if (verseNum!! > 0)
-        return BookChapterVerseAccess(chapterNum,bookName)+"And BibleContents.VerseNum = " + verseNum
+        return BookChapterVerseAccess(chapterNum,bookName)+"    And BibleContents.VerseNumber = " + verseNum
         else
             return BookChapterVerseAccess(chapterNum,bookName)
     }
