@@ -1,4 +1,6 @@
 package com.confessionsearchapptest.release1.ui.bible
 
-class BibleViewerFragment {
+import androidx.fragment.app.Fragment
+
+class BibleViewerFragment : Fragment() {
 }

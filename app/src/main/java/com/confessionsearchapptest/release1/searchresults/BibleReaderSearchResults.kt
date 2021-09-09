@@ -67,6 +67,8 @@ val translationName = intent.getStringExtra("Translation")
                     Toast.LENGTH_LONG
                 )
            Log.i("VerseCatcher","Results found " + bibleVerseList.count())
+
+
        }
        catch(ex : Exception){
        ex.printStackTrace()
