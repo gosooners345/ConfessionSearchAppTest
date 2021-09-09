@@ -1,13 +1,13 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
+
 }
 
 android {
     compileSdk = 30
     buildToolsVersion = "30.0.3"
-    dataBinding.isEnabled = true
+
     defaultConfig {
         applicationId = "com.confessionsearchapptest.release1"
         minSdk = 21
