@@ -54,7 +54,7 @@ val translationName = intent.getStringExtra("Translation")
     }
     
     
-   
+   // Where
     fun bibleReader( bibleBook : String?, bibleCh : Int?, bibleVerseNum : Int? , bibleTranslation : String?)
      {
          Log.d("BibleReader","Debut")
@@ -64,20 +64,9 @@ val translationName = intent.getStringExtra("Translation")
 
          bibleVerseList = docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
 
-          /*DesignerToast.Success(
-                    this,
-                    String.format("Results found: "+bibleVerseList.count()),
-                    Gravity.CENTER,
-                    Toast.LENGTH_LONG
-
-                )*/
-
-
-
            MotionToast.createToast(this,"Search Results","Results found " + bibleVerseList.count(),
                MotionToast.TOAST_SUCCESS,
-               MotionToast.GRAVITY_BOTTOM
-               ,
+               MotionToast.GRAVITY_BOTTOM               ,
                MotionToast.LONG_DURATION,
                ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
 if(bibleCh!=0)
@@ -89,11 +78,33 @@ if(bibleVerseNum!=0)
     else
 {for(verses in bibleVerseList)
             verse +=verses.VerseText!!}
-        MotionToast.createToast(this,"Bible Chapter",verse!!,
+       /* MotionToast.createToast(this,"Bible Chapter",verse!!,
             MotionToast.TOAST_SUCCESS,
             MotionToast.GRAVITY_BOTTOM,
             MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
+*/
+   val awesomeDialog = AwesomeDialog.build(this)
+        .title(
+            "No Results Found!",
+            titleColor = ContextCompat.getColor(this, android.R.color.holo_red_light)
+        )
+        .body(
+            verse!!,
+            color = ContextCompat.getColor(this, android.R.color.holo_red_light)
+        )
+        .background(R.drawable.layout_rounded_white)
+        .onPositive("OK") {
+
+        }
+        .onNegative("No") {
+
+        }
+        .position(AwesomeDialog.POSITIONS.CENTER)
+
+    if (!isFinishing) awesomeDialog.show()
+
+
     }
 
 else

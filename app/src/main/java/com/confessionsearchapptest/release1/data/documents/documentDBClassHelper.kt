@@ -350,21 +350,15 @@ class documentDBClassHelper : SQLiteAssetHelper {
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
-                verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
-                verseList.add(verseText)
-                while (i < cursor.count) {
+//Iterate through the list of items and add to list
+                for (i in 0 until cursor.count)
+                {
+                    verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
                     val addBibleContent = BibleContents()
 addBibleContent.VerseText=verseText
                     addBibleContent.ChapterNum=chapNum
                     addBibleContent.BookName=bookName
               bookList.add(addBibleContent)
-                    
-                    // Filters out excessive verses so we don't duplicate entries
-                    /*if(verseInt<addBibleContent.VerseNumber!!)
-                    {
-                        verseInt = addBibleContent.VerseNumber!!
-                        verseList.add(addBibleContent.VerseNumber)}*/
-                    i++
                     cursor.moveToNext()
                 
             }}
