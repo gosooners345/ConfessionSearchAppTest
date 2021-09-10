@@ -23,6 +23,8 @@ import android.content.Intent
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.example.awesomedialog.*
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import www.sanju.motiontoast.MotionToast
 import java.util.*
 import java.util.regex.Pattern
 
@@ -59,25 +61,57 @@ val translationName = intent.getStringExtra("Translation")
          docDBhelper= documentDBClassHelper(this)
          documentDB = docDBhelper!!.readableDatabase
        try{
+
          bibleVerseList = docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
-          DesignerToast.Success(
+
+          /*DesignerToast.Success(
                     this,
                     String.format("Results found: "+bibleVerseList.count()),
                     Gravity.CENTER,
                     Toast.LENGTH_LONG
-                )
+
+                )*/
+
+
+
+           MotionToast.createToast(this,"Search Results","Results found " + bibleVerseList.count(),
+               MotionToast.TOAST_SUCCESS,
+               MotionToast.GRAVITY_BOTTOM
+               ,
+               MotionToast.LONG_DURATION,
+               ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
+if(bibleCh!=0)
+{
+    var verse =""
+
+if(bibleVerseNum!=0)
+    verse=bibleVerseList[0].VerseText!!
+    else
+{for(verses in bibleVerseList)
+            verse +=verses.VerseText!!}
+        MotionToast.createToast(this,"Bible Chapter",verse!!,
+            MotionToast.TOAST_SUCCESS,
+            MotionToast.GRAVITY_BOTTOM,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
+    }
+
+else
+{
+    MotionToast.createToast(this,"Search Results","Results found " + bibleVerseList.count(),
+        MotionToast.TOAST_SUCCESS,
+        MotionToast.GRAVITY_BOTTOM
+        ,
+        MotionToast.LONG_DURATION,
+        ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
+}
            Log.i("VerseCatcher","Results found " + bibleVerseList.count())
 
 
        }
        catch(ex : Exception){
        ex.printStackTrace()
-        DesignerToast.Error(
-                    this,
-                    String.format(ex.message!!.toString()),
-                    Gravity.CENTER,
-                    Toast.LENGTH_LONG
-                )
+        MotionToast.createToast(this,"Error",ex.stackTraceToString(),MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM,MotionToast.LONG_DURATION,ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular) )
        }
      
      

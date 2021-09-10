@@ -9,6 +9,7 @@ class BibleContents : BaseColumns{
     var ChapterNum : Int? = null
     var VerseNumber : Int? = null
     var VerseText : String? = null
+    var BookName : String? = null
 
 
 

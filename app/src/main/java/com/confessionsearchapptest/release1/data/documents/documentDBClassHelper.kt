@@ -341,6 +341,8 @@ class documentDBClassHelper : SQLiteAssetHelper {
             {accessString = BookChapterVerseAccess(chapNum,bookName)}
         else if(chapNum!! == 0 && verseNum!! == 0)
             {accessString =BookChapterNumberAccess(bookName)}
+         else if (chapNum!! !=0 && verseNum!! != 0)
+             accessString=VerseAccess(verseNum,chapNum,bookName)
          else
          accessString  = VerseAccess(verseNum,chapNum,bookName)
 
@@ -348,11 +350,13 @@ class documentDBClassHelper : SQLiteAssetHelper {
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
-   //             verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
-     //           verseList.add(verseText)
+                verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+                verseList.add(verseText)
                 while (i < cursor.count) {
                     val addBibleContent = BibleContents()
-
+addBibleContent.VerseText=verseText
+                    addBibleContent.ChapterNum=chapNum
+                    addBibleContent.BookName=bookName
               bookList.add(addBibleContent)
                     
                     // Filters out excessive verses so we don't duplicate entries
