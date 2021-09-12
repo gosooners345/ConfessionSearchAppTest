@@ -356,6 +356,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
                     verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
                     val addBibleContent = BibleContents()
 addBibleContent.VerseText=verseText
+                    addBibleContent.VerseNumber = verseNum
                     addBibleContent.ChapterNum=chapNum
                     addBibleContent.BookName=bookName
               bookList.add(addBibleContent)
