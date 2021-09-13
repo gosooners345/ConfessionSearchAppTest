@@ -13,6 +13,7 @@ import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import android.os.Environment
 import android.util.Log
+import androidx.core.os.trace
 import com.confessionsearchapptest.release1.data.bible.BibleBooks
 import com.confessionsearchapptest.release1.data.bible.BibleContents
 import java.io.File
@@ -332,10 +333,16 @@ class documentDBClassHelper : SQLiteAssetHelper {
         translationName: String?,
         bookName: String?,chapNum: Int?,verseNum: Int?
     ): BibleContentsList {
+        var chapterNumb : Int? = 0
+        var verseNumb : Int?=0
+        var verseOnly = false
+        var chapterOnly=false
         val bookList = BibleContentsList()
         var verseText = ""
         var accessString: String?
         val verseList = ArrayList<String?>()
+        var prevChapter =0
+        var prevVerse = 0
         //This allows the database to filter out requests without the need for multiple functions
             if(verseNum!! ==0 && chapNum!!>0)
             {accessString = BookChapterVerseAccess(chapNum,bookName)}
@@ -345,24 +352,86 @@ class documentDBClassHelper : SQLiteAssetHelper {
              accessString=VerseAccess(verseNum,chapNum,bookName)
          else
          accessString  = VerseAccess(verseNum,chapNum,bookName)
-
+if(verseNum>0 && chapNum>0)
+    verseOnly = true
+        if(chapNum>0 && !verseOnly)
+            chapterOnly=true
                val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
+
 //Iterate through the list of items and add to list
-                for (i in 0 until cursor.count)
-                {
-                    verseText = cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+                for (i in 0 until cursor.count) {
                     val addBibleContent = BibleContents()
-addBibleContent.VerseText=verseText
+
+                if(verseOnly) {
+                    verseText =
+                        cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+
+                    //Deals with one chapter
+                    addBibleContent.VerseText = verseText
                     addBibleContent.VerseNumber = verseNum
-                    addBibleContent.ChapterNum=chapNum
-                    addBibleContent.BookName=bookName
-              bookList.add(addBibleContent)
+                    addBibleContent.ChapterNum = chapterNumb
+                    addBibleContent.BookName = bookName
+
+                }
+                    if(chapterOnly)
+                    {
+                        var x = 0
+                        val cursor2 = cursor
+                        cursor2.moveToPosition(cursor.position)
+                        var prevChapter= cursor.getInt(cursor.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                        //Experimental : attempt to concatenate verses into one text field
+                        while(cursor2.getInt(cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))==prevChapter)
+                        {
+                            val verseNumn = cursor2.getInt(cursor2.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSENUMBER))
+                            verseText+= verseNumn.toString()+ " " +cursor2.getString(cursor2.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSETEXT))
+                            cursor2.moveToNext()
+                        }
+                        cursor2.close()
+                        addBibleContent.VerseText = verseText
+                        addBibleContent.ChapterNum = chapterNumb
+                        addBibleContent.BookName = bookName
+                        bookList.add(addBibleContent)
+                    }
+                    else if (!chapterOnly&&!verseOnly)
+                    { //gather verses
+                        var x = 0
+                        val cursor2 = cursor
+                        cursor2.moveToPosition(cursor.position)
+                        var prevChapter= cursor.getInt(cursor.getColumnIndex(
+                            KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                        //Experimental : attempt to concatenate verses into one text field
+                        while(cursor2.getInt(cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))==prevChapter)
+                        {
+                            val verseNumn = cursor2.getInt(cursor2.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSENUMBER))
+                            verseText+= verseNumn.toString()+ " " +cursor2.getString(cursor2.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSETEXT))
+                            cursor2.moveToNext()
+                        }
+                        cursor2.close()
+                        addBibleContent.VerseText = verseText
+                        addBibleContent.ChapterNum = chapterNumb
+                        addBibleContent.BookName = bookName
+                        bookList.add(addBibleContent)
+                        }
+
+
+
+
+           /* addBibleContent.VerseText=verseText
+            addBibleContent.VerseNumber = verseNum
+            addBibleContent.ChapterNum=chapNum*/
+         /*   addBibleContent.BookName=bookName
+                bookList.add(addBibleContent)*/
                     cursor.moveToNext()
-                
-            }}
+
+                }}
             cursor.close()
             return bookList
         } catch (exception: Exception) {
