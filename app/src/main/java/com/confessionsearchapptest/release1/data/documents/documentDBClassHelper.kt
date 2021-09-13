@@ -365,63 +365,80 @@ class documentDBClassHelper : SQLiteAssetHelper {
                 for (i in 0 until cursor.count) {
                     val addBibleContent = BibleContents()
 
-                if(verseOnly) {
-                    verseText =
-                        cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+                    if (verseOnly) {
+                        verseText =
+                            cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
 
-                    //Deals with one chapter
-                    addBibleContent.VerseText = verseText
-                    addBibleContent.VerseNumber = verseNum
-                    addBibleContent.ChapterNum = chapterNumb
-                    addBibleContent.BookName = bookName
+                        //Deals with one chapter
+                        addBibleContent.VerseText = verseText
+                        addBibleContent.VerseNumber = verseNum
+                        addBibleContent.ChapterNum = chapterNumb
+                        addBibleContent.BookName = bookName
 
-                }
-                    else
-                    { //gather verses
+                    } else { //gather verses
                         var x = 0
                         val cursor2 = cursor
                         cursor2.moveToPosition(cursor.position)
-                        var prevChapter= cursor.getInt(cursor.getColumnIndex(
-                            KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                        prevChapter = cursor.getInt(
+                            cursor.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                            )
+                        )
                         verseText = ""
-
                         //Experimental : attempt to concatenate verses into one text field
-                        while(cursor2.position<cursor2.count)
-
-                        //while(cursor2.getInt(cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))==prevChapter)
-                        {
-                            var verseNumn :Int? =1
-
+                        while (cursor2.position < cursor2.count) {
+                            var verseNumn: Int? = 1
                             chapterNumb = prevChapter
-                            if(cursor2.getInt(cursor2.getColumnIndex(
-                                    KEY_BIBLE_CONTENTS_CHAPTERNUMBER))==prevChapter)
-                            verseNumn = cursor2.getInt(cursor2.getColumnIndex(
-                                KEY_BIBLE_CONTENTS_VERSENUMBER))
-                            else if (cursor2.getInt(cursor2.getColumnIndex(
-                                    KEY_BIBLE_CONTENTS_CHAPTERNUMBER))>prevChapter)
-                                        prevChapter=cursor2.getInt(cursor2.getColumnIndex(
-                                            KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                            if (cursor2.getInt(
+                                    cursor2.getColumnIndex(
+                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                                    )
+                                ) == prevChapter
+                            )
+                                verseNumn = cursor2.getInt(
+                                    cursor2.getColumnIndex(
+                                        KEY_BIBLE_CONTENTS_VERSENUMBER
+                                    )
+                                )
+                            else if (cursor2.getInt(
+                                    cursor2.getColumnIndex(
+                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                                    )
+                                ) > prevChapter
+                            )
+                                prevChapter = cursor2.getInt(
+                                    cursor2.getColumnIndex(
+                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                                    )
+                                )
                             else
                                 verseNumn = 1
-                            verseText+= verseNumn.toString()+ " " +cursor2.getString(cursor2.getColumnIndex(
-                                KEY_BIBLE_CONTENTS_VERSETEXT))
+                            verseText += verseNumn.toString() + " " + cursor2.getString(
+                                cursor2.getColumnIndex(
+                                    KEY_BIBLE_CONTENTS_VERSETEXT
+                                )
+                            )
 
-                            if(cursor2.position==cursor2.count || cursor2.getInt(cursor2.getColumnIndex(
-                                    KEY_BIBLE_CONTENTS_CHAPTERNUMBER))==prevChapter)
-                            {cursor2.moveToNext()
-                                }
-                            else
+                            if (cursor2.position == cursor2.count || cursor2.getInt(
+                                    cursor2.getColumnIndex(
+                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
+                                    )
+                                ) == prevChapter
+                            ) {
+                                cursor2.moveToNext()
+                            } else
                                 continue
                         }
                     }
-                    addBibleContent.VerseText=verseText
-                    addBibleContent.ChapterNum=chapterNumb
-                    addBibleContent.BookName=bookName
+                    addBibleContent.VerseText = verseText
+                    addBibleContent.ChapterNum = chapterNumb
+                    addBibleContent.BookName = bookName
 //If a chapter is selected, size should only be 1, otherwise entire book
-                bookList.add(addBibleContent)
+                    bookList.add(addBibleContent)
                     cursor.moveToNext()
 
-                }}
+                }
+            }
             else
             cursor.close()
             Log.i("COUNT",bookList.count().toString())
