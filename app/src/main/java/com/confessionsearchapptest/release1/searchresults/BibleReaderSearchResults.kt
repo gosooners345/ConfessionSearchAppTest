@@ -91,7 +91,7 @@ else
     val chTextBox = findViewById<TextView>(R.id.chapterText)
     val chHeader = findViewById<TextView>(R.id.chapterHeader)
 
-    chHeader.text = bibleContents.BookName +" " + bibleContents.ChapterNum +":"+ bibleContents .VerseNumber
+    chHeader.text =String.format("${bibleContents.BookName} ${bibleContents.ChapterNum}")
     chTextBox.text = bibleContents.VerseText
 }
            Log.i("VerseCatcher", "Results found " + bibleVerseList.count())

@@ -351,7 +351,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
             accessString = VerseAccess(verseNum, chapNum, bookName)
         else
             accessString = VerseAccess(verseNum, chapNum, bookName)
-        if (verseNum > 0)
+        if (verseNum > 0 && chapNum > 0)
             verseOnly = true
         if (chapNum > 0 && !verseOnly)
             chapterOnly=true
@@ -398,17 +398,10 @@ class documentDBClassHelper : SQLiteAssetHelper {
                             addBibleContent.ChapterNum = chapterNumb
                             addBibleContent.BookName = bookName
                             bookList.add(addBibleContent)
-                            //cursor.close()
                             break@outerloop
                         }
-                            // Testing next, Beware of the infinite hold
-                        //Break the loop with storing values in addBibleContent variable to be added to list.
-                        // To break the conditions must be one of the following
-                        // 1. the chapter in the next cursor entry must be higher than the current chapter
-                        // 2. The end of the list
 
                             // This will break the loop
-                            //else if (!chapterOnly  && cursor.position+1> cursor.count)
                         else if (!chapterOnly  && cursor.isLast)
                         {addBibleContent.VerseText = verseText
                             addBibleContent.VerseNumber=0
@@ -434,18 +427,9 @@ class documentDBClassHelper : SQLiteAssetHelper {
                             }
                             cursor.moveToNext()
                         }
-
-
-//If a chapter is selected, size should only be 1, otherwise entire book
-//i++
-
-                //bookList.add(addBibleContent)
                 }
             }
 
-
-//Iterate through the list of items and add to list
-                //outerloop@for (i in 0 until cursor.count)
                 cursor.close()
             }
 
