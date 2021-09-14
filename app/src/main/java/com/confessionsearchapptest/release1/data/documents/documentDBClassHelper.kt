@@ -359,16 +359,19 @@ class documentDBClassHelper : SQLiteAssetHelper {
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
-                var i = 0
+
+
+                var addBibleContent =BibleContents()
+                chapterNumb = cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                verseNumb = verseNum
+               var i =0
+
                 //set chapter number to what the db entry at current position value is
-            chapterNumb=cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
-//Iterate through the list of items and add to list
-            //outerloop@for (i in 0 until cursor.count)
-                outerloop@while(cursor.position<=cursor.count)
-                {
-                    val addBibleContent = BibleContents()
+                /* outerloop@while(cursor.position<=cursor.count)*/
+                outerloop@while(!cursor.isAfterLast()){
+                    addBibleContent = BibleContents()
                     verseNumb =1
-                    if (verseOnly) {
+                  if (verseOnly) {
                         verseText =
                             cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
                         //Deals with one chapter
@@ -379,7 +382,8 @@ class documentDBClassHelper : SQLiteAssetHelper {
                         bookList.add(addBibleContent)
                         break@outerloop
 
-                    } else { //gather verses
+                    }
+                    else { //gather verses
                         i++
                         verseNumb = i
                         // Look over this tomorrow 9-14-21
@@ -387,13 +391,14 @@ class documentDBClassHelper : SQLiteAssetHelper {
                                 KEY_BIBLE_CONTENTS_VERSETEXT))
                         // This breaks when the cursor has gone through the list of verses
                         //This works for chapter selection - 09-13-21
-                        if (chapterOnly && cursor.position== cursor.count)
+                        if (chapterOnly && cursor.isLast)
                         {
                             addBibleContent.VerseText = verseText
                             addBibleContent.VerseNumber=0
                             addBibleContent.ChapterNum = chapterNumb
                             addBibleContent.BookName = bookName
                             bookList.add(addBibleContent)
+                            //cursor.close()
                             break@outerloop
                         }
                             // Testing next, Beware of the infinite hold
@@ -404,19 +409,19 @@ class documentDBClassHelper : SQLiteAssetHelper {
 
                             // This will break the loop
                             //else if (!chapterOnly  && cursor.position+1> cursor.count)
-                        else if (!chapterOnly  && cursor.position== cursor.count)
+                        else if (!chapterOnly  && cursor.isLast)
                         {addBibleContent.VerseText = verseText
                             addBibleContent.VerseNumber=0
                             addBibleContent.ChapterNum = chapterNumb
                             addBibleContent.BookName = bookName
                             bookList.add(addBibleContent)
-                            break@outerloop
+                           break@outerloop
                             }
                         // This continues the loop
                         else
                         {   prevChapter=cursor.getInt(
                                 cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
-                            if(chapterNumb!! < prevChapter && cursor.position<cursor.count+1) {
+                            if(chapterNumb!! < prevChapter && !cursor.isLast) {
                                 addBibleContent.VerseNumber = 0
                                 addBibleContent.VerseText = verseText
                                 addBibleContent.ChapterNum = chapterNumb
@@ -425,34 +430,11 @@ class documentDBClassHelper : SQLiteAssetHelper {
                                 bookList.add(addBibleContent)
                                 i=0
                                 verseText =""
-                              continue
+
                             }
-
-
                             cursor.moveToNext()
-
-
                         }
-                        //Experimental : attempt to concatenate verses into one text field
-                /* innerLoop@while (cursor2.position < cursor2.count) {
-                            var verseNumb: Int? = 1
-                            chapterNumb = prevChapter
-                            if (cursor2.getInt(
-                                    cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER)) == prevChapter)
-                                verseNumb = cursor2.getInt(
-                                    cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_VERSENUMBER))
-                            else
-                                verseNumb = 1
-                            //Concatenate verses together
-                            verseText += verseNumb.toString() +
-                                    " " + cursor2.getString(cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
-                            //Insert Solution code here. This should break the loop to allow the outer loop to advance to the next set.
-                            //Advances the loop to the next entry. We need this to break when a chapter
-                            // ends or else we end up with one massive block of text without end.
-                            cursor2.moveToNext()
-                        }*/
-                    }
+
 
 //If a chapter is selected, size should only be 1, otherwise entire book
 //i++
@@ -460,8 +442,14 @@ class documentDBClassHelper : SQLiteAssetHelper {
                 //bookList.add(addBibleContent)
                 }
             }
-            else
-            cursor.close()
+
+
+//Iterate through the list of items and add to list
+                //outerloop@for (i in 0 until cursor.count)
+                cursor.close()
+            }
+
+
             Log.i("COUNT",bookList.count().toString())
             return bookList
         } catch (exception: Exception) {
