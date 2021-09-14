@@ -141,7 +141,10 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
         var bibleTopic: String? = ""
         bibleTopic = bibleSection.BookName!!
         bibleBookPosition++
-        frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,bibleSection.VerseNumber!!,bibleSection.BookName!!)
+        if(bibleSection.VerseNumber!!>0)
+            frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,bibleSection.VerseNumber!!,bibleSection.BookName!!)
+        else
+            frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,bibleSection.ChapterNum!!,bibleSection.BookName!!)
         return frg
     }
 

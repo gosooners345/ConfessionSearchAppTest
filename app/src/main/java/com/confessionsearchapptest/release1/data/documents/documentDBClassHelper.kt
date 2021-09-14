@@ -13,7 +13,6 @@ import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import android.os.Environment
 import android.util.Log
-import androidx.core.os.trace
 import com.confessionsearchapptest.release1.data.bible.BibleBooks
 import com.confessionsearchapptest.release1.data.bible.BibleContents
 import java.io.File
@@ -352,91 +351,113 @@ class documentDBClassHelper : SQLiteAssetHelper {
             accessString = VerseAccess(verseNum, chapNum, bookName)
         else
             accessString = VerseAccess(verseNum, chapNum, bookName)
-        if (verseNum > 0 && chapNum > 0)
+        if (verseNum > 0)
             verseOnly = true
         if (chapNum > 0 && !verseOnly)
-      chapterOnly=true
-               val cursor = bibleList!!.rawQuery(accessString, null)
+            chapterOnly=true
+        //Populate the cursor with entries from db
+        val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
-
+                //set chapter number to what the db entry at current position value is
+            chapterNumb=cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
 //Iterate through the list of items and add to list
-                for (i in 0 until cursor.count) {
+            //outerloop@for (i in 0 until cursor.count)
+                outerloop@while(cursor.position<=cursor.count)
+                {
                     val addBibleContent = BibleContents()
-
+                    verseNumb =1
                     if (verseOnly) {
                         verseText =
                             cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
-
                         //Deals with one chapter
                         addBibleContent.VerseText = verseText
                         addBibleContent.VerseNumber = verseNum
                         addBibleContent.ChapterNum = chapterNumb
                         addBibleContent.BookName = bookName
+                        bookList.add(addBibleContent)
+                        break@outerloop
 
                     } else { //gather verses
-                        var x = 0
-                        val cursor2 = cursor
-                        cursor2.moveToPosition(cursor.position)
-                        prevChapter = cursor.getInt(
-                            cursor.getColumnIndex(
-                                KEY_BIBLE_CONTENTS_CHAPTERNUMBER
-                            )
-                        )
-                        verseText = ""
+                        i++
+                        verseNumb = i
+                        // Look over this tomorrow 9-14-21
+                            verseText+=verseNumb.toString() +" "+  cursor.getString(cursor.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSETEXT))
+                        // This breaks when the cursor has gone through the list of verses
+                        //This works for chapter selection - 09-13-21
+                        if (chapterOnly && cursor.position== cursor.count)
+                        {
+                            addBibleContent.VerseText = verseText
+                            addBibleContent.VerseNumber=0
+                            addBibleContent.ChapterNum = chapterNumb
+                            addBibleContent.BookName = bookName
+                            bookList.add(addBibleContent)
+                            break@outerloop
+                        }
+                            // Testing next, Beware of the infinite hold
+                        //Break the loop with storing values in addBibleContent variable to be added to list.
+                        // To break the conditions must be one of the following
+                        // 1. the chapter in the next cursor entry must be higher than the current chapter
+                        // 2. The end of the list
+
+                            // This will break the loop
+                            //else if (!chapterOnly  && cursor.position+1> cursor.count)
+                        else if (!chapterOnly  && cursor.position== cursor.count)
+                        {addBibleContent.VerseText = verseText
+                            addBibleContent.VerseNumber=0
+                            addBibleContent.ChapterNum = chapterNumb
+                            addBibleContent.BookName = bookName
+                            bookList.add(addBibleContent)
+                            break@outerloop
+                            }
+                        // This continues the loop
+                        else
+                        {   prevChapter=cursor.getInt(
+                                cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
+                            if(chapterNumb!! < prevChapter && cursor.position<cursor.count+1) {
+                                addBibleContent.VerseNumber = 0
+                                addBibleContent.VerseText = verseText
+                                addBibleContent.ChapterNum = chapterNumb
+                                addBibleContent.BookName = bookName
+                                chapterNumb = prevChapter
+                                bookList.add(addBibleContent)
+                                i=0
+                                verseText =""
+                              continue
+                            }
+
+
+                            cursor.moveToNext()
+
+
+                        }
                         //Experimental : attempt to concatenate verses into one text field
-                        while (cursor2.position < cursor2.count) {
-                            var verseNumn: Int? = 1
+                /* innerLoop@while (cursor2.position < cursor2.count) {
+                            var verseNumb: Int? = 1
                             chapterNumb = prevChapter
                             if (cursor2.getInt(
+                                    cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER)) == prevChapter)
+                                verseNumb = cursor2.getInt(
                                     cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
-                                    )
-                                ) == prevChapter
-                            )
-                                verseNumn = cursor2.getInt(
-                                    cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_VERSENUMBER
-                                    )
-                                )
-                            else if (cursor2.getInt(
-                                    cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
-                                    )
-                                ) > prevChapter
-                            )
-                                prevChapter = cursor2.getInt(
-                                    cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
-                                    )
-                                )
+                                        KEY_BIBLE_CONTENTS_VERSENUMBER))
                             else
-                                verseNumn = 1
-                            verseText += verseNumn.toString() + " " + cursor2.getString(
-                                cursor2.getColumnIndex(
-                                    KEY_BIBLE_CONTENTS_VERSETEXT
-                                )
-                            )
-
-                            if (cursor2.position == cursor2.count || cursor2.getInt(
-                                    cursor2.getColumnIndex(
-                                        KEY_BIBLE_CONTENTS_CHAPTERNUMBER
-                                    )
-                                ) == prevChapter
-                            ) {
-                                cursor2.moveToNext()
-                            } else
-                                continue
-                        }
+                                verseNumb = 1
+                            //Concatenate verses together
+                            verseText += verseNumb.toString() +
+                                    " " + cursor2.getString(cursor2.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT))
+                            //Insert Solution code here. This should break the loop to allow the outer loop to advance to the next set.
+                            //Advances the loop to the next entry. We need this to break when a chapter
+                            // ends or else we end up with one massive block of text without end.
+                            cursor2.moveToNext()
+                        }*/
                     }
-                    addBibleContent.VerseText = verseText
-                    addBibleContent.ChapterNum = chapterNumb
-                    addBibleContent.BookName = bookName
-//If a chapter is selected, size should only be 1, otherwise entire book
-                    bookList.add(addBibleContent)
-                    cursor.moveToNext()
 
+//If a chapter is selected, size should only be 1, otherwise entire book
+//i++
+
+                //bookList.add(addBibleContent)
                 }
             }
             else
