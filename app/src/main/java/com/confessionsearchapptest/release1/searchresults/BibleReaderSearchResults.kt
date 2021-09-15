@@ -1,5 +1,6 @@
 package com.confessionsearchapptest.release1.searchresults
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -8,21 +9,26 @@ import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
 import com.confessionsearchapptest.release1.R
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.awesomedialog.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import com.confessionsearchapptest.release1.ui.bible.BibleViewerFragment
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import www.sanju.motiontoast.MotionToast
 
 
 class BibleReaderSearchResults : AppCompatActivity() {
 //var bibleVP : ViewPager?=null
   //  var adapter: SearchAdapter? = null
-    var shareList: String? = null
+    var shareList: String? = ""
+    var shareNote : String? =""
 
     var bibleVerseList = BibleContentsList()
     var docDBhelper: documentDBClassHelper? = null
@@ -90,9 +96,15 @@ else
 
     val chTextBox = findViewById<TextView>(R.id.chapterText)
     val chHeader = findViewById<TextView>(R.id.chapterHeader)
-
+//Set the header and verse text fields
     chHeader.text =String.format("${bibleContents.BookName} ${bibleContents.ChapterNum}")
     chTextBox.text = bibleContents.VerseText
+    val fab: ExtendedFloatingActionButton = findViewById(R.id.shareActionButton)
+    val saveFab: ExtendedFloatingActionButton = findViewById(R.id.saveNote)
+    fab.setOnClickListener(shareContent)
+    shareNote = ""
+    shareNote = chHeader.text.toString() +":"+ chTextBox.text.toString()//+" " + BibleViewerFragment.newLine
+    saveFab.setOnClickListener(saveNewNote)
 }
            Log.i("VerseCatcher", "Results found " + bibleVerseList.count())
        } catch (ex: Exception) {
@@ -108,8 +120,25 @@ else
            )
        }
    }
-
-    
+    var shareContent = View.OnClickListener {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        val INTENTNAME = "SHARE"
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareList)
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, INTENTNAME))
+    }
+    var saveNewNote = View.OnClickListener {
+        val intent = Intent(applicationContext, NotesComposeActivity::class.java)
+        intent.putExtra("search_result_save", shareNote)
+        intent.putExtra("activity_ID", BibleReaderSearchResults.ACTIVITY_ID)
+        Log.i(SearchResultFragment.TAG, "Opening new note to save entry")
+        startActivity(intent)
+    }
+    companion object
+    {
+        private const val ACTIVITY_ID = 65
+    }
 }
 class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, titleString:String ) : FragmentStatePagerAdapter(fm!!) {
     var dList1 = BibleContentsList()
@@ -126,12 +155,12 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
 
     override fun getPageTitle(position: Int): CharSequence? {
         if (term === "") {
-            term = bibleList.title!!//+" "+bibleList[position+1].ChapterNum
+            term = bibleList.title!!
         }
-        if(term=="")
-        return String.format("Chapter %s of %s in %s", position + 1, bibleList.size, term)
+        return if(term=="")
+            String.format("Chapter %s of %s in %s", position + 1, bibleList.size, term)
         else
-            return term
+            term
     }
 
     override fun getItem(position: Int): Fragment {
@@ -149,9 +178,10 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
     }
 
     init {
-
-
-//news = fm;
         term = titleString
+    }
+    companion object
+    {
+        private const val ACTIVITY_ID=66
     }
 }

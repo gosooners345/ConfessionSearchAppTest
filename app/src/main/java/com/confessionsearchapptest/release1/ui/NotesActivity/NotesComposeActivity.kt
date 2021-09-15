@@ -23,6 +23,7 @@ import com.confessionsearchapptest.release1.data.notes.Notes
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.thecode.aestheticdialogs.*
 import com.vdx.designertoast.DesignerToast
 import www.sanju.motiontoast.MotionToast
 
@@ -104,7 +105,8 @@ class NotesComposeActivity : AppCompatActivity() {
                 //Update or insert new note into database
                 if (isNewNote) {
                     noteRepository!!.insertNote(newNote)
-                } else noteRepository!!.updateNote(newNote)
+                }
+                else noteRepository!!.updateNote(newNote)
                 if (activityID == 32) NotesFragment.adapter!!.notifyDataSetChanged()
                 Log.i(TAG, "Saving note to storage")
                // DesignerToast.Success(applicationContext,"Saved Note to Storage!", Gravity.BOTTOM,Toast.LENGTH_LONG)
@@ -150,7 +152,6 @@ class NotesComposeActivity : AppCompatActivity() {
     //back button
     override fun onBackPressed() {
         if (mode == EDIT_OFF) {
-
             val awesomeDialog = AwesomeDialog.build(this)
             .title("Save your work?")
             .body("Save your notes here")
@@ -160,6 +161,20 @@ class NotesComposeActivity : AppCompatActivity() {
             .onNegative("No"){finish()}
             .position(AwesomeDialog.POSITIONS.CENTER)
             if (!isFinishing) awesomeDialog.show()
+            /*AestheticDialog.Builder(this,DialogStyle.FLAT,DialogType.INFO)
+                .setTitle("Save your work?")
+                .setMessage("Save your notes before leaving?")
+                .setCancelable(true)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(DialogAnimation.CARD)
+                .setDarkMode(true)
+                .setOnClickListener(object:OnDialogClickListener{
+                    override fun onClick(dialog: AestheticDialog.Builder) {
+                        saveButton!!.performClick()
+                    }
+                })*/
+
+
         } else DisableEdit()
     }
 
@@ -205,7 +220,7 @@ class NotesComposeActivity : AppCompatActivity() {
             ,
             MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(applicationContext,R.font.helvetica_regular))
-    //    Snackbar.make(findViewById(R.id.masterLayout), "Resume Writing", BaseTransientBottomBar.LENGTH_SHORT).show()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
