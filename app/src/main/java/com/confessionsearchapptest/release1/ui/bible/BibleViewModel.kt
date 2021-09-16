@@ -25,21 +25,32 @@ class BibleViewModel : ViewModel() {
         }
     }
 
-    fun getChapters(): ArrayList<Int?> {
-        return bibleChapterList
+    fun getChapters(): ArrayList<String?> {
+        val chapterStringList: ArrayList<String?> = ArrayList()
+        chapterStringList.add("All")
+        for(i in bibleChapterList)
+            chapterStringList.add(i.toString())
+        return chapterStringList
     }
 
     fun loadChapters(list: ArrayList<Int?>) {
-        bibleChapterList.add(0)
+       // bibleChapterList.add(0)
         bibleChapterList.addAll(list)
     }
 
-    fun getVerseNumbers(): ArrayList<Int?> {
-        return bibleVerseNumList
+    fun getVerseNumbers(): ArrayList<String?> {
+val verseStringList: ArrayList<String?> = ArrayList()
+      // forEach(verseNum i bibleVerseNumList)
+        verseStringList.add("All")
+        for (i in bibleVerseNumList) {
+            verseStringList.add(i.toString())
+        }
+        //bibleVerseNumList
+        return verseStringList
     }
 
     fun loadVerseNumbers(list: ArrayList<Int?>) {
-        bibleVerseNumList.add(0)
+       // bibleVerseNumList.add(0)
         bibleVerseNumList.addAll(list)
 
     }

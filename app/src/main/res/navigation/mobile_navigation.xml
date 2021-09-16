@@ -19,8 +19,7 @@
     <fragment
         android:id="@+id/navigation_bible"
         android:name="com.confessionsearchapptest.release1.ui.bible.BibleFragment"
-        android:label="BibleFragment"
-        tools:layout="@layout/fragment_bible_form"/>
+        android:label="Bible Reader" />
 
 
 </navigation>

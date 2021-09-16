@@ -10,14 +10,6 @@ import com.confessionsearchapptest.release1.ui.NotesActivity.NotesFragment.Compa
 
 class NotesViewModel : ViewModel() {
     var noteRepository: NoteRepository? = null
-//var notesList :ArrayList<Notes?> = ArrayList()
-
-   /* private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
-    }
-    val text: LiveData<String> = _text*/
-
-
 
 
     //Delete notes from database

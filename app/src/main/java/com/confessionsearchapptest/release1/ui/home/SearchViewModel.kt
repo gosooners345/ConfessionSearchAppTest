@@ -25,6 +25,7 @@ class SearchViewModel : ViewModel() {
     }
 
     fun getTitles(): ArrayList<String?> {
+       // documentTitleList.add("All")
         return documentTitleList
     }
 

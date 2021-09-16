@@ -24,6 +24,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.vdx.designertoast.DesignerToast
 import www.sanju.motiontoast.MotionToast
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 class SearchFragment : Fragment() {
@@ -294,16 +295,27 @@ var translationAbbrevTitle =""
         @SuppressLint("ResourceAsColor")
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
             run {
-                val docTitles: ArrayList<String?> = ArrayList()
-                type = parent.selectedItem.toString()
-                //Gets all document titles and places them in a list
-                for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB!!)) {
-                    docTitles!!.add(docTitle.documentName!!)
+                try {
+                    var docTitles: ArrayList<String?> = ArrayList()
+                    type = parent.selectedItem.toString()
+                    if (docTitleList.isNotEmpty())
+                        docTitleList.clear()
+                    searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB!!))
+                    docTitleList = searchViewModel.getTitles()
+                    //Gets all document titles and places them in a list
+                    /*  for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB!!)) {
+                    docTitles!!.add(docTitle.documentName!!)*/
+                }
+                catch(ex:Exception)
+                {
+                    Toast.makeText(context,ex.localizedMessage,Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,ex.stackTraceToString(),Toast.LENGTH_LONG).show()
+
                 }
                 docTitleSpinnerAdapter = ArrayAdapter(
                     requireContext(),
                     R.layout.support_simple_spinner_dropdown_item,
-                    docTitles
+                    docTitleList
                 )
                 docTitleSpinnerAdapter!!.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
                 documentNameSpinner!!.adapter = docTitleSpinnerAdapter

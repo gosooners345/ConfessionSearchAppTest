@@ -33,16 +33,16 @@ class BibleFragment : Fragment() {
     var bibleCh = 0
     var bibleVerseNum = 0
     var bibleBooksList: ArrayList<String?> = ArrayList()
-    var bibleChapterList: ArrayList<Int?> = ArrayList()
-    var bibleVerseNumList: ArrayList<Int?> = ArrayList()
+    var bibleChapterList: ArrayList<String?> = ArrayList()
+    var bibleVerseNumList: ArrayList<String?> = ArrayList()
     var bibleSelectorSpinner: Spinner? = null
     var bibleChapterSpinner: Spinner? = null
     var bibleVerseSelector: Spinner? = null
     var bibleBook = ""
     var bibleBookSelectorComboBox: Spinner? = null
     var bibleBookAdapter: ArrayAdapter<String>? = null
-    var bibleChNumAdapter: ArrayAdapter<Int>? = null
-    var bibleVerseNumAdapter: ArrayAdapter<Int>? = null
+    var bibleChNumAdapter: ArrayAdapter<String>? = null
+    var bibleVerseNumAdapter: ArrayAdapter<String>? = null
 
     var bibleSelectorAdapter: ArrayAdapter<String>? = null
     private val binding get() = _binding!!
@@ -161,7 +161,10 @@ class BibleFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                bibleCh = parent!!.selectedItem.toString().toInt()
+                bibleCh = if(parent!!.selectedItem.toString()=="All")
+                    0
+                else
+                    parent!!.selectedItem.toString().toInt()
                 if (bibleVerseNumList.isNotEmpty()) {
                     bibleVerseNumList.clear()
                 }
@@ -184,7 +187,10 @@ class BibleFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                bibleCh = parent!!.selectedItem.toString().toInt()
+                bibleCh = if(parent!!.selectedItem.toString()=="All")
+                    0
+                else
+                    parent!!.selectedItem.toString().toInt()
             }
         }
     var bibleVerseSelectorListener: AdapterView.OnItemSelectedListener =
@@ -195,17 +201,21 @@ class BibleFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                bibleVerseNum = parent!!.selectedItem.toString().toInt()
+                bibleVerseNum = if (parent!!.selectedItem.toString() == "All")
+                    0
+                else
+                    parent.selectedItem.toString().toInt()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                bibleVerseNum = parent!!.selectedItem.toString().toInt()
+                bibleVerseNum = if(parent!!.selectedItem.toString()=="All")
+                    0
+                else
+                    parent.selectedItem.toString().toInt()
             }
         }
     var submitFabClicker = View.OnClickListener {
         try {
             val bibleIntent = Intent(context, BibleReaderSearchResults::class.java)
-//bibleViewModel.loadBibleList(docDBhelper!!.getChaptersandVerses(documentDB!!,bibleTranslation,bibleBook,bibleCh,bibleVerseNum)
             bibleIntent.putExtra("Translation", bibleTranslation)
             bibleIntent.putExtra("BookName", bibleBook)
             bibleIntent.putExtra("Chapter", bibleCh)
