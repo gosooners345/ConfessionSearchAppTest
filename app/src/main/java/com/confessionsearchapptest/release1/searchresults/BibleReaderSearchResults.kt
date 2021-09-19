@@ -154,13 +154,14 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        if (term === "") {
-            term = bibleList.title!!
-        }
-        return if(term=="")
+        //if (term === "") {
+         //   term = bibleList.title!!
+        //}
+      //Test out a new display for bible reader
+        return 
             String.format("Chapter %s of %s in %s", position + 1, bibleList.size, term)
-        else
-            term
+        //else
+            //term
     }
 
     override fun getItem(position: Int): Fragment {
@@ -173,7 +174,7 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
         if(bibleSection.VerseNumber!!>0)
             frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,bibleSection.VerseNumber!!,bibleSection.BookName!!)
         else
-            frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,bibleSection.ChapterNum!!,bibleSection.BookName!!)
+            frg = BibleViewerFragment.NewVerse(bibleSection.ChapterNum!!,bibleSection.VerseText!!,0,bibleSection.BookName!!)
         return frg
     }
 
