@@ -11,8 +11,8 @@ class SearchViewModel : ViewModel() {
     //Document List variables for loading on main search form
     private var documentTypes: ArrayList<String?> = ArrayList()
     private var documentTitleList: ArrayList<String?> = ArrayList()
- private var bibleTranslationList : ArrayList<String?> = ArrayList()
-
+    private var bibleTranslationList: ArrayList<String?> = ArrayList()
+    //Document types
     fun getTypes(): ArrayList<String?> {
         return documentTypes
     }
@@ -25,7 +25,6 @@ class SearchViewModel : ViewModel() {
     }
 
     fun getTitles(): ArrayList<String?> {
-       // documentTitleList.add("All")
         return documentTitleList
     }
 
@@ -35,13 +34,12 @@ class SearchViewModel : ViewModel() {
 
     }
 
-    fun loadTranslations(list: java.util.ArrayList<BibleTranslation>)
-    {
+    fun loadTranslations(list: java.util.ArrayList<BibleTranslation>) {
         for (translation in list)
             bibleTranslationList.add(translation!!.bibleTranslationName)
     }
 
-    fun getTranslations(): ArrayList<String?>{
+    fun getTranslations(): ArrayList<String?> {
         return bibleTranslationList
     }
 }

@@ -3,50 +3,27 @@ package com.confessionsearchapptest.release1.data.documents
 import android.content.Context
 import android.database.Cursor
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
-import com.confessionsearchapptest.release1.databasehelpers.DatabaseContext
-import android.widget.Toast
-import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteDatabase
 import kotlin.jvm.Synchronized
 import android.database.sqlite.SQLiteQueryBuilder
 import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
-import android.os.Environment
 import android.util.Log
 import com.confessionsearchapptest.release1.data.bible.BibleBooks
 import com.confessionsearchapptest.release1.data.bible.BibleContents
-import java.io.File
 import java.lang.Exception
 
 import kotlin.collections.ArrayList
 
-class documentDBClassHelper : SQLiteAssetHelper {
+class DocumentDBClassHelper : SQLiteAssetHelper {
     var context: Context? = null
 
     constructor(context: Context?) : super(context, DATABASE_NAME, null, DATABASE_VERSION) {
-        this.context = context 
+        this.context = context
         setForcedUpgrade()
     }
 
-    internal constructor(context: Context?, databaseName: String?) : super(
-        DatabaseContext(context),
-        databaseName,
-        null,
-        DATABASE_VERSION
-    ) {
-        try {
-            val myPath = DATABASE_PATH
-            val dbFile = File(myPath)
-            if (dbFile.exists()) {
-                Toast.makeText(context, "DBExists", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(context, "Db doesn't exist", Toast.LENGTH_LONG).show()
-            }
-        } catch (e: SQLiteException) {
-            Log.d("Database doesn't exist", e.message!!)
-        }
-    }
-//Needs to be used in onUpgrade rewrite.
+    //Needs to be used in onUpgrade rewrite.
     override fun getWritableDatabase(): SQLiteDatabase {
         return super.getWritableDatabase()
     }
@@ -74,7 +51,8 @@ class documentDBClassHelper : SQLiteAssetHelper {
             c.moveToFirst()
             return c
         }
-        //Bible Translations
+
+    //Bible Translations
     val bibleTranslations: Cursor
         get() {
             val db = readableDatabase
@@ -92,28 +70,26 @@ class documentDBClassHelper : SQLiteAssetHelper {
             c.moveToFirst()
             return c
         }
-// Needs to be fixed to allow for smooth upgrades
+
+    // Needs to be fixed to allow for smooth upgrades
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion != newVersion) {
 //context.deleteDatabase(DATABASE_NAME)
-            //new documentDBClassHelper(context)
-            
+            //new DocumentDBClassHelper(context)
+
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLECONTENTS)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLE_BOOKS)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BIBLETRANSLATION)
-           db.execSQL("CREATE TABLE " + TABLE_DOCUMENTTITLE)
+            db.execSQL("CREATE TABLE " + TABLE_DOCUMENTTITLE)
             db.execSQL("CREATE TABLE " + TABLE_DOCUMENT)
             db.execSQL("CREATE TABLE " + TABLE_DOCUMENTTYPE)
-             db.execSQL("CREATE TABLE " + TABLE_BIBLECONTENTS)
+            db.execSQL("CREATE TABLE " + TABLE_BIBLECONTENTS)
             db.execSQL("CREATE TABLE " + TABLE_BIBLETRANSLATION)
             db.execSQL("CREATE TABLE " + TABLE_BIBLE_BOOKS)
             onCreate(db)
-        }
-        else
-        {//super.onUpgrade(db,oldVersion,newVersion)
         }
     }
 
@@ -150,7 +126,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
         } catch (e: Exception) {
             Log.e("Error", "Error Retrieving Entries from DB")
         } finally {
-            if (cursor != null && !cursor.isClosed) cursor.close()
+            if (!cursor.isClosed) cursor.close()
         }
         return translations
     }
@@ -184,12 +160,12 @@ class documentDBClassHelper : SQLiteAssetHelper {
         } catch (e: Exception) {
             Log.d("ERROR", "Error retrieving entries from DB")
         } finally {
-            if (cursor != null && !cursor.isClosed) cursor.close()
+            if (!cursor.isClosed) cursor.close()
             run { cursor.close() } //
         }
         return types
     }
-    
+
     //Bible Reader Related
 //Book Specific Filtering, Safe, Gets Chapters for spinner
     fun getAllChapters(
@@ -199,10 +175,10 @@ class documentDBClassHelper : SQLiteAssetHelper {
     ): ArrayList<Int?> {
         val bookList = BibleContentsList()
         var chInt = 0
-        var accessString: String?
+        val accessString: String?
         val ChList = ArrayList<Int?>()
 //SQL Statement to get Chapter numbers in code 
-       accessString  = BookChapterNumberAccess(bookName)
+        accessString = BookChapterNumberAccess(bookName)
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
@@ -217,10 +193,10 @@ class documentDBClassHelper : SQLiteAssetHelper {
                             KEY_BIBLE_CONTENTS_CHAPTERNUMBER
                         )
                     )
-                    if(chInt<addBibleContent.ChapterNum!!)
-{
-    chInt = addBibleContent.ChapterNum!!
-    ChList.add(addBibleContent.ChapterNum)}
+                    if (chInt < addBibleContent.ChapterNum!!) {
+                        chInt = addBibleContent.ChapterNum!!
+                        ChList.add(addBibleContent.ChapterNum)
+                    }
                     i++
                     cursor.moveToNext()
                 }
@@ -239,14 +215,14 @@ class documentDBClassHelper : SQLiteAssetHelper {
     fun getAllVerseNumbers(
         bibleList: SQLiteDatabase?,
         translationName: String?,
-        bookName: String?,chapNum: Int?
+        bookName: String?, chapNum: Int?
     ): ArrayList<Int?> {
         val bookList = BibleContentsList()
         var verseInt = 0
         var accessString: String?
         val verseList = ArrayList<Int?>()
 //SQL Statement for Verse numbers
-        accessString  = BookChapterVerseAccess(chapNum,bookName)
+        accessString = BookChapterVerseAccess(chapNum, bookName)
 
 
         val cursor = bibleList!!.rawQuery(accessString, null)
@@ -263,11 +239,11 @@ class documentDBClassHelper : SQLiteAssetHelper {
                             KEY_BIBLE_CONTENTS_VERSENUMBER
                         )
                     )
-    // Filters out excessive verses so we don't duplicate entries
-                    if(verseInt<addBibleContent.VerseNumber!!)
-                    {
+                    // Filters out excessive verses so we don't duplicate entries
+                    if (verseInt < addBibleContent.VerseNumber!!) {
                         verseInt = addBibleContent.VerseNumber!!
-                        verseList.add(addBibleContent.VerseNumber)}
+                        verseList.add(addBibleContent.VerseNumber)
+                    }
                     i++
                     cursor.moveToNext()
                 }
@@ -280,17 +256,18 @@ class documentDBClassHelper : SQLiteAssetHelper {
             return verseList
         }
     }
+
     fun getAllVerses(
         bibleList: SQLiteDatabase?,
         translationName: String?,
-        bookName: String?,chapNum: Int?,verseNum: Int?
+        bookName: String?, chapNum: Int?, verseNum: Int?
     ): ArrayList<String?> {
         val bookList = BibleContentsList()
         var verseText = ""
         var accessString: String?
         val verseList = ArrayList<String?>()
 //SQL Statement for Verse numbers
-        accessString  = VerseAccess(verseNum,chapNum,bookName)
+        accessString = VerseAccess(verseNum, chapNum, bookName)
 
 
         val cursor = bibleList!!.rawQuery(accessString, null)
@@ -319,12 +296,12 @@ class documentDBClassHelper : SQLiteAssetHelper {
             return verseList
         }
     }
-    
+
     //Bible Contents List 
-        fun getChaptersandVerses(
+    fun getChaptersandVerses(
         bibleList: SQLiteDatabase?,
         translationName: String?,
-        bookName: String?,chapNum: Int?,verseNum: Int?
+        bookName: String?, chapNum: Int?, verseNum: Int?
     ): BibleContentsList {
         var chapterNumb: Int? = 0
         var verseNumb: Int? = 0
@@ -333,9 +310,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
         val bookList = BibleContentsList()
         var verseText = ""
         var accessString: String?
-        val verseList = ArrayList<String?>()
         var prevChapter = 0
-        var prevVerse = 0
         //This allows the database to filter out requests without the need for multiple functions
         if (verseNum!! == 0 && chapNum!! > 0) {
             accessString = BookChapterVerseAccess(chapNum, bookName)
@@ -348,26 +323,32 @@ class documentDBClassHelper : SQLiteAssetHelper {
         if (verseNum > 0 && chapNum > 0)
             verseOnly = true
         if (chapNum > 0 && !verseOnly)
-            chapterOnly=true
+            chapterOnly = true
         //Populate the cursor with entries from db
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
             if (cursor.moveToFirst()) {
 
 
-                var addBibleContent =BibleContents()
+                var addBibleContent = BibleContents()
                 chapterNumb = cursor.getInt(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
                 verseNumb = verseNum
-               var i =0
+                var i = 0
 
                 //set chapter number to what the db entry at current position value is
-                /* outerloop@while(cursor.position<=cursor.count)*/
-                outerloop@while(!cursor.isAfterLast()){
+
+                outerloop@ while (!cursor.isAfterLast()) {
                     addBibleContent = BibleContents()
-                    verseNumb =1
-                  if (verseOnly) {
-                        verseText = String.format(verseNum.toString() + " " +
-                            cursor.getString(cursor.getColumnIndex(KEY_BIBLE_CONTENTS_VERSETEXT)))
+                    verseNumb = 1
+                    if (verseOnly) {
+                        verseText = String.format(
+                            verseNum.toString() + " " +
+                                    cursor.getString(
+                                        cursor.getColumnIndex(
+                                            KEY_BIBLE_CONTENTS_VERSETEXT
+                                        )
+                                    )
+                        )
                         //Deals with one chapter
                         addBibleContent.VerseText = verseText
                         addBibleContent.VerseNumber = verseNum
@@ -376,90 +357,94 @@ class documentDBClassHelper : SQLiteAssetHelper {
                         bookList.add(addBibleContent)
                         break@outerloop
 
-                    }
-                    else { //gather verses
+                    } else { //gather verses
                         i++
                         verseNumb = i
                         // Look over this tomorrow 9-14-21
-                            verseText+=verseNumb.toString() +" "+  cursor.getString(cursor.getColumnIndex(
-                                KEY_BIBLE_CONTENTS_VERSETEXT))
+                        verseText += verseNumb.toString() + " " + cursor.getString(
+                            cursor.getColumnIndex(
+                                KEY_BIBLE_CONTENTS_VERSETEXT
+                            )
+                        )
                         // This breaks when the cursor has gone through the list of verses
                         //This works for chapter selection - 09-13-21
-                        if (chapterOnly && cursor.isLast)
-                        {
+                        if (chapterOnly && cursor.isLast) {
                             addBibleContent.VerseText = verseText
-                            addBibleContent.VerseNumber=0
+                            addBibleContent.VerseNumber = 0
                             addBibleContent.ChapterNum = chapterNumb
                             addBibleContent.BookName = bookName
                             bookList.add(addBibleContent)
                             break@outerloop
                         }
 
-                            // This will break the loop
-                        else if (!chapterOnly  && cursor.isLast)
-                        {addBibleContent.VerseText = verseText
-                            addBibleContent.VerseNumber=0
+                        // This will break the loop
+                        else if (!chapterOnly && cursor.isLast) {
+                            addBibleContent.VerseText = verseText
+                            addBibleContent.VerseNumber = 0
                             addBibleContent.ChapterNum = chapterNumb
                             addBibleContent.BookName = bookName
                             bookList.add(addBibleContent)
-                           break@outerloop
-                            }
+                            break@outerloop
+                        }
                         // This continues the loop
-                        else
-                        {   prevChapter=cursor.getInt(
-                                cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER))
-                            if(chapterNumb!! < prevChapter && !cursor.isLast) {
+                        else {
+                            prevChapter = cursor.getInt(
+                                cursor.getColumnIndex(KEY_BIBLE_CONTENTS_CHAPTERNUMBER)
+                            )
+                            if (chapterNumb!! < prevChapter && !cursor.isLast) {
                                 addBibleContent.VerseNumber = 0
                                 addBibleContent.VerseText = verseText
                                 addBibleContent.ChapterNum = chapterNumb
                                 addBibleContent.BookName = bookName
                                 chapterNumb = prevChapter
                                 bookList.add(addBibleContent)
-                                i=0
-                                verseText =""
+                                i = 0
+                                verseText = ""
 
                             }
                             cursor.moveToNext()
                         }
+                    }
                 }
-            }
 
                 cursor.close()
             }
 
 
-            Log.i("COUNT",bookList.count().toString())
+            Log.i("COUNT", bookList.count().toString())
             return bookList
         } catch (exception: Exception) {
             exception.printStackTrace()
-
             cursor.close()
             return bookList
         }
     }
-    
-    
-    
-//get bible books, Bible Reader Related
+
+
+    //get bible books, Bible Reader Related
     fun getAllBooks(
         bibleList: SQLiteDatabase?
     ): ArrayList<BibleBooks> {
-        var bookList =ArrayList<BibleBooks>()
-        var cursor: Cursor?
-        var accessString: String? = BibleBookAccess()
-        cursor=bibleList!!.rawQuery(accessString,null)
-        try{
+        val bookList = ArrayList<BibleBooks>()
+        val cursor: Cursor?
+        val accessString: String? = BibleBookAccess()
+        cursor = bibleList!!.rawQuery(accessString, null)
+        try {
 
-            if(cursor.moveToFirst())
-            {
-                var i =0
-                while(i<cursor.count)
-                {
-           val bibleBook = BibleBooks()
-                    bibleBook.BookID=cursor.getInt(cursor.getColumnIndex(
-                        KEY_BIBLE_BOOKS_ID))
-                    bibleBook.BookName=cursor.getString(cursor.getColumnIndex(
-                        KEY_BIBLE_BOOKS_BOOKNAME))
+            if (cursor.moveToFirst()) {
+                var i = 0
+                while (i < cursor.count) {
+                    val bibleBook = BibleBooks()
+                    bibleBook.BookID = cursor.getInt(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_BOOKS_ID
+                        )
+                    )
+                    bibleBook.BookName = cursor.getString(
+                        cursor.getColumnIndex(
+                            KEY_BIBLE_BOOKS_BOOKNAME
+                        )
+                    )
                     i++
                     cursor.moveToNext()
                     bookList.add(bibleBook)
@@ -467,19 +452,18 @@ class documentDBClassHelper : SQLiteAssetHelper {
             }
             cursor.close()
             return bookList
-        }
-        catch (exception : Exception)
-        {
+        } catch (exception: Exception) {
             exception.printStackTrace()
             cursor.close()
             return bookList
         }
     }
 
-// For another section of project
-    fun getVersesForProofs(){
-        TODO("This is for future implementation with the Transition from static proofs to dynamic proofs allowing the user to select their own translation")}
-//Grab Document titles from DB, Document Search Related;
+    // For another section of project
+    fun getVersesForProofs() {
+           }
+
+    //Grab Document titles from DB, Document Search Related;
     fun getAllDocTitles(type: String, dbType: SQLiteDatabase): ArrayList<DocumentTitle> {
         var type = type
         val documentTitles = ArrayList<DocumentTitle>()
@@ -525,11 +509,9 @@ class documentDBClassHelper : SQLiteAssetHelper {
                 }
             }
             cursor.close()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d("Error", "Error Retrieving the entries from DocumentTitle Table")
-        }
-        finally {
+        } finally {
             if (cursor != null && !cursor.isClosed) cursor.close()
             run { cursor!!.close() }
         }
@@ -640,14 +622,15 @@ class documentDBClassHelper : SQLiteAssetHelper {
         }
     }
 
-//Document search related
+    //Document search related
     fun LayoutString(docType: String?): String {
         return String.format(
             "SELECT DocumentType.*, DocumentTitle.* FROM DocumentTitle NATURAL JOIN DocumentType WHERE DocumentTitle.DocumentTypeID = DocumentType.DocumentTypeId AND DocumentType.DocumentTypeName = '%s'",
             docType
         )
     }
-//Document Search Related, Document search
+
+    //Document Search Related, Document search
     fun DataTableAccess(documentName: String?): String {
         return String.format(
             "SELECT Documenttitle.documentName, " +
@@ -656,29 +639,38 @@ class documentDBClassHelper : SQLiteAssetHelper {
             documentName
         )
     }
+
     // Chapter Retrieval and filtering. Simply add this + extra filters on string to use query. Bible Reader Related
-    fun BookChapterNumberAccess(bookName: String?) : String{
-        return String.format("SELECT BibleTranslations.*, BibleBooks.*, BibleContents.* from BibleContents NATURAL JOIN BibleBooks Natural Join BibleTranslations " +
-                "Where BibleContents.BookNumber = BibleBooks.BookID And BibleContents.TranslationID = BibleTranslations.TranslationID And BibleBooks.BookName = '%s'",bookName)
+    fun BookChapterNumberAccess(bookName: String?): String {
+        return String.format(
+            "SELECT BibleTranslations.*, BibleBooks.*, BibleContents.* from BibleContents NATURAL JOIN BibleBooks Natural Join BibleTranslations " +
+                    "Where BibleContents.BookNumber = BibleBooks.BookID And BibleContents.TranslationID = BibleTranslations.TranslationID And BibleBooks.BookName = '%s'",
+            bookName
+        )
 
     }
+
     //Verse Retrieval. Adds on to BCNA method above for verse retrieval
-    fun BookChapterVerseAccess(chapNum: Int?,bookName: String?) : String{
-        return BookChapterNumberAccess(bookName)+" And BibleContents.ChapterNum = " + chapNum
-    }
-    fun VerseAccess(verseNum: Int?,chapterNum:Int?,bookName: String?) :String
-    {if (verseNum!! > 0)
-        return BookChapterVerseAccess(chapterNum,bookName)+"    And BibleContents.VerseNumber = " + verseNum
-        else
-            return BookChapterVerseAccess(chapterNum,bookName)
-    }
-    
-//Bible Book Retrieval , Bible Reader Related Method
-    fun BibleBookAccess():String{
-        return  "SELECT * FROM BibleBooks"
+    fun BookChapterVerseAccess(chapNum: Int?, bookName: String?): String {
+        return BookChapterNumberAccess(bookName) + " And BibleContents.ChapterNum = " + chapNum
     }
 
-//Document Search Related, Document Title Related
+    fun VerseAccess(verseNum: Int?, chapterNum: Int?, bookName: String?): String {
+        if (verseNum!! > 0)
+            return BookChapterVerseAccess(
+                chapterNum,
+                bookName
+            ) + "    And BibleContents.VerseNumber = " + verseNum
+        else
+            return BookChapterVerseAccess(chapterNum, bookName)
+    }
+
+    //Bible Book Retrieval , Bible Reader Related Method
+    fun BibleBookAccess(): String {
+        return "SELECT * FROM BibleBooks"
+    }
+
+    //Document Search Related, Document Title Related
     fun TableAccess(tableName: String): String {
         val table1: String
         table1 = if (tableName !== "") String.format(
@@ -692,7 +684,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
         //DATABASE INFORMATION
         private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
         private const val DATABASE_VERSION = 6
-        private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
+      //  private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
 
         //TABLE INFO
         private const val TABLE_DOCUMENT = "Document"
@@ -729,7 +721,7 @@ class documentDBClassHelper : SQLiteAssetHelper {
 
         //BibleBooksTable
         private const val KEY_BIBLE_BOOKS_ID = "BookID"
-        private const val KEY_BIBLE_BOOKS_BOOKNAME="BookName"
+        private const val KEY_BIBLE_BOOKS_BOOKNAME = "BookName"
 
         //BIBLE CONTENTS TABLE
         private const val KEY_BIBLE_CONTENTS_ENTRY_ID = "EntryID"
@@ -738,11 +730,12 @@ class documentDBClassHelper : SQLiteAssetHelper {
         private const val KEY_BIBLE_CONTENTS_CHAPTERNUMBER = "ChapterNum"
         private const val KEY_BIBLE_CONTENTS_VERSENUMBER = "VerseNumber"
         private const val KEY_BIBLE_CONTENTS_VERSETEXT = "VerseText"
-        private var sInstance: documentDBClassHelper? = null
+        private var sInstance: DocumentDBClassHelper? = null
+
         @Synchronized
-        fun getInstance(context: Context): documentDBClassHelper? {
+        fun getInstance(context: Context): DocumentDBClassHelper? {
             if (sInstance == null) {
-                sInstance = documentDBClassHelper(context.applicationContext)
+                sInstance = DocumentDBClassHelper(context.applicationContext)
             }
             return sInstance
         }

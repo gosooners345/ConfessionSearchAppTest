@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.confessionsearchapptest.release1.R
-import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
+import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentBibleFormBinding
 import com.confessionsearchapptest.release1.searchresults.BibleReaderSearchResults
 
@@ -25,7 +25,7 @@ class BibleFragment : Fragment() {
     private var _binding: FragmentBibleFormBinding? = null
     private lateinit var bibleViewModel: BibleViewModel
     var documentDB: SQLiteDatabase? = null
-    var docDBhelper: documentDBClassHelper? = null
+    var docDBhelper: DocumentDBClassHelper? = null
     var bibleTransList: ArrayList<String?> = ArrayList()
     var bibleTranslation = ""
     var submitButton: ExtendedFloatingActionButton? = null
@@ -54,7 +54,7 @@ class BibleFragment : Fragment() {
     ): View? {
         _binding = FragmentBibleFormBinding.inflate(inflater, container, false)
         bibleViewModel = ViewModelProvider(this).get(BibleViewModel::class.java)
-        docDBhelper = documentDBClassHelper(super.getContext())
+        docDBhelper = DocumentDBClassHelper(super.getContext())
 
         documentDB = docDBhelper!!.readableDatabase
 //Translations

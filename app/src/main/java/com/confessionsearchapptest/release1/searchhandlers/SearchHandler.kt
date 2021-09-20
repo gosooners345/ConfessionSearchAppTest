@@ -1,14 +1,10 @@
 package com.confessionsearchapptest.release1.searchhandlers
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Html
 import android.util.Log
 import android.view.Gravity
@@ -20,11 +16,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.Document
 import com.confessionsearchapptest.release1.data.documents.DocumentList
-import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
+import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
 import com.confessionsearchapptest.release1.searchresults.SearchAdapter
 import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.example.awesomedialog.*
@@ -38,15 +33,12 @@ class SearchHandler : AppCompatActivity() {
     var masterList = DocumentList()
     var searchFragment: SearchFragmentActivity? = null
     var documentDB: SQLiteDatabase? = null
-    var docDBhelper: documentDBClassHelper? = null
+    var docDBhelper: DocumentDBClassHelper? = null
     var shareList = ""
 
 
-
-
-
-  @SuppressLint("NewApi")
-    override fun onCreate(savedInstanceState: Bundle?){//, persistentState: PersistableBundle?) {
+    @SuppressLint("NewApi")
+    override fun onCreate(savedInstanceState: Bundle?) {//, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState)
         val allDocsBool = intent.getBooleanExtra("AllDocs", false)
         val answers = intent.getBooleanExtra("Answers", false)
@@ -62,7 +54,8 @@ class SearchHandler : AppCompatActivity() {
         val fileName = intent.getStringExtra("FileName")
 
 
-        search(query,allDocsBool,answers,
+        search(
+            query, allDocsBool, answers,
             confession,
             catechism,
             creed,
@@ -75,7 +68,8 @@ class SearchHandler : AppCompatActivity() {
         )
 
     }
-//Search Method used for application
+
+    //Search Method used for application
     @RequiresApi(Build.VERSION_CODES.N)
     fun search(
         query: String?,
@@ -91,13 +85,13 @@ class SearchHandler : AppCompatActivity() {
         questionSearch: Boolean?,
         fileName: String?
     ) {
-        Log.d("SearchMethod","SearchWorks")
+        Log.d("SearchMethod", "SearchWorks")
         var query = query
         var docID = 0
         var accessString = ""
         var fileString = ""
-docDBhelper = documentDBClassHelper(this)
-        documentDB= docDBhelper!!.readableDatabase
+        docDBhelper = DocumentDBClassHelper(this)
+        documentDB = docDBhelper!!.readableDatabase
 
         //Boolean  proofs = true, answers = true, searchAll = false, viewDocs = false;
 
@@ -183,7 +177,7 @@ docDBhelper = documentDBClassHelper(this)
 
         //Displays the list of results
         if (masterList.size > 1) {
-           setContentView(R.layout.index_pager)
+            setContentView(R.layout.index_pager)
             val adapter = SearchAdapter(supportFragmentManager, masterList, query!!)
             val vp2 = findViewById<ViewPager>(R.id.resultPager)
             searchFragment!!.DisplayResults(masterList, vp2, adapter, query, 0)
@@ -191,11 +185,10 @@ docDBhelper = documentDBClassHelper(this)
             //Returns an error if there are no results in the list
             if (masterList.size == 1) {
                 val document = masterList[masterList.size - 1]
-                try{
+                try {
 
-               setContentView(R.layout.search_results)}
-                catch (ex : Exception)
-                {
+                    setContentView(R.layout.search_results)
+                } catch (ex: Exception) {
                     ex.printStackTrace()
                     setContentView(R.layout.error_page)
                 }
@@ -222,17 +215,15 @@ docDBhelper = documentDBClassHelper(this)
                         String.format("%s %s: %s", header, document.chNumber, document.chName)
                 } else chNumbBox.text = String.format("%s", document.documentName)
                 val newLine = "\r\n"
-                 shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
-                     + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
-                 fab.setOnClickListener(shareContent)
+                shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
+                        + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
+                fab.setOnClickListener(shareContent)
                 // fab.setBackgroundColor(Color.BLACK)
                 var shareNote = ""
-                 shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
-                       + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
+                shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
+                        + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
                 // saveFab.setOnClickListener(saveNewNote)
-            }
-
-             else {
+            } else {
                 Log.i("Error", "No results found for Topic")
                 DesignerToast.Error(
                     this,
@@ -250,7 +241,7 @@ docDBhelper = documentDBClassHelper(this)
     """.trimIndent(), query
                 )
                 //Beautify this section by using Awesome Dialog
-                
+
                 val alert = AlertDialog.Builder(this)
                 alert.setTitle("No Results found!")
                 alert.setMessage(
@@ -281,7 +272,9 @@ docDBhelper = documentDBClassHelper(this)
                     .position(AwesomeDialog.POSITIONS.CENTER)
 
                 if (!isFinishing) awesomeDialog.show()
-        }}}
+            }
+        }
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -362,6 +355,7 @@ docDBhelper = documentDBClassHelper(this)
         Collections.sort(resultList, Document.compareMatches)
         masterList = resultList
     }
+
     var shareContent = View.OnClickListener {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
@@ -381,6 +375,7 @@ docDBhelper = documentDBClassHelper(this)
         Log.d("Test", resultString)
         return resultString
     }
+
     //Formats the code into a user friendly readable format
     private fun formatter(formatString: String): String {
         var formatString = formatString
@@ -389,7 +384,7 @@ docDBhelper = documentDBClassHelper(this)
     }
 
     override fun onBackPressed() {
-this.finish()
+        this.finish()
         super.onBackPressed()
 
     }

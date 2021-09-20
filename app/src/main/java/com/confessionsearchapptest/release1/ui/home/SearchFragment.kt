@@ -16,13 +16,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.confessionsearchapptest.release1.R
 
 import com.confessionsearchapptest.release1.data.documents.DocumentList
-import com.confessionsearchapptest.release1.data.documents.documentDBClassHelper
+import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentHomeBinding
 import com.confessionsearchapptest.release1.searchhandlers.SearchHandler
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.vdx.designertoast.DesignerToast
 import www.sanju.motiontoast.MotionToast
 import java.lang.Exception
 import java.util.*
@@ -32,9 +31,9 @@ class SearchFragment : Fragment() {
     private lateinit var searchViewModel: SearchViewModel
     private var _binding: FragmentHomeBinding? = null
     var documentDB: SQLiteDatabase? = null
-    var docDBhelper: documentDBClassHelper? = null
+    var docDBhelper: DocumentDBClassHelper? = null
     var shareProvider: ShareActionProvider? = null
-private var translationSpinner : Spinner? = null
+    private var translationSpinner: Spinner? = null
     private var documentTypeSpinner: Spinner? = null
     private var documentNameSpinner: Spinner? = null
     var helpButton: ExtendedFloatingActionButton? = null
@@ -46,7 +45,8 @@ private var translationSpinner : Spinner? = null
     protected var readerSearch: Boolean? = null
     var query: String? = null
     var dbName = "confessionSearchDB.sqlite3"
-   // var documentDBHelper: documentDBClassHelper? = null
+
+    // var documentDBHelper: DocumentDBClassHelper? = null
     var type = ""
     var shareList = ""
 
@@ -66,7 +66,6 @@ private var translationSpinner : Spinner? = null
     var proofChip: Chip? = null
     var searchAllChip: Chip? = null
     var optionGroup: ChipGroup? = null
-
     var searchFAB: ExtendedFloatingActionButton? = null
     var topicChip: Chip? = null
     var questionChip: Chip? = null
@@ -74,11 +73,11 @@ private var translationSpinner : Spinner? = null
     var docTypeSpinnerAdapter: ArrayAdapter<String>? = null
     var bibleTranslationAdapter: ArrayAdapter<String>? = null
     var docTitleSpinnerAdapter: ArrayAdapter<String>? = null
-    var bibleTransList : ArrayList<String?> = ArrayList()
+    var bibleTransList: ArrayList<String?> = ArrayList()
     var docTitleList: ArrayList<String?> = ArrayList()
     var docTypes: ArrayList<String?> = ArrayList()
     var searchBox: SearchView? = null
-var translationAbbrevTitle =""
+    var translationAbbrevTitle = ""
     //var documentDB: SQLiteDatabase? = null
 
     var chipGroup: ChipGroup? = null
@@ -101,8 +100,8 @@ var translationAbbrevTitle =""
         // Load all objects related to Search Screen Here
         searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         // Load database
-        docDBhelper = documentDBClassHelper(super.getContext())
-        documentDB=docDBhelper!!.readableDatabase
+        docDBhelper = DocumentDBClassHelper(super.getContext())
+        documentDB = docDBhelper!!.readableDatabase
         //Load Types and Load Spinners
         searchViewModel.loadTypes(docDBhelper!!.getAllDocTypes(documentDB))
 
@@ -165,7 +164,7 @@ var translationAbbrevTitle =""
             R.layout.support_simple_spinner_dropdown_item,
             bibleTransList
         )
-        translationSpinner!!.adapter=bibleTranslationAdapter
+        translationSpinner!!.adapter = bibleTranslationAdapter
         translationSpinner!!.onItemSelectedListener = translationSpinnerItemSelectedListener
 
         searchBox!!.setOnKeyListener(submissionKey)
@@ -200,7 +199,7 @@ var translationAbbrevTitle =""
             textSearch = true
             questionSearch = false
             readerSearch = false
-           // searchFAB!!.text = resources.getString(R.string.Search)
+            // searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.questionChip) {
             searchBox!!.isEnabled = true
@@ -214,31 +213,36 @@ var translationAbbrevTitle =""
             //searchFAB!!.text = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.readDocsChip) {
-         //   searchFAB!!.text = resources.getString(R.string.read_button_text)
+            //   searchFAB!!.text = resources.getString(R.string.read_button_text)
             textSearch = false
             questionSearch = false
             readerSearch = true
         }
 
     }
+
     //Submission key
     var searchButtonListener = View.OnClickListener {
         val query: String
         if (!readerSearch!!) {
             query = searchBox!!.query.toString()
-            if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/
-            { /* DesignerToast.Error(
+            if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/ { /* DesignerToast.Error(
                     super.getContext(),
                     "Enter A topic in the search field!",
                     Gravity.BOTTOM,
                     Toast.LENGTH_LONG
                 )*/
-                MotionToast.createToast(this.requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
-                    ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(super.requireContext(),R.font.helvetica_regular))
-            
-            }
-                 
-            else Search(query)
+                MotionToast.createToast(
+                    this.requireActivity(),
+                    "Error",
+                    "Please Enter a topic in search field",
+                    MotionToast.TOAST_ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(super.requireContext(), R.font.helvetica_regular)
+                )
+
+            } else Search(query)
         } else {
             query = ""
             Search(query)
@@ -249,8 +253,15 @@ var translationAbbrevTitle =""
         if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
             query = searchBox.query.toString()
             Log.d("View", String.format("%s", event.displayLabel))
-            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else  MotionToast.createToast(this.requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
-                ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(super.requireContext(),R.font.helvetica_regular))
+            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else MotionToast.createToast(
+                this.requireActivity(),
+                "Error",
+                "Please Enter a topic in search field",
+                MotionToast.TOAST_ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(super.requireContext(), R.font.helvetica_regular)
+            )
 /*ErrorMessage(resources.getString(R.string.query_error))*/
             true
         } else {
@@ -262,8 +273,15 @@ var translationAbbrevTitle =""
             override fun onQueryTextSubmit(entry: String): Boolean {
                 query = entry
                 if (!readerSearch!!) {
-                    if (query!!.isEmpty()) MotionToast.createToast(requireActivity(),"Error","Please Enter a topic in search field",MotionToast.TOAST_ERROR,MotionToast.GRAVITY_BOTTOM
-                        ,MotionToast.LONG_DURATION,ResourcesCompat.getFont(requireContext(),R.font.helvetica_regular))
+                    if (query!!.isEmpty()) MotionToast.createToast(
+                        requireActivity(),
+                        "Error",
+                        "Please Enter a topic in search field",
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(requireContext(), R.font.helvetica_regular)
+                    )
                     else Search(query)
                 } else Search(query)
                 return false
@@ -276,40 +294,37 @@ var translationAbbrevTitle =""
         }
 
     //Spinner Listeners
-            // Bible Translation Spinner Listener
-    var translationSpinnerItemSelectedListener : AdapterView.OnItemSelectedListener = object :
-    AdapterView.OnItemSelectedListener{
+    // Bible Translation Spinner Listener
+    var translationSpinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
+        AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            run{
-            translationAbbrevTitle = String.format("%s",parent!!.selectedItem.toString())
+            run {
+                translationAbbrevTitle = String.format("%s", parent!!.selectedItem.toString())
             }
-                    }
+        }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {
             translationAbbrevTitle = parent!!.selectedItem.toString()
         }
     }
+
     //Document type spinner listener
-    var spinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
+    private var spinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
         @SuppressLint("ResourceAsColor")
-        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
             run {
                 try {
                     var docTitles: ArrayList<String?> = ArrayList()
-                    type = parent.selectedItem.toString()
+                    type = parent!!.selectedItem.toString()
                     if (docTitleList.isNotEmpty())
                         docTitleList.clear()
                     searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB!!))
                     docTitleList = searchViewModel.getTitles()
-                    //Gets all document titles and places them in a list
-                    /*  for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB!!)) {
-                    docTitles!!.add(docTitle.documentName!!)*/
-                }
-                catch(ex:Exception)
-                {
-                    Toast.makeText(context,ex.localizedMessage,Toast.LENGTH_LONG).show()
-                    Toast.makeText(context,ex.stackTraceToString(),Toast.LENGTH_LONG).show()
+
+                } catch (ex: Exception) {
+                    Toast.makeText(context, ex.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, ex.stackTraceToString(), Toast.LENGTH_LONG).show()
 
                 }
                 docTitleSpinnerAdapter = ArrayAdapter(
@@ -355,14 +370,14 @@ var translationAbbrevTitle =""
             }
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>) {
-            type = parent.selectedItem.toString()
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            type = parent!!.selectedItem.toString()
         }
     }
     var docTitleSpinner: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-            fileName = String.format("%s", adapterView.selectedItem.toString())
+        override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+            fileName = String.format("%s", adapterView!!.selectedItem.toString())
         }
 
         override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -374,9 +389,7 @@ var translationAbbrevTitle =""
     // 7-13-21 Take the data from the search form and package it in a format to put in the search handler
     @SuppressLint("NewApi")
     fun Search(query: String?) {
-
         val searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
-        //val parentActivity = super.getActivity()
         val stringQuery = query
         Log.d("Test", context.toString())
         //Document Type Filtering
@@ -400,9 +413,8 @@ var translationAbbrevTitle =""
         searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
         requireContext().startActivity(searchIntent)
     }
-companion object{
-    const val ACTIVITY_ID = 32
-}
-
+    companion object {
+        const val ACTIVITY_ID = 32
+    }
 }
 
