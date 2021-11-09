@@ -122,4 +122,9 @@ and catechisms. Use this to take a quick note of a topic your searching, or add 
     <string name="bible_label">Bible Translation:</string>
     <string name="bible_translation">Bible Translation:</string>
     <string name="submit">Submit</string>
+    <string name="sort_by_chapter">Sort By Chapter?</string>
+    <string name="_0_9_asc">0-9 Low to High</string>
+    <string name="_0_9_desc">0-9 High to Low</string>
+    <string name="matches_low_to_high">Matches Low to High</string>
+    <string name="matches_high_to_low">Matches High to Low</string>
 </resources>

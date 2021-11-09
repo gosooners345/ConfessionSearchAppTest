@@ -20,6 +20,9 @@
         android:id="@+id/navigation_bible"
         android:name="com.confessionsearchapptest.release1.ui.bible.BibleFragment"
         android:label="Bible Reader" />
-
+    <fragment
+        android:id="@+id/navigation_help"
+        android:name="com.confessionsearchapptest.release1.ui.help.HelpPageFragment"
+        tools:layout="@layout/fragment_help_page" />
 
 </navigation>

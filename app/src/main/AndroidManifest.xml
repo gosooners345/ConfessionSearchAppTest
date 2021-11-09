@@ -12,6 +12,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,14 +22,16 @@
         </activity>
         <activity
             android:name=".ui.NotesActivity.NotesComposeActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
             android:label="New Note" />
 <activity android:name=".searchhandlers.SearchHandler"
     android:label="Search Results"
+    android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
     android:parentActivityName=".MainActivity"/>
 
 <activity android:name=".searchresults.BibleReaderSearchResults"
     android:label="Bible Reader"
+    android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
     android:parentActivityName=".MainActivity"/>
     </application>
 

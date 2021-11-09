@@ -59,7 +59,7 @@ class SearchFragment : Fragment() {
     protected var proofs = true
     protected var answers = true
     protected var searchAll = false
-
+    protected var sortByChapterBool = false
 
     //Testing
     var answerChip: Chip? = null
@@ -70,6 +70,7 @@ class SearchFragment : Fragment() {
     var topicChip: Chip? = null
     var questionChip: Chip? = null
     var readDocsChip: Chip? = null
+    var sortChapterChip: Chip? = null
     var docTypeSpinnerAdapter: ArrayAdapter<String>? = null
     var bibleTranslationAdapter: ArrayAdapter<String>? = null
     var docTitleSpinnerAdapter: ArrayAdapter<String>? = null
@@ -79,7 +80,8 @@ class SearchFragment : Fragment() {
     var searchBox: SearchView? = null
     var translationAbbrevTitle = ""
     //var documentDB: SQLiteDatabase? = null
-
+var docType=""
+    var sortType: String = ""
     var chipGroup: ChipGroup? = null
     var masterList = DocumentList()
     var shareNote: String? = null
@@ -111,7 +113,7 @@ class SearchFragment : Fragment() {
         optionGroup = root.findViewById(R.id.option_group)
         //Search Button Initialization
         searchButton = root.findViewById(R.id.searchFAB)
-
+        sortChapterChip = root.findViewById(R.id.sortByChapter)
         searchButton!!.setOnClickListener(searchButtonListener)
         //Search Box Initialization
         searchBox = root.findViewById(R.id.searchView1)
@@ -184,6 +186,7 @@ class SearchFragment : Fragment() {
             R.id.proofChip -> proofs = !proofChip!!.isChecked
             R.id.answerChip -> answers = !answerChip!!.isChecked
             R.id.searchAllChip -> searchAll = searchAllChip!!.isChecked
+            R.id.sortByChapter -> sortByChapterBool = sortChapterChip!!.isChecked
         }
     }
     var optionListener = ChipGroup.OnCheckedChangeListener { group, checkedId ->
@@ -342,6 +345,7 @@ class SearchFragment : Fragment() {
                         catechismOpen = false
                         creedOpen = false
                         helpOpen = false
+                        docType = "All"
                     }
                     "CONFESSION" -> {
                         allOpen = false
@@ -350,6 +354,7 @@ class SearchFragment : Fragment() {
                         header = "Chapter "
                         creedOpen = false
                         helpOpen = false
+                        docType = "Confession"
                     }
                     "CATECHISM" -> {
                         allOpen = false
@@ -389,20 +394,24 @@ class SearchFragment : Fragment() {
     // 7-13-21 Take the data from the search form and package it in a format to put in the search handler
     @SuppressLint("NewApi")
     fun Search(query: String?) {
-        val searchIntent = Intent(context, SearchHandler::class.java)//MainActivity::class.java)
+        Log.d("Handler", "HomeScreen is in charge")
+        if (sortByChapterBool)
+            sortType = "Chapter"
+        else
+            sortType = "Matches"
+
+        var searchIntent = Intent(context, SearchHandler::class.java)
         val stringQuery = query
         Log.d("Test", context.toString())
         //Document Type Filtering
         searchIntent.putExtra("AllDocs", allOpen)
-        searchIntent.putExtra("Confession", confessionOpen)
-        searchIntent.putExtra("Catechism", catechismOpen)
-        searchIntent.putExtra("Creed", creedOpen)
         //All document search within type or all
         searchIntent.putExtra("SearchAll", searchAll)
         //Search Type
         searchIntent.putExtra("Question", questionSearch)
         searchIntent.putExtra("Text", textSearch)
         searchIntent.putExtra("Reader", readerSearch)
+        searchIntent.putExtra("docType", docType)
         //Advanced Options
         searchIntent.putExtra("Answers", answers)
         searchIntent.putExtra("Proofs", proofs)
@@ -411,7 +420,11 @@ class SearchFragment : Fragment() {
         //FileName
         searchIntent.putExtra("FileName", fileName)
         searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
+        //Sort Options
+        searchIntent.putExtra("SortType", sortType)
+
         requireContext().startActivity(searchIntent)
+
     }
     companion object {
         const val ACTIVITY_ID = 32
