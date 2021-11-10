@@ -363,6 +363,7 @@ var docType=""
                         catechismOpen = true
                         creedOpen = false
                         helpOpen = false
+                        docType = "Catechism"
                     }
                     "CREED" -> {
                         allOpen = false
@@ -370,6 +371,7 @@ var docType=""
                         catechismOpen = false
                         confessionOpen = false
                         helpOpen = false
+                        docType = "Creed"
                     }
                 }
             }

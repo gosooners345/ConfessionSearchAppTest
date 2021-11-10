@@ -2,18 +2,16 @@ package com.confessionsearchapptest.release1.data.documents
 
 import android.content.Context
 import android.database.Cursor
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 import android.database.sqlite.SQLiteDatabase
-import kotlin.jvm.Synchronized
 import android.database.sqlite.SQLiteQueryBuilder
-import com.confessionsearchapptest.release1.data.bible.BibleTranslation
-import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import android.util.Log
 import com.confessionsearchapptest.release1.data.bible.BibleBooks
 import com.confessionsearchapptest.release1.data.bible.BibleContents
-import java.lang.Exception
+import com.confessionsearchapptest.release1.data.bible.BibleContentsList
+import com.confessionsearchapptest.release1.data.bible.BibleTranslation
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 
-import kotlin.collections.ArrayList
+// Database Helper class for the ConfessionSearchApp Main Search and Bible reader functionality
 
 class DocumentDBClassHelper : SQLiteAssetHelper {
     var context: Context? = null
@@ -23,15 +21,10 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         setForcedUpgrade()
     }
 
-    //Needs to be used in onUpgrade rewrite.
-    override fun getWritableDatabase(): SQLiteDatabase {
-        return super.getWritableDatabase()
-    }
-
     override fun onOpen(db: SQLiteDatabase) {
         super.onOpen(db)
     }
-
+    //Handles read only db
     @Synchronized
     override fun getReadableDatabase(): SQLiteDatabase {
         return super.getReadableDatabase()
@@ -71,12 +64,9 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
             return c
         }
 
-    // Needs to be fixed to allow for smooth upgrades
+    // Fixed 07/2021
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion != newVersion) {
-//context.deleteDatabase(DATABASE_NAME)
-            //new DocumentDBClassHelper(context)
-
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTITLE)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENT)
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOCUMENTTYPE)
@@ -177,7 +167,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         var chInt = 0
         val accessString: String?
         val ChList = ArrayList<Int?>()
-//SQL Statement to get Chapter numbers in code 
+//SQL Statement to get Chapter numbers in code
         accessString = BookChapterNumberAccess(bookName)
         val cursor = bibleList!!.rawQuery(accessString, null)
         try {
@@ -256,7 +246,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
             return verseList
         }
     }
-
+    //Get Bible Verses
     fun getAllVerses(
         bibleList: SQLiteDatabase?,
         translationName: String?,
@@ -297,7 +287,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         }
     }
 
-    //Bible Contents List 
+    //Bible Contents List
     fun getChaptersandVerses(
         bibleList: SQLiteDatabase?,
         translationName: String?,
@@ -314,9 +304,9 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         //This allows the database to filter out requests without the need for multiple functions
         if (verseNum!! == 0 && chapNum!! > 0) {
             accessString = BookChapterVerseAccess(chapNum, bookName)
-        } else if (chapNum!! == 0 && verseNum!! == 0) {
+        } else if (chapNum!! == 0 && verseNum == 0) {
             accessString = BookChapterNumberAccess(bookName)
-        } else if (chapNum!! != 0 && verseNum!! != 0)
+        } else if (chapNum != 0 && verseNum != 0)
             accessString = VerseAccess(verseNum, chapNum, bookName)
         else
             accessString = VerseAccess(verseNum, chapNum, bookName)
@@ -337,7 +327,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
 
                 //set chapter number to what the db entry at current position value is
 
-                outerloop@ while (!cursor.isAfterLast()) {
+                outerloop@ while (!cursor.isAfterLast) {
                     addBibleContent = BibleContents()
                     verseNumb = 1
                     if (verseOnly) {
@@ -461,7 +451,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
 
     // For another section of project
     fun getVersesForProofs() {
-           }
+    }
 
     //Grab Document titles from DB, Document Search Related;
     fun getAllDocTitles(type: String, dbType: SQLiteDatabase): ArrayList<DocumentTitle> {
@@ -518,12 +508,13 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         return documentTitles
     }
 
-    //Fetch documents for processing, Document Search Related 
+    //Fetch documents for processing, Document Search Related
     fun getAllDocuments(
         fileString: String,
         fileName: String?,
         docID: Int,
         allDocs: Boolean?,
+        searchAll: Boolean?,
         dbList: SQLiteDatabase,
         access: String?,
         docList: DocumentList?,
@@ -532,24 +523,24 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         var docList = docList
         val cursor: Cursor?
         val documentList = DocumentList()
-        val commandText: String
         val docCommandText: String
-        val accessString: String
+
         var documentIndex = 0
-        accessString = DataTableAccess(access)
-        //SQL Query Execution
-//Identify what needs selected
-        commandText = if (docID != 0) {
+        //Document title list SQL String
+        val commandText: String = if (docID != 0) {
             TableAccess(fileString)
         } else fileString
-        docCommandText = accessString
+
+        //SQL Query Execution
+//Identify what needs selected
+        var accessString = ""
         //Add entries to Document List
         val docTitle = ArrayList<DocumentTitle>()
         val docIds = ArrayList<Int?>()
         val docTitleList = ArrayList<String?>()
         //CommandText Uses Table Access For Document Titles, doc uses DataTableAccess
         cursor = dbList.rawQuery(commandText, null)
-        //cursor1 =
+
         try {
             if (cursor.moveToFirst()) {
                 var i = 0
@@ -576,8 +567,22 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
                 docIds.add(docTitle[y].documentID)
                 docTitleList.add(docTitle[y].documentName)
             }
-            val cursor1: Cursor
-            cursor1 = dbList.rawQuery(docCommandText, null)
+            //DocumentList SQL String
+            accessString = if (access!! == "s") {
+                var documentTitleIDLoc = docTitleList.indexOf(fileName)
+                var docIDLoc = docTitle[documentTitleIDLoc].documentID
+                var accessExtra: String = String.format("AND Document.documentID = '%s' ", docIDLoc)
+                DataTableAccess(accessExtra)
+            } else if (searchAll!! and !allDocs!!) {
+
+                var docIDString = docIds.toString()
+                docIDString = docIDString.replace('[', '(')
+                docIDString = docIDString.replace(']', ')')
+                DataTableAccess(String.format("AND Document.documentID in %s ", docIDString))
+            } else access
+
+            docCommandText = accessString
+            val cursor1: Cursor = dbList.rawQuery(docCommandText, null)
             Log.d(
                 "Size of Query List", cursor1.getColumnIndexOrThrow(KEY_DOCDETAILID_ID)
                     .toString()
@@ -635,7 +640,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
         return String.format(
             "SELECT Documenttitle.documentName, " +
                     "document.*, documenttitle.documentid FROM " +
-                    "documentTitle NATURAL JOIN document WHERE document.DocumentID = DocumentTitle.DocumentID %s",
+                    "documentTitle NATURAL JOIN document WHERE document.DocumentID = DocumentTitle.DocumentID %s ",
             documentName
         )
     }
@@ -683,8 +688,8 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
     companion object {
         //DATABASE INFORMATION
         private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
-        private const val DATABASE_VERSION = 6
-      //  private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
+        private const val DATABASE_VERSION = 4
+        //  private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
 
         //TABLE INFO
         private const val TABLE_DOCUMENT = "Document"
