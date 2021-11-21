@@ -697,7 +697,7 @@ class DocumentDBClassHelper : SQLiteAssetHelper {
     companion object {
         //DATABASE INFORMATION
         private const val DATABASE_NAME = "confessionSearchDB.sqlite3"
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 7
         //  private val DATABASE_PATH = Environment.DIRECTORY_DOWNLOADS + "/" + DATABASE_NAME
 
         //TABLE INFO

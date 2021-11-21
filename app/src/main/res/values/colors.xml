@@ -19,7 +19,7 @@
     <color name="textPrimaryDark">#FFFFFF</color>
     <color name="bgPrimaryDark">#000000</color>
     <!--//New Red-->
-    <color name="md_theme_light_primary">#C00011</color>
+    <!--<color name="md_theme_light_primary">#C00011</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#FFDAD4</color>
     <color name="md_theme_light_onPrimaryContainer">#410002</color>
@@ -72,7 +72,7 @@
     <color name="md_theme_dark_inverseSurface">#EDE0DE</color>
     <color name="md_theme_dark_primaryInverse">#C00011</color>
     <color name="seed">#DE031B</color>
-    <color name="error">#BA1B1B</color>
+    <color name="error">#BA1B1B</color>-->
     <!--//Green-->
     <!--  <color name="md_theme_light_primary">#016E07</color>
       <color name="md_theme_light_onPrimary">#FFFFFF</color>
@@ -129,7 +129,7 @@
       <color name="seed">#006E06</color>
       <color name="error">#BA1B1B</color>-->
     <!--//Blue-->
-    <!-- <color name="md_theme_light_primary">#0056D3</color>
+     <color name="md_theme_light_primary">#0056D3</color>
      <color name="md_theme_light_onPrimary">#FFFFFF</color>
      <color name="md_theme_light_primaryContainer">#D9E2FF</color>
      <color name="md_theme_light_onPrimaryContainer">#001849</color>
@@ -182,7 +182,7 @@
      <color name="md_theme_dark_inverseSurface">#E0E3E3</color>
      <color name="md_theme_dark_primaryInverse">#0056D3</color>
      <color name="seed">#0E64E8</color>
-     <color name="error">#BA1B1B</color>-->
+     <color name="error">#BA1B1B</color>
     <!--Original-->
     <!-- <color name="md_theme_light_primary">#C10000</color>
      <color name="md_theme_light_onPrimary">#FFFFFF</color>
