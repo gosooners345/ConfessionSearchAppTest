@@ -24,23 +24,25 @@ class BibleViewModel : ViewModel() {
             bibleBookList.add(book.BookName)
         }
     }
-
+    //This fetches the list for the bible fragment
     fun getChapters(): ArrayList<String?> {
-        val chapterStringList: ArrayList<String?> = ArrayList()
+        var chapterStringList: ArrayList<String?> = ArrayList()
         chapterStringList.add("All")
-        for(i in bibleChapterList)
+        for (i in bibleChapterList)
             chapterStringList.add(i.toString())
         return chapterStringList
     }
 
+    //This method loads chapter numbers for the bible fragment
     fun loadChapters(list: ArrayList<Int?>) {
-       // bibleChapterList.add(0)
+        bibleChapterList.clear()
         bibleChapterList.addAll(list)
     }
 
+    //This fetches the verse list for the bible fragment
     fun getVerseNumbers(): ArrayList<String?> {
-val verseStringList: ArrayList<String?> = ArrayList()
-      // forEach(verseNum i bibleVerseNumList)
+        var verseStringList: ArrayList<String?> = ArrayList()
+        // forEach(verseNum i bibleVerseNumList)
         verseStringList.add("All")
         for (i in bibleVerseNumList) {
             verseStringList.add(i.toString())
@@ -49,8 +51,10 @@ val verseStringList: ArrayList<String?> = ArrayList()
         return verseStringList
     }
 
+    /*This method loads verse numbers into the application*/
     fun loadVerseNumbers(list: ArrayList<Int?>) {
-       // bibleVerseNumList.add(0)
+        //
+        bibleVerseNumList.clear()
         bibleVerseNumList.addAll(list)
 
     }
@@ -81,5 +85,4 @@ val verseStringList: ArrayList<String?> = ArrayList()
     fun getBibleList(): BibleContentsList {
         return bibleContentList
     }
-
 }

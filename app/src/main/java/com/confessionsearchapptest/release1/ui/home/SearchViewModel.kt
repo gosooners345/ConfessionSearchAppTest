@@ -1,6 +1,7 @@
 package com.confessionsearchapptest.release1.ui.home
 
 import androidx.lifecycle.ViewModel
+import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.bible.BibleTranslation
 import com.confessionsearchapptest.release1.data.documents.DocumentTitle
 import com.confessionsearchapptest.release1.data.documents.DocumentType
@@ -34,12 +35,7 @@ class SearchViewModel : ViewModel() {
 
     }
 
-    fun loadTranslations(list: java.util.ArrayList<BibleTranslation>) {
-        for (translation in list)
-            bibleTranslationList.add(translation!!.bibleTranslationName)
-    }
-
-    fun getTranslations(): ArrayList<String?> {
-        return bibleTranslationList
-    }
+    var query: String = ""
+    var buttonText: String = ""
+    var buttonPic: Int = R.drawable.search_light_drawable
 }

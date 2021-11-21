@@ -1,6 +1,7 @@
 package com.confessionsearchapptest.release1.searchhandlers
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.database.sqlite.SQLiteDatabase
@@ -12,6 +13,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -185,14 +187,17 @@ class SearchHandler : AppCompatActivity() {
             if (masterList.size > 1) {
                 refreshQuery = query!!
                 refreshFragmentsOnScreen(query)
+
             }
 
         } else if (questionSearch and (query !== "") and !readerSearch and !textSearch) {
             if (query !== "") {
                 val searchInt = query!!.toInt()
                 FilterResults(masterList, answers, proofs, searchInt)
-                if (masterList.size > 1)
+                if (masterList.size > 1) {
                     refreshFragmentsOnScreen(query)
+
+                }
             } else {
                 recreate()
             }
@@ -201,8 +206,10 @@ class SearchHandler : AppCompatActivity() {
                 fileName
             } else "View All"
             refreshQuery = query!!
-            if (masterList.size > 1)
+            if (masterList.size > 1) {
                 refreshFragmentsOnScreen(query)
+
+            }
         }
         if (masterList.size < 2) {
             //Returns an error if there are no results in the list
@@ -215,8 +222,8 @@ class SearchHandler : AppCompatActivity() {
                     setContentView(R.layout.error_page)
                 }
                 var header = ""
-                val saveFab = findViewById<ExtendedFloatingActionButton>(R.id.saveNote)
-                val fab = findViewById<ExtendedFloatingActionButton>(R.id.shareActionButton)
+                val saveFab = findViewById<Button>(R.id.saveNote)
+                val fab = findViewById<Button>(R.id.shareActionButton)
                 val chapterBox = findViewById<TextView>(R.id.chapterText)
                 val proofBox = findViewById<TextView>(R.id.proofText)
                 val chNumbBox = findViewById<TextView>(R.id.confessionChLabel)
@@ -240,7 +247,6 @@ class SearchHandler : AppCompatActivity() {
                 shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
                         + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
                 fab.setOnClickListener(shareContent)
-                // fab.setBackgroundColor(Color.BLACK)
 
                 shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
                         + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
@@ -282,23 +288,22 @@ class SearchHandler : AppCompatActivity() {
     Go back to home page to search for another topic
     """.trimIndent(), query
                 )
-                val awesomeDialog = AwesomeDialog.build(this)
-                    .title(
-                        "No Results Found!",
-
-                        )
-                    .body(
-                        "No results were found. Do you want to go back and search for another topic?",
+                val alert = AlertDialog.Builder(this)
+                alert.setTitle("No Results Found!")
+                alert.setMessage(
+                    String.format(
+                        """No results were found for %s
+    Go back to home page to search for another topic
+    """.trimIndent(), query
                     )
-                    .background(R.drawable.error_background)
-                    .onPositive("Yes") {
-                        this.onBackPressed()
-                    }
-                    .onNegative("No") {
-                    }
-                    .position(AwesomeDialog.POSITIONS.CENTER)
+                )
+                alert.setPositiveButton("Yes") { dialog, which ->
+                    onBackPressed()
+                }
+                alert.setNegativeButton("No") { dialog, which -> dialog.dismiss() }
+                val dialog: Dialog = alert.create()
+                if (!isFinishing) dialog.show()
 
-                if (!isFinishing) awesomeDialog.show()
 
             }
         }
@@ -309,6 +314,7 @@ class SearchHandler : AppCompatActivity() {
         adapter = SearchAdapter(supportFragmentManager, masterList, query!!)
         vp2 = findViewById<ViewPager>(R.id.resultPager)
         searchFragment!!.DisplayResults(masterList, vp2, adapter, query, 0)
+
     }
 
 
@@ -335,8 +341,8 @@ class SearchHandler : AppCompatActivity() {
                     //Tally up all matching sections
                     while (true) {
                         val wordIndex =
-                            word.toUpperCase()
-                                .indexOf(query!!.toUpperCase(), matchIndex)
+                            word.uppercase(Locale.getDefault())
+                                .indexOf(query!!.uppercase(Locale.getDefault()), matchIndex)
                         if (wordIndex < 0) break
                         matchIndex = wordIndex + 1
                         document.matches = document.matches!! + 1
@@ -463,13 +469,6 @@ class SearchHandler : AppCompatActivity() {
         return formatString
     }
 
-    //Back Button
-    override fun onBackPressed() {
-        this.finish()
-        super.onBackPressed()
-
-    }
-
     //Sorts documents based on order given
     fun sortOrder(docList: DocumentList) {
         //Prevents Creeds from crashing the app
@@ -500,23 +499,6 @@ class SearchHandler : AppCompatActivity() {
 
     }
 
-    /* override fun onConfigurationChanged(newConfig: Configuration) {
-         super.onConfigurationChanged(newConfig)
- 
- 
-         when (Configuration.UI_MODE_NIGHT_MASK and resources.configuration.uiMode) {
-             Configuration.UI_MODE_NIGHT_NO -> {
-                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                 Log.i("ConfigChange", "Restarting Actviity due to UI Change")
-                 onBackPressed()
-             }
- 
-             Configuration.UI_MODE_NIGHT_YES -> {
-                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                 onBackPressed()
-             }
-         }
-     }*/
 
     companion object {
         const val CHAPTER_ASC = "Chapter_ASC"
@@ -528,3 +510,6 @@ class SearchHandler : AppCompatActivity() {
     }
 
 }
+
+
+

@@ -7,13 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ShareActionProvider
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
-
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class SearchResultFragment : Fragment() {
     private val documentTitle: String? = null
@@ -59,12 +58,16 @@ class SearchResultFragment : Fragment() {
         matchView.text = String.format("Matches: %s", resultMatch)
         shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
                 + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
-        val fab: ExtendedFloatingActionButton = view.findViewById(R.id.shareActionButton)
-        val saveFab: ExtendedFloatingActionButton = view.findViewById(R.id.saveNote)
+        val fab = view.findViewById<Button>(R.id.shareActionButton)
+        val saveFab = view.findViewById<Button>(R.id.saveNote)
         fab.setOnClickListener(shareContent)
         shareNote = ""
-        shareNote = (docTitleBox.text.toString() + newLine + newLine + chNumbBox.text + newLine
-                + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text) + newLine
+        shareNote = String.format(
+            docTitleBox.text.toString() + newLine + chNumbBox.text.toString() + newLine
+                    + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text.toString()
+        )
+        //( Html.fromHtml(docTitleBox.text.toString() + lineBreak + chNumbBox.text.toString() + lineBreak
+        //  + lineBreak + chapterBox.text + singleBreak + "Proofs" + singleBreak + proofBox.text).toString())
         saveFab.setOnClickListener(saveNewNote)
         return view
     }
@@ -96,6 +99,8 @@ class SearchResultFragment : Fragment() {
         private const val TITLE = "title"
         private const val ANSWER = "answer"
         private const val DOCTITLE = "titles"
+        val lineBreak = "<br><br>"
+        val singleBreak = "<br>"
         private const val matchNumb = "matches"
         private const val TAGS = "tags"
         private const val newLine = "\r\n"

@@ -1,120 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ui.bible.BibleFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/layoutMain"
+    style="@android:style/Widget.Material.ScrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true"
+    android:overScrollMode="always"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarStyle="outsideInset"
+    android:scrollbars="vertical"
+    tools:context="ui.bible.BibleFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/fragment_bible_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="155dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="177dp"
+            android:text="@string/bible_reader"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.533"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/translationDisplayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/bible_translation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_bible_title" />
+
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:id="@+id/bibleTranslationCB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/spinner_outline"
+            android:paddingLeft="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/translationDisplayLabel"
+            app:smsp_arrowColor="?attr/colorOnBackground"
+            app:smsp_floatingLabelColor="?attr/colorPrimary"
+            app:smsp_itemColor="?attr/colorOnBackground"
+            app:smsp_itemListColor="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/bookDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+
+            android:layout_marginTop="16dp"
+            android:text="@string/book"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bibleTranslationCB" />
+
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:id="@+id/bibleBookCB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/spinner_outline"
+            android:paddingLeft="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bookDisplay"
+            app:smsp_arrowColor="?attr/colorOnBackground"
+            app:smsp_floatingLabelColor="?attr/colorPrimary"
+            app:smsp_itemColor="?attr/colorOnBackground"
+            app:smsp_itemListColor="?attr/colorOnBackground" />
 
 
-    <Spinner
-        android:id="@+id/bibleTranslationSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="107dp"
-        android:spinnerMode="dialog"
-        android:textAlignment="viewEnd"
-        app:layout_constraintStart_toEndOf="@id/translationDisplayLabel"
-
-        app:layout_constraintTop_toBottomOf="@id/fragment_bible_title" />
-
-    <TextView
-        android:id="@+id/translationDisplayLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="122dp"
-        android:text="@string/bible_translation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_bible_title" />
-
-    <Spinner
-        android:id="@+id/bibleBookSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginStart="48dp"
-
-        app:layout_constraintEnd_toEndOf="@+id/bibleTranslationSelector"
-        app:layout_constraintTop_toBottomOf="@+id/bibleTranslationSelector" />
-
-    <TextView
-        android:id="@+id/bookDisplay"
-        android:layout_width="65dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
-        android:text="Book:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/translationDisplayLabel" />
-
-    <TextView
-        android:id="@+id/fragment_bible_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="177dp"
-        android:text="Bible Reader"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/chapterDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
-        android:text="Chapter:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookDisplay" />
-
-    <Spinner
-        android:id="@+id/bibleChapterSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-app:layout_constraintEnd_toEndOf="@id/bibleBookSelector"
-        app:layout_constraintTop_toBottomOf="@+id/bibleBookSelector" />
-
-    <Spinner
-        android:id="@+id/verseSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-
-        app:layout_constraintEnd_toEndOf="@+id/bibleChapterSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/bibleChapterSpinner" />
-
-    <TextView
-        android:id="@+id/verseDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
-        android:text="Verse:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chapterDisplay" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/submitFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="56dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/submit"
-        app:fabSize="auto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verseSpinner" />
+        <!-- <Spinner
+             android:id="@+id/bibleBookSelector"
+             style="@android:style/Widget.Material.Spinner.Underlined"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:layout_marginTop="16dp"
+             android:layout_marginEnd="8dp"
+             android:minHeight="48dp"
+             android:spinnerMode="dialog"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/bookDisplay"
+             tools:ignore="SpeakableTextPresentCheck" />-->
 
 
+        <TextView
+            android:id="@+id/chapterDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/chapter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bibleBookCB" />
+
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:id="@+id/bibleChapterSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/spinner_outline"
+            android:paddingLeft="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chapterDisplay"
+            app:smsp_arrowColor="?attr/colorOnBackground"
+            app:smsp_floatingLabelColor="?attr/colorPrimary"
+            app:smsp_itemColor="?attr/colorOnBackground"
+            app:smsp_itemListColor="?attr/colorOnBackground" />
+
+        <!-- <Spinner
+             android:id="@+id/bibleChapterSpinner"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:layout_marginTop="16dp"
+             android:layout_marginEnd="8dp"
+             android:minHeight="48dp"
+             style="@android:style/Widget.Material.Spinner.Underlined"
+             android:spinnerMode="dialog"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/chapterDisplay"
+             tools:ignore="SpeakableTextPresentCheck" />-->
+        <TextView
+            android:id="@+id/verseDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/verse"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bibleChapterSpinner" />
+        <!--<Spinner
+            android:id="@+id/verseSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            style="@android:style/Widget.Material.Spinner.Underlined"
+            android:layout_marginBottom="150dp"
+            android:minHeight="48dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/verseDisplay"
+            tools:ignore="SpeakableTextPresentCheck" />-->
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:id="@+id/verseSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/spinner_outline"
+            android:paddingLeft="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/verseDisplay"
+            app:smsp_arrowColor="?attr/colorOnBackground"
+            app:smsp_floatingLabelColor="?attr/colorPrimary"
+            app:smsp_itemColor="?attr/colorOnBackground"
+            app:smsp_itemListColor="?attr/colorOnBackground" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

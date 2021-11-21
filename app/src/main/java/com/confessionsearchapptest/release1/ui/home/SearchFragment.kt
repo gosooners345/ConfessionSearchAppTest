@@ -1,93 +1,72 @@
 package com.confessionsearchapptest.release1.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.confessionsearchapptest.release1.R
-
-import com.confessionsearchapptest.release1.data.documents.DocumentList
+import com.confessionsearchapptest.release1.data.MyAdapter
 import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
+import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.confessionsearchapptest.release1.databinding.FragmentHomeBinding
 import com.confessionsearchapptest.release1.searchhandlers.SearchHandler
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import www.sanju.motiontoast.MotionToast
-import java.lang.Exception
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 import kotlin.collections.ArrayList
+
+
 class SearchFragment : Fragment() {
 
-    private lateinit var searchViewModel: SearchViewModel
+
     private var _binding: FragmentHomeBinding? = null
     var documentDB: SQLiteDatabase? = null
     var docDBhelper: DocumentDBClassHelper? = null
     var shareProvider: ShareActionProvider? = null
-    private var translationSpinner: Spinner? = null
     private var documentTypeSpinner: Spinner? = null
     private var documentNameSpinner: Spinner? = null
-    var helpButton: ExtendedFloatingActionButton? = null
-    var searchButton: ExtendedFloatingActionButton? = null
-    var notesButton: ExtendedFloatingActionButton? = null
+
+    // var docTypeATV : TextInputLayout? = null
     var header = ""
-    protected var textSearch: Boolean? = null
-    protected var questionSearch: Boolean? = null
-    protected var readerSearch: Boolean? = null
-    var query: String? = null
+    var searchBoxContainer: TextInputLayout? = null
+
     var dbName = "confessionSearchDB.sqlite3"
-
-    // var documentDBHelper: DocumentDBClassHelper? = null
     var type = ""
-    var shareList = ""
 
-    var fileName: String? = null
-    protected var allOpen: Boolean? = null
-    protected var confessionOpen: Boolean? = null
-    protected var catechismOpen: Boolean? = null
-    protected var creedOpen: Boolean? = null
-    protected var helpOpen: Boolean? = null
-    protected var proofs = true
-    protected var answers = true
-    protected var searchAll = false
-    protected var sortByChapterBool = false
 
     //Testing
     var answerChip: Chip? = null
     var proofChip: Chip? = null
     var searchAllChip: Chip? = null
     var optionGroup: ChipGroup? = null
-    var searchFAB: ExtendedFloatingActionButton? = null
     var topicChip: Chip? = null
     var questionChip: Chip? = null
     var readDocsChip: Chip? = null
     var sortChapterChip: Chip? = null
-    var docTypeSpinnerAdapter: ArrayAdapter<String>? = null
-    var bibleTranslationAdapter: ArrayAdapter<String>? = null
+    var docTypeSpinnerAdapter: MyAdapter<String>? = null
     var docTitleSpinnerAdapter: ArrayAdapter<String>? = null
-    var bibleTransList: ArrayList<String?> = ArrayList()
     var docTitleList: ArrayList<String?> = ArrayList()
     var docTypes: ArrayList<String?> = ArrayList()
-    var searchBox: SearchView? = null
-    var translationAbbrevTitle = ""
-    //var documentDB: SQLiteDatabase? = null
-var docType=""
-    var sortType: String = ""
     var chipGroup: ChipGroup? = null
     var masterList = DocumentList()
     var shareNote: String? = null
-    //var searchFragment: SearchFragmentActivity? = null
-
-
+    // var docType = ""
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -106,47 +85,54 @@ var docType=""
         documentDB = docDBhelper!!.readableDatabase
         //Load Types and Load Spinners
         searchViewModel.loadTypes(docDBhelper!!.getAllDocTypes(documentDB))
-
-        val root: View = binding.root//View.inflate(context,R.layout.fragment_home,container)
+        val root: View = binding.root
         //Chip Group Initialization
         chipGroup = root.findViewById(R.id.chip_group)
         optionGroup = root.findViewById(R.id.option_group)
-        //Search Button Initialization
-        searchButton = root.findViewById(R.id.searchFAB)
-        sortChapterChip = root.findViewById(R.id.sortByChapter)
-        searchButton!!.setOnClickListener(searchButtonListener)
+
         //Search Box Initialization
-        searchBox = root.findViewById(R.id.searchView1)
-        searchBox!!.setOnQueryTextListener(searchQueryListener)
-        searchBox!!.setOnKeyListener(submissionKey)
+
+        searchBoxContainer = root.findViewById(R.id.searchContainer)
+
+        searchBoxContainer!!.editText!!.setOnKeyListener(submissionKey)
+
+
+        searchBoxContainer!!.editText!!.addTextChangedListener(searchBoxEditTextChangedWatcher)
+
         //More stuff
         optionGroup!!.setOnCheckedChangeListener(optionListener)
-
         // Chip Initialization 06/01/2021 - Testing look and execution
         answerChip = root.findViewById(R.id.answerChip)
         proofChip = root.findViewById(R.id.proofChip)
         searchAllChip = root.findViewById(R.id.searchAllChip)
+        sortChapterChip = root.findViewById(R.id.sortByChapter)
 
         //Implement check changed listeners
         answerChip!!.setOnCheckedChangeListener(checkBox)
         proofChip!!.setOnCheckedChangeListener(checkBox)
         searchAllChip!!.setOnCheckedChangeListener(checkBox)
+        sortChapterChip!!.setOnCheckedChangeListener(checkBox)
         topicChip = root.findViewById(R.id.topicChip)
         questionChip = root.findViewById(R.id.questionChip)
         readDocsChip = root.findViewById(R.id.readDocsChip)
         //Spinner Initialization
-        documentTypeSpinner = root.findViewById(R.id.documentTypeSpinner)
-        documentNameSpinner = root.findViewById(R.id.documentNameSpinner)
-        translationSpinner = root.findViewById(R.id.bibleTranslationSpinner)
+
         //Adapter and Spinner Assignments
         docTypes = searchViewModel.getTypes()
-        docTypeSpinnerAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.support_simple_spinner_dropdown_item,
-            docTypes!!
+
+
+
+
+
+        docTypeSpinnerAdapter = MyAdapter(
+            requireContext(), R.layout.support_simple_spinner_dropdown_item,
+            docTypes
         )
-        documentTypeSpinner!!.adapter = docTypeSpinnerAdapter
-        documentTypeSpinner!!.onItemSelectedListener = spinnerItemSelectedListener
+
+        /// Test 1
+        binding.docTypeCB.item = docTypes as List<Any>?
+        binding.docTypeCB.onItemSelectedListener = docTypeSpinnerListener
+
         type = ""
         //Load Document Titles into Doc Title list for preparation
         searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB!!))
@@ -156,22 +142,11 @@ var docType=""
             R.layout.support_simple_spinner_dropdown_item,
             docTitleList
         )
-        documentNameSpinner!!.onItemSelectedListener = docTitleSpinner
-
-        //Bible Translation Spinner Initialization
-        searchViewModel.loadTranslations(docDBhelper!!.getAllBibleTranslations(documentDB!!))
-        bibleTransList = searchViewModel.getTranslations()
-        bibleTranslationAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.support_simple_spinner_dropdown_item,
-            bibleTransList
-        )
-        translationSpinner!!.adapter = bibleTranslationAdapter
-        translationSpinner!!.onItemSelectedListener = translationSpinnerItemSelectedListener
-
-        searchBox!!.setOnKeyListener(submissionKey)
+        binding.docTitleCB.item = docTitleList as List<Any>?
+        binding.docTitleCB.onItemSelectedListener = docTitleSpinnerListener
+//        documentNameSpinner!!.onItemSelectedListener = docTitleSpinnerListener
         topicChip!!.performClick()
-
+        binding.docTypeCB.setSelection(0)
         return root
     }
 
@@ -179,8 +154,6 @@ var docType=""
         super.onDestroyView()
         _binding = null
     }
-
-
     private var checkBox = CompoundButton.OnCheckedChangeListener { compoundButton, _ ->
         when (compoundButton.id) {
             R.id.proofChip -> proofs = !proofChip!!.isChecked
@@ -190,33 +163,30 @@ var docType=""
         }
     }
     var optionListener = ChipGroup.OnCheckedChangeListener { group, checkedId ->
-        val enter = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)
-        //val searchFab = root.findViewById<ExtendedFloatingActionButton>(R.id.searchFAB)
         if (checkedId == (R.id.topicChip)) {
-            searchBox!!.isEnabled = true
-            searchBox!!.imeOptions = EditorInfo.IME_ACTION_SEARCH
-            searchBox!!.isSubmitButtonEnabled = true
-            searchBox!!.setOnKeyListener(submissionKey)
-            searchBox!!.setOnQueryTextListener(searchQueryListener)
-            searchBox!!.inputType = InputType.TYPE_CLASS_TEXT
+            searchBoxContainer!!.isEnabled = true
+            searchBoxContainer!!.editText!!.imeOptions = EditorInfo.IME_ACTION_SEARCH
+            searchBoxContainer!!.editText!!.setOnKeyListener(submissionKey)
+            searchBoxContainer!!.editText!!.inputType = InputType.TYPE_CLASS_TEXT
             textSearch = true
             questionSearch = false
             readerSearch = false
-            // searchFAB!!.text = resources.getString(R.string.Search)
+            searchViewModel.buttonText = resources.getString(R.string.Search)
+
 
         } else if (checkedId == R.id.questionChip) {
-            searchBox!!.isEnabled = true
-            searchBox!!.imeOptions = EditorInfo.IME_ACTION_SEARCH
-            searchBox!!.inputType = InputType.TYPE_CLASS_NUMBER
-            searchBox!!.setOnQueryTextListener(searchQueryListener)
-            searchBox!!.setOnKeyListener(submissionKey)
+            searchBoxContainer!!.isEnabled = true
+            searchBoxContainer!!.editText!!.imeOptions = EditorInfo.IME_ACTION_SEARCH
+            searchBoxContainer!!.editText!!.inputType = InputType.TYPE_CLASS_NUMBER
+            searchBoxContainer!!.editText!!.setOnKeyListener(submissionKey)
             textSearch = false
             readerSearch = false
             questionSearch = true
-            //searchFAB!!.text = resources.getString(R.string.Search)
+            searchViewModel.buttonText = resources.getString(R.string.Search)
 
         } else if (checkedId == R.id.readDocsChip) {
-            //   searchFAB!!.text = resources.getString(R.string.read_button_text)
+            searchViewModel.buttonText = resources.getString(R.string.read_button_text)
+            searchBoxContainer!!.isEnabled = false
             textSearch = false
             questionSearch = false
             readerSearch = true
@@ -224,167 +194,102 @@ var docType=""
 
     }
 
-    //Submission key
-    var searchButtonListener = View.OnClickListener {
-        val query: String
-        if (!readerSearch!!) {
-            query = searchBox!!.query.toString()
-            if (query.isEmpty()) /*ErrorMessage(resources.getString(R.string.query_error))*/ { /* DesignerToast.Error(
-                    super.getContext(),
-                    "Enter A topic in the search field!",
-                    Gravity.BOTTOM,
-                    Toast.LENGTH_LONG
-                )*/
-                MotionToast.createToast(
-                    this.requireActivity(),
-                    "Error",
-                    "Please Enter a topic in search field",
-                    MotionToast.TOAST_ERROR,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(super.requireContext(), R.font.helvetica_regular)
-                )
-
-            } else Search(query)
-        } else {
-            query = ""
-            Search(query)
-        }
-    }
-    var submissionKey = View.OnKeyListener { v, keyCode, event ->
-        val searchBox = v as SearchView
-        if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
-            query = searchBox.query.toString()
+    //Enter Key Event Handler for Search EditText
+    var submissionKey = View.OnKeyListener { v, _, event ->
+        val searchBox = v as TextInputEditText
+        if (event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
+            searchViewModel.query = searchBox.text.toString()
+            Log.d("ENTERKEY", "THE ENTER KEY WAS PRESSED TO EXECUTE THIS")
             Log.d("View", String.format("%s", event.displayLabel))
-            if (!query!!.isEmpty() and !readerSearch!!) Search(query) else MotionToast.createToast(
-                this.requireActivity(),
-                "Error",
-                "Please Enter a topic in search field",
-                MotionToast.TOAST_ERROR,
-                MotionToast.GRAVITY_BOTTOM,
-                MotionToast.LONG_DURATION,
-                ResourcesCompat.getFont(super.requireContext(), R.font.helvetica_regular)
-            )
-/*ErrorMessage(resources.getString(R.string.query_error))*/
+            if (!searchViewModel.query.isEmpty() and !readerSearch!!) Search(
+                searchViewModel.query,
+                requireContext()
+            ) else Toast.makeText(
+                super.getContext(),
+                R.string.query_error,
+                Toast.LENGTH_LONG
+            ).show()
+
             true
         } else {
             false
         }
     }
-    var searchQueryListener: SearchView.OnQueryTextListener =
-        object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(entry: String): Boolean {
-                query = entry
-                if (!readerSearch!!) {
-                    if (query!!.isEmpty()) MotionToast.createToast(
-                        requireActivity(),
-                        "Error",
-                        "Please Enter a topic in search field",
-                        MotionToast.TOAST_ERROR,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(requireContext(), R.font.helvetica_regular)
-                    )
-                    else Search(query)
-                } else Search(query)
-                return false
-            }
 
-            //nothing happens here
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
-            }
+    // Needed to change the
+    var searchBoxEditTextChangedWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            searchViewModel.query = s.toString()
+            //Log.d("QUERYVAL","Query is ${searchViewModel.query}")
         }
 
-    //Spinner Listeners
-    // Bible Translation Spinner Listener
-    var translationSpinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
-        AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            run {
-                translationAbbrevTitle = String.format("%s", parent!!.selectedItem.toString())
-            }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            searchViewModel.query = s.toString()
+            //  Log.d("QUERYVAL","Query is ${searchViewModel.query}")
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            translationAbbrevTitle = parent!!.selectedItem.toString()
+        override fun afterTextChanged(s: Editable?) {
+            searchViewModel.query = s!!.toString()
+            //    Log.d("QUERYVAL","Query is ${searchViewModel.query}")
         }
+
     }
 
-    //Document type spinner listener
-    private var spinnerItemSelectedListener: AdapterView.OnItemSelectedListener = object :
+    //Spinner Listeners
+
+    var docTypeSpinnerListener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
         @SuppressLint("ResourceAsColor")
-        override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+        override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
             run {
-                try {
-                    var docTitles: ArrayList<String?> = ArrayList()
-                    type = parent!!.selectedItem.toString()
-                    if (docTitleList.isNotEmpty())
-                        docTitleList.clear()
-                    searchViewModel.loadTitles(docDBhelper!!.getAllDocTitles(type, documentDB!!))
-                    docTitleList = searchViewModel.getTitles()
-
-                } catch (ex: Exception) {
-                    Toast.makeText(context, ex.localizedMessage, Toast.LENGTH_LONG).show()
-                    Toast.makeText(context, ex.stackTraceToString(), Toast.LENGTH_LONG).show()
-
+                val docTitles: ArrayList<String?> = ArrayList()
+                type = parent.selectedItem.toString()
+                //Gets all document titles and places them in a list
+                for (docTitle in docDBhelper!!.getAllDocTitles(type, documentDB!!)) {
+                    docTitles.add(docTitle.documentName!!)
                 }
                 docTitleSpinnerAdapter = ArrayAdapter(
                     requireContext(),
                     R.layout.support_simple_spinner_dropdown_item,
-                    docTitleList
+                    docTitles
                 )
                 docTitleSpinnerAdapter!!.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
-                documentNameSpinner!!.adapter = docTitleSpinnerAdapter
-                documentNameSpinner!!.onItemSelectedListener = docTitleSpinner
-                when (type.uppercase(Locale.getDefault())) {
+                binding.docTitleCB.item = docTitles as List<Any>?
+                binding.docTitleCB.onItemSelectedListener = docTitleSpinnerListener
+
+                when (type.uppercase(Locale.ROOT)) {
                     "ALL" -> {
                         allOpen = true
-                        confessionOpen = false
-                        catechismOpen = false
-                        creedOpen = false
-                        helpOpen = false
                         docType = "All"
                     }
                     "CONFESSION" -> {
                         allOpen = false
-                        confessionOpen = true
-                        catechismOpen = false
                         header = "Chapter "
-                        creedOpen = false
-                        helpOpen = false
                         docType = "Confession"
                     }
                     "CATECHISM" -> {
                         allOpen = false
                         header = "Question "
-                        confessionOpen = false
-                        catechismOpen = true
-                        creedOpen = false
-                        helpOpen = false
                         docType = "Catechism"
                     }
                     "CREED" -> {
                         allOpen = false
-                        creedOpen = true
-                        catechismOpen = false
-                        confessionOpen = false
-                        helpOpen = false
                         docType = "Creed"
                     }
                 }
+                binding.docTitleCB.setSelection(0)
             }
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            type = parent!!.selectedItem.toString()
+        override fun onNothingSelected(parent: AdapterView<*>) {
+            type = parent.selectedItem.toString()
         }
     }
-    var docTitleSpinner: AdapterView.OnItemSelectedListener = object :
+
+    var docTitleSpinnerListener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
-            fileName = String.format("%s", adapterView!!.selectedItem.toString())
+        override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+            fileName = String.format("%s", adapterView.selectedItem.toString())
         }
 
         override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -395,41 +300,61 @@ var docType=""
 
     // 7-13-21 Take the data from the search form and package it in a format to put in the search handler
     @SuppressLint("NewApi")
-    fun Search(query: String?) {
-        Log.d("Handler", "HomeScreen is in charge")
-        if (sortByChapterBool)
-            sortType = "Chapter"
-        else
-            sortType = "Matches"
 
-        var searchIntent = Intent(context, SearchHandler::class.java)
-        val stringQuery = query
-        Log.d("Test", context.toString())
-        //Document Type Filtering
-        searchIntent.putExtra("AllDocs", allOpen)
-        //All document search within type or all
-        searchIntent.putExtra("SearchAll", searchAll)
-        //Search Type
-        searchIntent.putExtra("Question", questionSearch)
-        searchIntent.putExtra("Text", textSearch)
-        searchIntent.putExtra("Reader", readerSearch)
-        searchIntent.putExtra("docType", docType)
-        //Advanced Options
-        searchIntent.putExtra("Answers", answers)
-        searchIntent.putExtra("Proofs", proofs)
-        //Query Holder
-        searchIntent.putExtra("Query", stringQuery)
-        //FileName
-        searchIntent.putExtra("FileName", fileName)
-        searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
-        //Sort Options
-        searchIntent.putExtra("SortType", sortType)
 
-        requireContext().startActivity(searchIntent)
-
-    }
     companion object {
         const val ACTIVITY_ID = 32
+
+        var fileName: String? = ""
+        var allOpen: Boolean? = null
+        var proofs = true
+        var answers = true
+        var searchAll: Boolean? = null
+        var sortByChapterBool = false
+        var sortType = ""
+        var docType = ""
+        var textSearch: Boolean? = null
+        var questionSearch: Boolean? = null
+        var readerSearch: Boolean? = null
+        lateinit var searchViewModel: SearchViewModel
+
+        fun Search(query: String?, context: Context?) {
+            //This will force the application to halt before continuing
+            Log.d("Handler", "HomeScreen is in charge")
+            //Sort Type Setting
+            if (sortByChapterBool)
+                sortType = "Chapter"
+            else
+                sortType = "Matches"
+
+            var searchIntent = Intent(context, SearchHandler::class.java)
+            val stringQuery = query
+            Log.d("Test", context.toString())
+            //Document Type Filtering
+            searchIntent.putExtra("AllDocs", allOpen)
+            //All document search within type or all
+            searchIntent.putExtra("SearchAll", searchAll)
+            //Search Type
+            searchIntent.putExtra("Question", questionSearch)
+            searchIntent.putExtra("Text", textSearch)
+            searchIntent.putExtra("Reader", readerSearch)
+            searchIntent.putExtra("docType", docType)
+            //Advanced Options
+            searchIntent.putExtra("Answers", answers)
+            searchIntent.putExtra("Proofs", proofs)
+            //Query Holder
+            searchIntent.putExtra("Query", stringQuery)
+            //FileName
+            searchIntent.putExtra("FileName", fileName)
+            searchIntent.putExtra("ACTIVITY_ID", ACTIVITY_ID)
+            //Sort Options
+            searchIntent.putExtra("SortType", sortType)
+
+            context!!.startActivity(searchIntent)
+
+        }
     }
+
+
 }
 
