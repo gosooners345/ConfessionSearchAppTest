@@ -72,6 +72,7 @@ class SearchResultFragment : Fragment() {
         return view
     }
 
+
     var shareContent = View.OnClickListener {
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND

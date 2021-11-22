@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/result_layout_anchor"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_x="2dp"
-    android:layout_y="2dp"
-    android:clickable="true"
-    android:nestedScrollingEnabled="true"
 
-    app:cardCornerRadius="2dp"
-    app:cardElevation="3dp"
-    app:layout_scrollFlags="scroll">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/result_layout_anchor"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/result_screen"
@@ -36,7 +28,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:scrollbars="none|vertical"
-                android:text="ChapterTextHere"
+                android:text="@string/placeholder_text_here"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textIsSelectable="true"
                 android:verticalScrollbarPosition="right"
@@ -48,9 +40,9 @@
                 android:id="@+id/shareActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:actionProviderClass="android.widget.ShareActionProvider"
                 android:text="@string/share"
                 app:icon="@android:drawable/ic_menu_share"
@@ -79,13 +71,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp"
-                android:text="chapterHeader"
+                android:layout_marginTop="48dp"
+                android:text="@string/placeholder_text_ch_Title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/chapterText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-</androidx.cardview.widget.CardView>

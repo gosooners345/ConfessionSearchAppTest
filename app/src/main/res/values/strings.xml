@@ -145,4 +145,6 @@ and catechisms. Use this to take a quick note of a topic your searching, or add 
     <string name="bible_reader">Bible Reader</string>
     <string name="book">Book</string>
     <string name="verse">Verse</string>
+    <string name="placeholder_text_ch_Title">chapterHeader</string>
+    <string name="placeholder_text_here">ChapterTextHere</string>
 </resources>

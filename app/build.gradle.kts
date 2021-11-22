@@ -63,6 +63,7 @@ dependencies {
     implementation ("com.github.chivorns:smartmaterialspinner:1.5.0")
     implementation("com.github.Spikeysanju:MotionToast:1.3.3.4")
     testImplementation("junit:junit:4.13.2")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     annotationProcessor("androidx.room:room-compiler:2.3.0")

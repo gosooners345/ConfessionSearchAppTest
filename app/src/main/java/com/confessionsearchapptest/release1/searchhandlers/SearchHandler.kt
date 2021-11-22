@@ -21,7 +21,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.Document
 import com.confessionsearchapptest.release1.data.documents.DocumentList
@@ -32,6 +34,9 @@ import com.confessionsearchapptest.release1.searchresults.SearchResultFragment
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import com.example.awesomedialog.*
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.tabs.TabItem
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.vdx.designertoast.DesignerToast
 import www.sanju.motiontoast.MotionToast
 import java.util.*
@@ -49,7 +54,7 @@ class SearchHandler : AppCompatActivity() {
     var refreshQuery = ""
     var sortType = ""
     lateinit var adapter: SearchAdapter
-    lateinit var vp2: ViewPager
+    lateinit var vp2: ViewPager2
 
     @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {//, persistentState: PersistableBundle?) {
@@ -311,9 +316,23 @@ class SearchHandler : AppCompatActivity() {
 
     private fun refreshFragmentsOnScreen(query: String?) {
         setContentView(R.layout.index_pager)
-        adapter = SearchAdapter(supportFragmentManager, masterList, query!!)
-        vp2 = findViewById<ViewPager>(R.id.resultPager)
-        searchFragment!!.DisplayResults(masterList, vp2, adapter, query, 0)
+        adapter = SearchAdapter(supportFragmentManager, masterList, query!!,lifecycle)
+        vp2 = findViewById<ViewPager2>(R.id.resultPager2)
+        adapter.createFragment(0)
+
+        vp2.adapter = adapter
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+
+        TabLayoutMediator(tabLayout,vp2){tab,position ->
+           vp2.setCurrentItem(tab.position,true)
+            tab.text = String.format("Result %s of %s for %s", position + 1, masterList.size, query!!)
+        }
+            .attach()
+        adapter.saveState()
+
+
+
+       // searchFragment!!.DisplayResults(masterList, vp2, adapter, query, 0)
 
     }
 

@@ -1,11 +1,20 @@
 package com.confessionsearchapptest.release1.searchresults
 
+import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.DocumentList
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class SearchFragmentActivity  //public ViewPager2 vp2;
     : AppCompatActivity() {
@@ -16,15 +25,28 @@ class SearchFragmentActivity  //public ViewPager2 vp2;
     var header = ""
     var index: Int? = null
 
-    fun DisplayResults(sourceList: DocumentList, vp: ViewPager, search: SearchAdapter, searchTerm: String?, count: Int) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    fun DisplayResults(sourceList: DocumentList, vp: ViewPager2, search: SearchAdapter, searchTerm: String?, count: Int) {
+
         documentList = sourceList
-        search.getItem(count)
+        var title =""
+        search.createFragment(count)
         search.saveState()
         vp.adapter = search
+
+
     }
+
+
+
 }
 
-class SearchAdapter(fm: FragmentManager?, documents: DocumentList, searchTerm: String) : FragmentStatePagerAdapter(fm!!) {
+//This is where the biggest changes appear to occur
+class SearchAdapter(fm:FragmentManager, documents: DocumentList, searchTerm: String,lifeCycle: Lifecycle) : FragmentStateAdapter(fm!!,lifeCycle) {
     var dList1 = DocumentList()
     var documentList1 = DocumentList()
     private var docPosition = 0
@@ -32,19 +54,17 @@ class SearchAdapter(fm: FragmentManager?, documents: DocumentList, searchTerm: S
     private val header = ""
 
     //public FragmentManager news;
-    var news: FragmentManager? = null
-    override fun getCount(): Int {
+   // var news: FragmentManager? = null
+    override fun getItemCount(): Int {
         return documentList1.size
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        if (term === "") {
-            term = documentList1[position + 1].documentName!!
-        }
-        return String.format("Result %s of %s for %s", position + 1, documentList1.size, term)
+    init {
+        documentList1 = documents
+        term = searchTerm
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         var title = ""
         val frg: Fragment
         val document = documentList1[position]
@@ -52,15 +72,9 @@ class SearchAdapter(fm: FragmentManager?, documents: DocumentList, searchTerm: S
         title = document.documentName!!
         docTitle = if (title === "Results" || title === "") document.documentName else document.documentName
         docPosition++
+
         frg = SearchResultFragment.NewResult(document.documentText, document.proofs, document.documentName,
-                document.chNumber, documentList1.title, document.matches, document.chName, document.tags)
+            document.chNumber, documentList1.title, document.matches, document.chName, document.tags)
         return frg
-    }
-
-    init {
-        documentList1 = documents
-
-//news = fm;
-        term = searchTerm
     }
 }

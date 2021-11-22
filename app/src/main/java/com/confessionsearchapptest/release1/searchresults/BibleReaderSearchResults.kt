@@ -10,14 +10,20 @@ import com.confessionsearchapptest.release1.R
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import com.confessionsearchapptest.release1.ui.bible.BibleViewerFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import www.sanju.motiontoast.MotionToast
 
 
@@ -25,12 +31,13 @@ class BibleReaderSearchResults : AppCompatActivity() {
 
     var shareList: String? = ""
     var shareNote: String? = ""
-
+lateinit var vp2: ViewPager2
+lateinit var  adapter: BibleReaderAdapter
     var bibleVerseList = BibleContentsList()
     var docDBhelper: DocumentDBClassHelper? = null
     var documentDB: SQLiteDatabase? = null
     var header = ""
-    var bibleReaderHandler: BibleReaderHandler? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +60,7 @@ class BibleReaderSearchResults : AppCompatActivity() {
         docDBhelper = DocumentDBClassHelper(this)
         documentDB = docDBhelper!!.readableDatabase
         try {
-            bibleReaderHandler = BibleReaderHandler()
+
             bibleVerseList = docDBhelper!!.getChaptersandVerses(
                 documentDB!!,
                 bibleTranslation,
@@ -77,21 +84,30 @@ class BibleReaderSearchResults : AppCompatActivity() {
             bibleVerseList.title = bibleBook
             //Under further review for bugfixes
             //setContentView(R.layout.index_pager)
-            val bibleAdapter = BibleReaderAdapter(
+            adapter = BibleReaderAdapter(
                 supportFragmentManager,
                 bibleVerseList,
-                bibleVerseList.title!!
+                bibleVerseList.title!!,lifecycle
             )
 
             if (bibleVerseList.size > 1) {
                 setContentView(R.layout.index_pager)
-                val adapter = BibleReaderAdapter(
+                 adapter = BibleReaderAdapter(
                     supportFragmentManager,
                     bibleVerseList,
-                    bibleVerseList.title!!
+                    bibleVerseList.title!!,lifecycle
                 )
-                val vp = findViewById<ViewPager>(R.id.resultPager)
-                bibleReaderHandler!!.displayResults(bibleVerseList, vp, adapter, 0)
+                vp2 = findViewById<ViewPager2>(R.id.resultPager2)
+                adapter.createFragment(0)
+                vp2.adapter=adapter
+                val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+                TabLayoutMediator(tabLayout,vp2){tab,position ->
+                    tab.text = String.format("Chapter %s of %s in %s", position + 1, bibleVerseList.size,bibleBook)
+                }.attach()
+                adapter.saveState()
+
+              //  val vp = findViewById<ViewPager>(R.id.resultPager)
+                //bibleReaderHandler!!.displayResults(bibleVerseList, vp, adapter, 0)
 
             }
             else {
@@ -103,8 +119,8 @@ class BibleReaderSearchResults : AppCompatActivity() {
                 chHeader.text =
                     String.format("${bibleContents.BookName} ${bibleContents.ChapterNum}")
                 chTextBox.text = bibleContents.VerseText
-                val fab: ExtendedFloatingActionButton = findViewById(R.id.shareActionButton)
-                val saveFab: ExtendedFloatingActionButton = findViewById(R.id.saveNote)
+                val fab: Button = findViewById(R.id.shareActionButton)
+                val saveFab: Button = findViewById(R.id.saveNote)
                 fab.setOnClickListener(shareContent)
                 shareNote = ""
                 shareNote =
@@ -146,26 +162,25 @@ class BibleReaderSearchResults : AppCompatActivity() {
         private const val ACTIVITY_ID = 65
     }
 }
-class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, titleString:String ) : FragmentStatePagerAdapter(fm!!) {
+class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, titleString:String ,lifeCycle: Lifecycle) : FragmentStateAdapter(fm!!,lifeCycle) {
     var dList1 = BibleContentsList()
     var bibleList = verseList
     private var bibleBookPosition = 0
     private var term = ""
     private val header = ""
-
-    //public FragmentManager news;
-    var news: FragmentManager? = null
-    override fun getCount(): Int {
-        return bibleList.size
+    init {
+        term = titleString
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        var titleString =
-            String.format("Chapter %s of %s in %s", position + 1, bibleList.size, term)
-        return titleString
+    companion object {
+        private const val ACTIVITY_ID = 66
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItemCount(): Int {
+  return  bibleList.size
+    }
+
+    override fun createFragment(position: Int): Fragment {
         var title = ""
         val frg: Fragment
         val bibleSection = bibleList[position]
@@ -185,13 +200,5 @@ class BibleReaderAdapter (fm: FragmentManager?, verseList: BibleContentsList, ti
                 bibleSection.BookName!!
             )
         return frg
-    }
-
-    init {
-        term = titleString
-    }
-
-    companion object {
-        private const val ACTIVITY_ID = 66
     }
 }
