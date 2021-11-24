@@ -77,32 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-
-        when (Configuration.UI_MODE_NIGHT_MASK and resources.configuration.uiMode) {
-            Configuration.UI_MODE_NIGHT_NO -> {
-                setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Log.i("ConfigChange", "Configuration Change Made")
-                var restart = Intent(context, MainActivity::class.java)
-                var saveBundle = navController.saveState()
-
-                restart.putExtra("config", saveBundle)
-                finish()
-                startActivity(restart)
-
-            }
-
-            Configuration.UI_MODE_NIGHT_YES -> {
-                setDefaultNightMode(MODE_NIGHT_YES)
-
-                var restart = Intent(context, MainActivity::class.java)
-                Log.i("ConfigChange", "Restarting Actviity due to UI Change")
-                var saveBundle = navController.saveState()
-                //this.onSaveInstanceState( saveBundle )
-                restart.putExtra("config", saveBundle)
-                finish()
-                startActivity(restart)
-            }
-        }
+recreate()
     }
 
     private var navControllerEvent: NavController.OnDestinationChangedListener =
@@ -190,8 +165,11 @@ class MainActivity : AppCompatActivity() {
     //Pass any static variables along here
     companion object {
         var notesArrayList = ArrayList<Notes>()
-    }
+        const val  versionName = BuildConfig.VERSION_NAME
+    const val appName = BuildConfig.APPLICATION_ID
+        const val buildType = BuildConfig.BUILD_TYPE
 
+    }
 
 }
 

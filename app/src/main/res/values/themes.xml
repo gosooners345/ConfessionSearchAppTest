@@ -28,6 +28,7 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
+        <item name="aboutStyle">@style/Widget.App.AboutPage</item>
     </style>
 
 
@@ -60,11 +61,25 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip</item>
     <item name="android:textColor">@color/black</item>
     </style>
-        <!--<item name="chipIconTint">@color/red_200</item>
-        <item name="chipBackgroundColor">@color/red_200</item>
-        <item name="chipStrokeWidth">2dp</item>
-        <item name="chipStrokeColor">@color/stroke_tint</item>
-        <item name="checkedIconVisible">false</item>
-        <item name="shapeAppearanceOverlay">@null</item>-->
+
+    <style name="Widget.App.AboutPage" parent="about_About">
+        <item name="aboutBackground">?android:colorBackground</item>
+        <item name="aboutElementIconTint">?attr/colorOnBackground</item>
+        <item name="aboutSeparatorColor">?attr/colorOnBackground</item>
+        <item name="android:layout_marginBottom">64dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="aboutDescriptionTextAppearance">@style/TextAppearance.App.AboutPage.Description</item>
+
+        <!-- similarly, you can also apply the following text appearances -->
+        <item name="aboutElementTextAppearance">@style/about_elementTextAppearance</item>
+        <item name="aboutGroupTextAppearance">@style/about_groupTextAppearance</item>
+    </style>
+
+    <style name="TextAppearance.App.AboutPage.Description" parent="about_descriptionTextAppearance">
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+
 
 </resources>

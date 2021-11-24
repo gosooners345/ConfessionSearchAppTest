@@ -16,7 +16,7 @@
         <item name="colorError">@color/md_theme_dark_error</item>
         <item name="colorErrorContainer">@color/md_theme_dark_errorContainer</item>
         <item name="colorOnError">@color/md_theme_dark_onError</item>
-
+        <item name="aboutStyle">@style/Widget.App.AboutPage</item>
         <item name="colorOnErrorContainer">@color/md_theme_dark_onErrorContainer</item>
         <item name="android:colorBackground">@color/md_theme_dark_background</item>
         <item name="colorOnBackground">@color/md_theme_dark_onBackground</item>
@@ -58,14 +58,26 @@
     <item name="android:textColor">@color/red_200</item>
     </style>
 
-    <!--<style name="Widget.App.Chip" parent="Widget.MaterialComponents.Chip.Entry">
-        <item name="chipIconTint">@color/red_200</item>
-        <item name="chipBackgroundColor">@color/black</item>
-        <item name="chipStrokeWidth">2dp</item>
-        <item name="chipStrokeColor">@color/stroke_tint</item>
-        <item name="checkedIconVisible">false</item>
-        <item name="shapeAppearanceOverlay">@null</item>
-    </style>-->
+
+    <!-- Define a global style for AboutPage in your 'styles.xml' -->
+    <style name="Widget.App.AboutPage" parent="about_About">
+        <item name="aboutBackground">?android:colorBackground</item>
+        <item name="aboutElementIconTint">?attr/colorOnBackground</item>
+        <item name="aboutSeparatorColor">?attr/colorOnBackground</item>
+        <item name="aboutDescriptionTextAppearance">@style/TextAppearance.App.AboutPage.Description</item>
+<item name="android:layout_marginBottom">64dp</item>
+
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <!-- similarly, you can also apply the following text appearances -->
+        <item name="aboutElementTextAppearance">@style/about_elementTextAppearance.Dark</item>
+        <item name="aboutGroupTextAppearance">@style/about_groupTextAppearance</item>
+    </style>
+
+    <style name="TextAppearance.App.AboutPage.Description" parent="about_descriptionTextAppearance.Dark">
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
 
 
 </resources>
