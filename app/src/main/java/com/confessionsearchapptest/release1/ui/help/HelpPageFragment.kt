@@ -1,6 +1,7 @@
 package com.confessionsearchapptest.release1.ui.help
 
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,8 @@ class HelpPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        var sourceElement = Element()
+        sourceElement.setTitle(getString(R.string.sources_tab)+newLine+getString(R.string.copyright_disclaimer))
         var versionElement = Element()
         versionElement.setTitle("Version #: ${MainActivity.versionName}")
         val searchTabElement = Element()
@@ -31,13 +34,14 @@ class HelpPageFragment : Fragment() {
         val notesSectionElement =Element()
         notesSectionElement.title=getString(R.string.notes_tab_help) + newLine + getString(R.string.notes_tab_helpPgh)
 val bibleReaderElement = Element()
-        bibleReaderElement.title = getString(R.string.bible_tab_HelpLabel)+newLine+getString(R.string.bible_tab_helpPgh)
+        bibleReaderElement.title = getString(R.string.bible_tab_HelpLabel)+ newLine+getString(R.string.bible_tab_helpPgh)
         Log.i("HelpFragment", "I am loading...")
         val helpPage =   AboutPage(requireContext())
             .setDescription(getString(R.string.app_description))
             .addItem(searchTabElement)
             .addItem(notesSectionElement)
             .addItem(bibleReaderElement)
+            .addItem(sourceElement)
             .addPlayStore("com.confessionsearch.release1")
             .addEmail("BoomerSooner12345@gmail.com", "Email Developer")
 
