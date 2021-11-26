@@ -231,11 +231,11 @@ class SearchHandler : AppCompatActivity() {
                 val fab = findViewById<Button>(R.id.shareActionButton)
                 val chapterBox = findViewById<TextView>(R.id.chapterText)
                 val proofBox = findViewById<TextView>(R.id.proofText)
+                val proofLabel = findViewById<TextView>(R.id.proofLabel)
                 val chNumbBox = findViewById<TextView>(R.id.confessionChLabel)
                 val docTitleBox = findViewById<TextView>(R.id.documentTitleLabel)
                 val tagBox = findViewById<TextView>(R.id.tagView)
                 proofBox.text = Html.fromHtml(document.proofs)
-                docTitleBox.text = document.documentName
                 docTitleBox.text = document.documentName
                 chapterBox.text = Html.fromHtml(document.documentText)
                 tagBox.text = String.format("Tags: %s", document.tags)

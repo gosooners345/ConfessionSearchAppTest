@@ -1,6 +1,8 @@
 package com.confessionsearchapptest.release1.searchresults
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -11,6 +13,7 @@ import android.widget.Button
 import android.widget.ShareActionProvider
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.confessionsearchapptest.release1.BuildConfig
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 
@@ -20,12 +23,16 @@ class SearchResultFragment : Fragment() {
     var shareNote: String? = null
     var shareList = ""
 
+    @SuppressLint("NewApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         bundle: Bundle?
     ): View? {
         var header = ""
+        var titleHeader = ""
+        var tagLine = ""
+        var matchLine = ""
         val resultChapter = requireArguments().getString(CHAPTER, "")
         val chTitle = requireArguments().getString(CHAPTITLE, "")
         val resultTags = requireArguments().getString(TAGS, "")
@@ -40,34 +47,58 @@ class SearchResultFragment : Fragment() {
         val chNumbBox = view.findViewById<TextView>(R.id.confessionChLabel)
         val docTitleBox = view.findViewById<TextView>(R.id.documentTitleLabel)
         val matchView = view.findViewById<TextView>(R.id.matchView)
-        val proofView = view.findViewById<TextView>(R.id.proofLabel)
         val tagBox = view.findViewById<TextView>(R.id.tagView)
-        chapterBox.text = Html.fromHtml(resultChapter)
-        proofBox.text = Html.fromHtml(resultProofs)
-        tagBox.text = String.format("Tags: %s", resultTags)
-        docTitleBox.text = resultTitle
+       val proofLabel = view.findViewById<TextView>(R.id.proofLabel)
         if (resultChapter.contains("Question")) {
             header = "Question "
-            chNumbBox.text = String.format("%s %s : %s", header, resultID, chTitle)
+            titleHeader = String.format("%s %s : %s", header, resultID, chTitle)
         } else if (resultChapter.contains("I. ")) {
             header = "Chapter"
-            chNumbBox.text = String.format("%s %s: %s", header, resultID, chTitle)
+           titleHeader = String.format("%s %s: %s", header, resultID, chTitle)
         } else {
-            chNumbBox.text = String.format("%s ", chTitle)
+            titleHeader = String.format("%s ", chTitle)
         }
-        matchView.text = String.format("Matches: %s", resultMatch)
-        shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
-                + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
+        shareNote = ""
+        tagLine= String.format("Tags: %s", resultTags)
+        matchLine = String.format("Matches: %s", resultMatch)
+        if(android.os.Build.VERSION.SDK_INT>android.os.Build.VERSION_CODES.N)
+        {
+            chapterBox.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+            chapterBox.text = Html.fromHtml(resultTitle + lineBreak+titleHeader+ lineBreak+resultChapter + lineBreak+"Proofs:"+ lineBreak +resultProofs
+            + lineBreak+matchLine+ lineBreak+tagLine
+            )
+            shareList = chapterBox.text.toString()
+            shareNote = chapterBox.text.toString()
+            docTitleBox.visibility=View.GONE
+            proofBox.visibility=View.GONE
+            proofLabel.visibility=View.GONE
+            chNumbBox.visibility=View.GONE
+            tagBox.visibility=View.GONE
+            matchView.visibility=View.GONE
+        }
+        else {
+            docTitleBox.text = resultTitle
+            chNumbBox.text = titleHeader
+            chapterBox.text = Html.fromHtml(resultChapter)
+            proofBox.text = Html.fromHtml(resultProofs)
+            tagBox.text =tagLine
+            matchView.text = matchLine
+            shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
+                    + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
+            shareNote = String.format(
+                docTitleBox.text.toString() + newLine + chNumbBox.text.toString() + newLine
+                        + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text.toString()
+            )
+        }
+
+
+
+
+
         val fab = view.findViewById<Button>(R.id.shareActionButton)
         val saveFab = view.findViewById<Button>(R.id.saveNote)
         fab.setOnClickListener(shareContent)
-        shareNote = ""
-        shareNote = String.format(
-            docTitleBox.text.toString() + newLine + chNumbBox.text.toString() + newLine
-                    + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text.toString()
-        )
-        //( Html.fromHtml(docTitleBox.text.toString() + lineBreak + chNumbBox.text.toString() + lineBreak
-        //  + lineBreak + chapterBox.text + singleBreak + "Proofs" + singleBreak + proofBox.text).toString())
+
         saveFab.setOnClickListener(saveNewNote)
         return view
     }
