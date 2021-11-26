@@ -33,6 +33,7 @@ import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.confessionsearchapptest.release1.searchresults.SearchResultFragment
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import com.example.awesomedialog.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
@@ -227,34 +228,60 @@ class SearchHandler : AppCompatActivity() {
                     setContentView(R.layout.error_page)
                 }
                 var header = ""
+                val lineBreak = "<br><br>"
+                val singleBreak = "<br>"
+                var titleHeader = ""
+                var tagLine = ""
+                var matchLine = ""
+                val newLine = "\r\n"
                 val saveFab = findViewById<Button>(R.id.saveNote)
                 val fab = findViewById<Button>(R.id.shareActionButton)
                 val chapterBox = findViewById<TextView>(R.id.chapterText)
+                val matchView = findViewById<TextView>(R.id.matchView)
                 val proofBox = findViewById<TextView>(R.id.proofText)
                 val proofLabel = findViewById<TextView>(R.id.proofLabel)
                 val chNumbBox = findViewById<TextView>(R.id.confessionChLabel)
                 val docTitleBox = findViewById<TextView>(R.id.documentTitleLabel)
                 val tagBox = findViewById<TextView>(R.id.tagView)
-                proofBox.text = Html.fromHtml(document.proofs)
-                docTitleBox.text = document.documentName
-                chapterBox.text = Html.fromHtml(document.documentText)
-                tagBox.text = String.format("Tags: %s", document.tags)
-                if (chapterBox.text.toString().contains("Question")) {
+                if (document.documentText!!.contains("Question")) {
                     header = "Question "
-                    chNumbBox.text =
+                    titleHeader=
                         String.format("%s %s: %s", header, document.chNumber, document.chName)
-                } else if (chapterBox.text.toString().contains("I. ")) {
+                } else if (document.documentText!!.contains("I. ")) {
                     header = "Chapter"
-                    chNumbBox.text =
+                    titleHeader=
                         String.format("%s %s: %s", header, document.chNumber, document.chName)
-                } else chNumbBox.text = String.format("%s", document.documentName)
-                val newLine = "\r\n"
-                shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
-                        + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
-                fab.setOnClickListener(shareContent)
+                } else titleHeader = String.format("%s", document.documentName)
+                shareNote = ""
+                tagLine= String.format("Tags: %s", document.tags)
+                matchLine = String.format("Matches: %s", document.matches)
+                docTitleBox.text = document.documentName
+                chNumbBox.text=titleHeader
+                if(android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.O)
+                {
+                    chapterBox.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                    chapterBox.text=Html.fromHtml(
+                            lineBreak+document.documentText+lineBreak+"Proofs:"+lineBreak+document.proofs+
+                    lineBreak+tagLine+lineBreak+matchLine)
+                    shareList=docTitleBox.text.toString()+newLine+chapterBox.text.toString()
+                    shareNote=shareList
+                    proofBox.visibility=View.GONE
+                    proofLabel.visibility=View.GONE
+                    tagBox.visibility=View.GONE
+                    matchView.visibility=View.GONE
+                }
+                else{
+                    proofBox.text = Html.fromHtml(document.proofs)
+                    chapterBox.text = Html.fromHtml(document.documentText)
+                    tagBox.text = String.format("Tags: %s", document.tags)
+                    shareList = (docTitleBox.text.toString() + newLine + chNumbBox.text + newLine
+                            + newLine + chapterBox.text + newLine + "Proofs" + newLine + proofBox.text)
 
-                shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
-                        + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
+                    shareNote = (docTitleBox.text.toString() + "<br>" + "<br>" + chNumbBox.text + "<br>"
+                            + "<br>" + document.documentText + "<br>" + "Proofs" + "<br>" + document.proofs)
+                }
+
+                fab.setOnClickListener(shareContent)
                 saveFab.setOnClickListener(saveNewNote)
             } else {
                 Log.i("Error", "No results found for Topic")
@@ -286,30 +313,23 @@ class SearchHandler : AppCompatActivity() {
                 }
                 super.setContentView(R.layout.error_page)
                 val errorMsg = findViewById<TextView>(R.id.errorTV)
-                errorMsg.text = String.format(
+                val errorMessage = String.format(
                     """
     No results were found for %s 
     
     Go back to home page to search for another topic
     """.trimIndent(), query
                 )
-                val alert = AlertDialog.Builder(this)
-                alert.setTitle("No Results Found!")
-                alert.setMessage(
-                    String.format(
-                        """No results were found for %s
-    Go back to home page to search for another topic
-    """.trimIndent(), query
-                    )
-                )
-                alert.setPositiveButton("Yes") { dialog, which ->
-                    onBackPressed()
-                }
-                alert.setNegativeButton("No") { dialog, which -> dialog.dismiss() }
-                val dialog: Dialog = alert.create()
-                if (!isFinishing) dialog.show()
+                errorMsg.text = errorMessage
 
-
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("No Results Found!")
+                    .setMessage(errorMessage)
+                    .setPositiveButton("Yes") { dialog, which ->
+                        onBackPressed()
+                    }
+                    .setNegativeButton("No") { dialog, which -> dialog.dismiss() }
+                    .show()
             }
         }
     }

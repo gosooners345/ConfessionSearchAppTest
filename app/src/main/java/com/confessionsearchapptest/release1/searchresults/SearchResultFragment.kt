@@ -48,37 +48,38 @@ class SearchResultFragment : Fragment() {
         val docTitleBox = view.findViewById<TextView>(R.id.documentTitleLabel)
         val matchView = view.findViewById<TextView>(R.id.matchView)
         val tagBox = view.findViewById<TextView>(R.id.tagView)
-       val proofLabel = view.findViewById<TextView>(R.id.proofLabel)
+        val proofLabel = view.findViewById<TextView>(R.id.proofLabel)
+        val fab = view.findViewById<Button>(R.id.shareActionButton)
+        val saveFab = view.findViewById<Button>(R.id.saveNote)
         if (resultChapter.contains("Question")) {
             header = "Question "
             titleHeader = String.format("%s %s : %s", header, resultID, chTitle)
         } else if (resultChapter.contains("I. ")) {
             header = "Chapter"
-           titleHeader = String.format("%s %s: %s", header, resultID, chTitle)
+            titleHeader = String.format("%s %s: %s", header, resultID, chTitle)
         } else {
             titleHeader = String.format("%s ", chTitle)
         }
         shareNote = ""
         tagLine= String.format("Tags: %s", resultTags)
         matchLine = String.format("Matches: %s", resultMatch)
+        docTitleBox.text = resultTitle
+        chNumbBox.text = titleHeader
+
         if(android.os.Build.VERSION.SDK_INT>android.os.Build.VERSION_CODES.N)
         {
             chapterBox.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
-            chapterBox.text = Html.fromHtml(resultTitle + lineBreak+titleHeader+ lineBreak+resultChapter + lineBreak+"Proofs:"+ lineBreak +resultProofs
+            chapterBox.text = Html.fromHtml(  lineBreak+resultChapter + lineBreak+"Proofs:"+ lineBreak +resultProofs
             + lineBreak+matchLine+ lineBreak+tagLine
             )
             shareList = chapterBox.text.toString()
             shareNote = chapterBox.text.toString()
-            docTitleBox.visibility=View.GONE
             proofBox.visibility=View.GONE
             proofLabel.visibility=View.GONE
-            chNumbBox.visibility=View.GONE
             tagBox.visibility=View.GONE
             matchView.visibility=View.GONE
         }
         else {
-            docTitleBox.text = resultTitle
-            chNumbBox.text = titleHeader
             chapterBox.text = Html.fromHtml(resultChapter)
             proofBox.text = Html.fromHtml(resultProofs)
             tagBox.text =tagLine
@@ -91,14 +92,7 @@ class SearchResultFragment : Fragment() {
             )
         }
 
-
-
-
-
-        val fab = view.findViewById<Button>(R.id.shareActionButton)
-        val saveFab = view.findViewById<Button>(R.id.saveNote)
         fab.setOnClickListener(shareContent)
-
         saveFab.setOnClickListener(saveNewNote)
         return view
     }
