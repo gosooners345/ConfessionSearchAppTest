@@ -3,6 +3,7 @@
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/result_layout_anchor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -36,22 +37,6 @@
 
 
             <TextView
-                android:id="@+id/proofText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="Proofs Here"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textIsSelectable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/proofLabel" />
-
-
-            <TextView
                 android:id="@+id/documentTitleLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -65,18 +50,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/proofLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:text="Proofs"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chapterText" />
 
             <TextView
                 android:id="@+id/confessionChLabel"
@@ -96,45 +69,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/documentTitleLabel" />
 
-            <TextView
-                android:id="@+id/matchView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-
-                android:text="Matches:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/proofText" />
-
-            <TextView
-                android:id="@+id/tagView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="Tags:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/matchView" />
-
             <Button
                 android:id="@+id/shareActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:actionProviderClass="android.widget.ShareActionProvider"
 
+                android:actionProviderClass="android.widget.ShareActionProvider"
                 android:text="@string/share"
                 app:icon="@drawable/share_light_drawable"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tagView" />
+                app:layout_constraintTop_toBottomOf="@+id/chapterText" />
 
             <Button
                 android:id="@+id/saveNote"
