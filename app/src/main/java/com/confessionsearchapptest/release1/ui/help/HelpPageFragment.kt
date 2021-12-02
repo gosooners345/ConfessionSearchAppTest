@@ -1,11 +1,13 @@
 package com.confessionsearchapptest.release1.ui.help
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.confessionsearchapptest.release1.BuildConfig
 import com.confessionsearchapptest.release1.MainActivity
@@ -18,12 +20,13 @@ class HelpPageFragment : Fragment() {
 
       val newLine = "\r\n"
 
+    @SuppressLint("NewApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var sourceElement = Element()
+       /* var sourceElement = Element()
         sourceElement.setTitle(getString(R.string.sources_tab)+newLine+getString(R.string.copyright_disclaimer))
         var versionElement = Element()
         versionElement.setTitle("Version #: ${MainActivity.versionName}")
@@ -47,17 +50,32 @@ val bibleReaderElement = Element()
 
             .addItem(versionElement)
 
-            .create()
+            .create()*/
 
 
 
-      return  helpPage
-        /*val view = inflater.inflate(R.layout.fragment_help_page, container, false)
-      var searchTabTV = view.findViewById<TextView>(R.id.searchTabLabel)
-      var searchTabPgh1 = view.findViewById<TextView>(R.id.searchTabHelpText1)
+    //  return  helpPage
+        val view = inflater.inflate(R.layout.fragment_help_page, container, false)
+        val searchTabTV = view.findViewById<TextView>(R.id.searchTabLabel)
+        searchTabTV.text = Html.fromHtml(
+            (getString(R.string.search_tab) + newLine + getString(R.string.help_searchTab_pgh1)),
+            Html.FROM_HTML_MODE_COMPACT
+        )
+        val bibleTabTV = view.findViewById<TextView>(R.id.bibleTabLabel)
+        bibleTabTV.text = Html.fromHtml(
+            (getString(R.string.bible_tab_HelpLabel) + newLine + getString(R.string.bible_tab_helpPgh)),
+            Html.FROM_HTML_MODE_COMPACT
+        )
+        val notesTabTV = view.findViewById<TextView>(R.id.notesTabLabel)
+        notesTabTV.text = Html.fromHtml(
+            (getString(R.string.notes_tab_helpLabel) + newLine + getString(R.string.notes_tab_helpPgh)),
+            Html.FROM_HTML_MODE_COMPACT
+        )
+        val sourcesLabelTV = view.findViewById<TextView>(R.id.sourcesTabLabel)
+        sourcesLabelTV.text =
+            Html.fromHtml((getString(R.string.sources_tab) + newLine + getString(R.string.copyright_disclaimer)),Html.FROM_HTML_MODE_COMPACT)
+        return view
 
-      searchTabPgh1.movementMethod = ScrollingMovementMethod()
-      return view*///super.onCreateView(inflater, container, savedInstanceState)
     }
 
 
