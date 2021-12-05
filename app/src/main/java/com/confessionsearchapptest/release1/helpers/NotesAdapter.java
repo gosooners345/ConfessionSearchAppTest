@@ -85,7 +85,7 @@ setAnimation(holder.itemView,position);
 
         @Override
         public void onClick(View view) {
-            onNoteListener.onNoteClick(getAdapterPosition());
+            onNoteListener.onNoteClick(getBindingAdapterPosition());
         }
     }
 
