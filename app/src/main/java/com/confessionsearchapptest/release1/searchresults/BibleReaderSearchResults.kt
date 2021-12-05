@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.confessionsearchapptest.release1.helpers.DepthPageTransformer
 import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
 import com.confessionsearchapptest.release1.ui.bible.BibleViewerFragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -98,6 +99,8 @@ lateinit var  adapter: BibleReaderAdapter
                     bibleVerseList.title!!,lifecycle
                 )
                 vp2 = findViewById<ViewPager2>(R.id.resultPager2)
+                vp2.setPageTransformer(DepthPageTransformer())
+
                 adapter.createFragment(0)
                 vp2.adapter=adapter
                 val tabLayout = findViewById<TabLayout>(R.id.tabLayout)

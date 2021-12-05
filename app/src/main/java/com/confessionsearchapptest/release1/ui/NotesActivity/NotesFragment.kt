@@ -52,7 +52,7 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
         notesViewModel.noteRepository = NoteRepository(context)
         fetchNotes()
         notesList = root.findViewById(R.id.notesListView)
-        adapter = NotesAdapter(MainActivity.notesArrayList, this)
+        adapter = NotesAdapter(MainActivity.notesArrayList, this,requireContext())
         notesList!!.layoutManager = LinearLayoutManager(context)
         notesList!!.itemAnimator = DefaultItemAnimator()
         notesList!!.adapter = adapter

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +19,12 @@ import java.util.ArrayList;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
     private OnNoteListener onNoteListener;
     private ArrayList<Notes> noteList = new ArrayList<>();
-
-    public NotesAdapter(ArrayList<Notes> importNotes, OnNoteListener onNoteListener) {
+    private int lastPosition = -1;
+    private final Context context;
+    public NotesAdapter(ArrayList<Notes> importNotes, OnNoteListener onNoteListener,Context context) {
         noteList = importNotes;
         this.onNoteListener = onNoteListener;
+        this.context=context;
     }
 
 
@@ -42,6 +46,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         noteTitle.setText(note.getName());
         TextView contentHolder = holder.contentView;
         contentHolder.setText((note.getContent()));//note.getContent());
+setAnimation(holder.itemView,position);
+    }
+
+    private void setAnimation(View toAnimate, int position) {
+        if (position > lastPosition | position < lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.animate_card_enter);
+            //animation.scaleCurrentDuration(1.5f);
+            toAnimate.clearAnimation();
+
+            toAnimate.startAnimation(animation);
+
+            lastPosition = position;
+        }
 
     }
 

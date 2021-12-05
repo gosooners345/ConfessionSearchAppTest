@@ -28,6 +28,7 @@ import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.Document
 import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
+import com.confessionsearchapptest.release1.helpers.DepthPageTransformer
 import com.confessionsearchapptest.release1.searchresults.SearchAdapter
 import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.confessionsearchapptest.release1.searchresults.SearchResultFragment
@@ -317,8 +318,8 @@ class SearchHandler : AppCompatActivity() {
         setContentView(R.layout.index_pager)
         adapter = SearchAdapter(supportFragmentManager, masterList, query!!,lifecycle)
         vp2 = findViewById<ViewPager2>(R.id.resultPager2)
+        vp2.setPageTransformer(DepthPageTransformer())
         adapter.createFragment(0)
-
         vp2.adapter = adapter
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
 

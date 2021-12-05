@@ -1,11 +1,18 @@
 package com.confessionsearchapptest.release1.data.notes
 
 
+import android.icu.text.DateFormat
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
+import java.util.*
+
 
 @Entity(tableName = "notes")
 class Notes : Parcelable, Cloneable {
@@ -19,23 +26,40 @@ class Notes : Parcelable, Cloneable {
     @ColumnInfo(name = "content")
     var content: String? = null
 
-    /*  @ColumnInfo(name = "time_modified")
-      var time : String? = null*/
+   // @ColumnInfo(name = "time_modified")
+  //  var timeModified : Long?=null
 
+//@ColumnInfo(name ="time_displayed")
+//var time : String?=null
 
     constructor()
+    @RequiresApi(Build.VERSION_CODES.N)
     constructor(newname: String?, newcontent: String?, noteID: Int) {//},time : String? ) {
         name = newname
         content = newcontent
         this.noteID = noteID
-        // this.time = time
+    //     this.timeModified =System.currentTimeMillis()
+  //     this.time = DateFormat.getInstance().format(timeModified)
+
+    }
+    @RequiresApi(Build.VERSION_CODES.N)
+    constructor(newname: String?, newcontent: String?, noteID: Int, timeModified : Long?, timeString : String? ) {
+        name = newname
+        content = newcontent
+        this.noteID = noteID
+//        this.timeModified=timeModified
+
+        //time=DateFormat.getInstance().format(this.timeModified)
+
+
     }
 
     protected constructor(`in`: Parcel) {
         name = `in`.readString()
         noteID = `in`.readInt()
         content = `in`.readString()
-        // time = `in`.readString()
+        //timeModified = `in`.readLong()
+        //time = `in`.readString()
 
     }
 
@@ -43,6 +67,7 @@ class Notes : Parcelable, Cloneable {
         dest.writeString(name)
         dest.writeInt(noteID)
         dest.writeString(content)
+        //dest.writeLong(timeModified!!)
         // dest.writeString(time)
     }
 
@@ -54,7 +79,7 @@ class Notes : Parcelable, Cloneable {
         return "Notes{" +
                 "name='" + name + '\'' +
                 ", content='" + content + '\'' +
-                //   ",time '=" + time +'\''+
+                 //  ",time modified '=" + time +'\''+
                 '}'
     }
 
@@ -67,7 +92,7 @@ class Notes : Parcelable, Cloneable {
         if (this === o) return true
         if (o !is Notes) return false
         val notes = o
-        return name == notes.name && content == notes.content //&& time == notes.time
+        return name == notes.name && content == notes.content// && time == notes.time && timeModified==notes.timeModified
     }
 
 
@@ -82,5 +107,6 @@ class Notes : Parcelable, Cloneable {
                 return arrayOfNulls(size)
             }
         }
+
     }
 }
