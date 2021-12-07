@@ -17,8 +17,8 @@ import com.confessionsearchapptest.release1.data.notes.Notes;
 import java.util.ArrayList;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
-    private OnNoteListener onNoteListener;
-    private ArrayList<Notes> noteList = new ArrayList<>();
+    private final OnNoteListener onNoteListener;
+    private final ArrayList<Notes> noteList;
     private int lastPosition = -1;
     private final Context context;
     public NotesAdapter(ArrayList<Notes> importNotes, OnNoteListener onNoteListener,Context context) {
@@ -45,18 +45,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         TextView noteTitle = holder.subjectView;
         noteTitle.setText(note.getName());
         TextView contentHolder = holder.contentView;
-        contentHolder.setText((note.getContent()));//note.getContent());
+        contentHolder.setText((note.getContent()));
+        TextView timeStamp = holder.timeStamp;
+        timeStamp.setText(note.getTime());
 setAnimation(holder.itemView,position);
     }
 
     private void setAnimation(View toAnimate, int position) {
         if (position > lastPosition | position < lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.animate_card_enter);
-            //animation.scaleCurrentDuration(1.5f);
             toAnimate.clearAnimation();
-
             toAnimate.startAnimation(animation);
-
             lastPosition = position;
         }
 
@@ -72,12 +71,14 @@ setAnimation(holder.itemView,position);
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView contentView;
         public TextView subjectView;
+        public TextView timeStamp;
         OnNoteListener onNoteListener;
 
         public ViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
             subjectView = itemView.findViewById(R.id.content_Title);
             contentView = itemView.findViewById(R.id.content_text);
+            timeStamp = itemView.findViewById(R.id.timeStamp);
             this.onNoteListener = onNoteListener;
 
             itemView.setOnClickListener(this);
@@ -89,7 +90,5 @@ setAnimation(holder.itemView,position);
         }
     }
 
-    public interface OnNoteListener {
-        void onNoteClick(int position);
-    }
+
 }

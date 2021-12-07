@@ -144,4 +144,7 @@
   <string name="verse">Verse</string>
   <string name="placeholder_text_ch_Title">chapterHeader</string>
   <string name="placeholder_text_here">ChapterTextHere</string>
+    <string name="title_here">Title_Here</string>
+  <string name="lines">Lines</string>
+  <string name="timestamp">timestamp</string>
 </resources>

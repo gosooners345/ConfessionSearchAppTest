@@ -14,7 +14,11 @@ android {
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"
-
+javaCompileOptions {
+    annotationProcessorOptions{
+        arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+    }
+}
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,7 +34,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
+
+        }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -45,7 +51,7 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("com.google.android.material:material:1.5.0-beta01")
+    implementation("com.google.android.material:material:1.6.0-alpha01")
     implementation( "androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
@@ -58,15 +64,26 @@ dependencies {
     implementation("com.github.chnouman:AwesomeDialog:1.0.5")
     implementation ("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation("com.github.vedraj360:DesignerToast:0.1.3")
-    implementation("androidx.room:room-common:2.3.0")
-    implementation("androidx.room:room-runtime:2.3.0")
+    implementation("androidx.room:room-common:2.4.0-rc01")
+    implementation("androidx.room:room-runtime:2.4.0-rc01")
     implementation ("androidx.preference:preference-ktx:1.1.1")
     implementation ("com.github.chivorns:smartmaterialspinner:1.5.0")
     implementation("com.github.Spikeysanju:MotionToast:1.3.3.4")
+    implementation("androidx.sqlite:sqlite-ktx:2.1.0")
     testImplementation("junit:junit:4.13.2")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation("com.mikepenz:fastadapter:5.6.0")
+    implementation("com.mikepenz:fastadapter-extensions-binding:5.6.0") // view binding helpers
+    implementation("com.mikepenz:fastadapter-extensions-diff:5.6.0") // diff util helpers
+    implementation("com.mikepenz:fastadapter-extensions-drag:5.6.0") // drag support
+    implementation("com.mikepenz:fastadapter-extensions-paged:5.6.0") // paging support
+    implementation ("com.mikepenz:fastadapter-extensions-scroll:5.6.0") // scroll helpers
+    implementation( "com.mikepenz:fastadapter-extensions-swipe:5.6.0") // swipe support
+    implementation( "com.mikepenz:fastadapter-extensions-ui:5.6.0")// pre-defined ui components
+    implementation( "com.mikepenz:fastadapter-extensions-utils:5.6.0") // needs the `expandable`, `drag` and `scroll` extension.
     implementation("io.github.medyo:android-about-page:2.0.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    annotationProcessor("androidx.room:room-compiler:2.3.0")
+    annotationProcessor ("android.arch.persistence.room:compiler:1.1.1")
+    annotationProcessor("androidx.room:room-compiler:2.4.0-rc01")
 }

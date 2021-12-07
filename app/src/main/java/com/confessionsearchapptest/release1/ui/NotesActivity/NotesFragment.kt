@@ -3,6 +3,7 @@ package com.confessionsearchapptest.release1.ui.NotesActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,16 +22,14 @@ import com.confessionsearchapptest.release1.data.notes.NoteRepository
 import com.confessionsearchapptest.release1.data.notes.Notes
 import com.confessionsearchapptest.release1.databinding.FragmentNotesBinding
 import com.confessionsearchapptest.release1.helpers.NotesAdapter
+import com.confessionsearchapptest.release1.helpers.OnNoteListener
 import com.confessionsearchapptest.release1.helpers.RecyclerViewSpaceExtender
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
-class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
+class NotesFragment : Fragment(), OnNoteListener {
 
     private lateinit var notesViewModel: NotesViewModel
     private var _binding: FragmentNotesBinding? = null
-
     var notesList: RecyclerView? = null
-    var fab: ExtendedFloatingActionButton? = null
 
 
     // This property is only valid between onCreateView and
@@ -45,22 +44,20 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
 
         notesViewModel =
             ViewModelProvider(this).get(NotesViewModel::class.java)
-
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        notesViewModel.noteRepository = NoteRepository(context)
-        fetchNotes()
         notesList = root.findViewById(R.id.notesListView)
-        adapter = NotesAdapter(MainActivity.notesArrayList, this,requireContext())
-        notesList!!.layoutManager = LinearLayoutManager(context)
-        notesList!!.itemAnimator = DefaultItemAnimator()
-        notesList!!.adapter = adapter
-        val divider = RecyclerViewSpaceExtender(8)
-        notesList!!.addItemDecoration(divider)
+         notesViewModel.noteRepository = NoteRepository(context)
+         fetchNotes()
+         notesList = root.findViewById(R.id.notesListView)
+         adapter = NotesAdapter(MainActivity.notesArrayList, this, requireContext())
+         notesList!!.layoutManager = LinearLayoutManager(context)
+         notesList!!.itemAnimator = DefaultItemAnimator()
+         notesList!!.adapter = adapter
+         val divider = RecyclerViewSpaceExtender(8)
+         notesList!!.addItemDecoration(divider)
 
-        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesList)
-        //fab = root.findViewById(R.id.newNote)
+         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(notesList)
 
         return root
     }
@@ -74,8 +71,6 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
     override fun onNoteClick(position: Int) {
 
         MainActivity.notesArrayList[position]
-        val title = MainActivity.notesArrayList[position].name
-        val content = MainActivity.notesArrayList[position].content
         val intent = Intent(context, NotesComposeActivity::class.java)
         intent.putExtra("activity_ID", ACTIVITY_ID)
         intent.putExtra("note_selected", MainActivity.notesArrayList[position])
@@ -95,7 +90,7 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                notesViewModel.deleteNote(MainActivity.notesArrayList[viewHolder.adapterPosition])
+                notesViewModel.deleteNote(MainActivity.notesArrayList[viewHolder.bindingAdapterPosition])
             }
         }
 
@@ -109,6 +104,7 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
             }
             adapter!!.notifyDataSetChanged()
         }
+
         )
 
     }
@@ -117,12 +113,13 @@ class NotesFragment : Fragment(), NotesAdapter.OnNoteListener {
     companion object {
         @JvmField
         var adapter: NotesAdapter? = null
+
         const val ACTIVITY_ID = 32
         const val buttonText = "New Note"
         const val buttonPic = R.drawable.ic_add_note
         fun NewNote(context: Context?) {
             val intent = Intent(context, NotesComposeActivity::class.java)
-            intent.putExtra("activity_ID", NotesFragment.ACTIVITY_ID)
+            intent.putExtra("activity_ID", ACTIVITY_ID)
             context!!.startActivity(intent)
         }
     }

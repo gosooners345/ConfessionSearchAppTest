@@ -4,6 +4,7 @@ package com.confessionsearchapptest.release1.ui.NotesActivity
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -88,6 +90,7 @@ class NotesComposeActivity : AppCompatActivity() {
 
     //Save Note to device
     var SaveNote: View.OnClickListener = object : View.OnClickListener {
+        @RequiresApi(Build.VERSION_CODES.N)
         override fun onClick(view: View) {
             noteSubjectString = notesSubject!!.editText!!.text.toString()
             noteContentString = notesContent!!.editText!!.text.toString()
@@ -96,17 +99,23 @@ class NotesComposeActivity : AppCompatActivity() {
                 noteSubjectString,
                 noteContentString,
                 incomingNote!!.noteID
-            ) else Notes()
+            )
+            else Notes()
             newNote!!.name = noteSubjectString
             newNote!!.content = noteContentString
+            newNote!!.timeModified=System.currentTimeMillis()
+
             run {
                 //Update or insert new note into database
                 if (isNewNote) {
                     noteRepository!!.insertNote(newNote)
                 } else noteRepository!!.updateNote(newNote)
-                if (activityID == 32) NotesFragment.adapter!!.notifyDataSetChanged()
-                Log.i(TAG, "Saving note to storage")
+                if (activityID == 32)
+                {
 
+                    NotesFragment.adapter!!.notifyDataSetChanged()
+                }
+                Log.i(TAG, "Saving note to storage")
             }
             //Close this activity out and head back to parent screen
             finish()
@@ -122,6 +131,7 @@ class NotesComposeActivity : AppCompatActivity() {
                 newNote!!.noteID = incomingNote!!.noteID
                 newNote!!.content = incomingNote!!.content
                 newNote!!.name = incomingNote!!.name
+
                 mode = EDIT_ON
                 isNewNote = false
                 return false
@@ -129,6 +139,7 @@ class NotesComposeActivity : AppCompatActivity() {
                 val contentString = intent.getStringExtra("search_result_save")
                 newNote = Notes()
                 newNote!!.content = contentString
+
                 mode = EDIT_ON
                 isNewNote = true
                 return false
