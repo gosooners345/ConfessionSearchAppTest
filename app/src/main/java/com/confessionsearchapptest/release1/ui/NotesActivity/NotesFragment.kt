@@ -24,6 +24,7 @@ import com.confessionsearchapptest.release1.databinding.FragmentNotesBinding
 import com.confessionsearchapptest.release1.helpers.NotesAdapter
 import com.confessionsearchapptest.release1.helpers.OnNoteListener
 import com.confessionsearchapptest.release1.helpers.RecyclerViewSpaceExtender
+import java.util.*
 
 class NotesFragment : Fragment(), OnNoteListener {
 
@@ -49,8 +50,9 @@ class NotesFragment : Fragment(), OnNoteListener {
         notesList = root.findViewById(R.id.notesListView)
          notesViewModel.noteRepository = NoteRepository(context)
          fetchNotes()
+      //  Collections.sort(notesArrayList,Notes.compareDateTime)
          notesList = root.findViewById(R.id.notesListView)
-         adapter = NotesAdapter(MainActivity.notesArrayList, this, requireContext())
+         adapter = NotesAdapter(notesArrayList, this, requireContext())
          notesList!!.layoutManager = LinearLayoutManager(context)
          notesList!!.itemAnimator = DefaultItemAnimator()
          notesList!!.adapter = adapter
@@ -70,10 +72,10 @@ class NotesFragment : Fragment(), OnNoteListener {
     //Load notes
     override fun onNoteClick(position: Int) {
 
-        MainActivity.notesArrayList[position]
+        notesArrayList[position]
         val intent = Intent(context, NotesComposeActivity::class.java)
         intent.putExtra("activity_ID", ACTIVITY_ID)
-        intent.putExtra("note_selected", MainActivity.notesArrayList[position])
+        intent.putExtra("note_selected", notesArrayList[position])
         startActivity(intent)
 
     }
@@ -90,7 +92,9 @@ class NotesFragment : Fragment(), OnNoteListener {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                notesViewModel.deleteNote(MainActivity.notesArrayList[viewHolder.bindingAdapterPosition])
+                notesViewModel.deleteNote(notesArrayList[viewHolder.bindingAdapterPosition])
+
+
             }
         }
 
@@ -98,10 +102,11 @@ class NotesFragment : Fragment(), OnNoteListener {
     private fun fetchNotes() {
 
         notesViewModel.noteRepository!!.fetchNotes().observe(viewLifecycleOwner, { notes ->
-            if (MainActivity.notesArrayList.size > 0) MainActivity.notesArrayList.clear()
+            if (notesArrayList.size > 0) notesArrayList.clear()
             if (notes != null) {
-                MainActivity.notesArrayList.addAll(notes)
+                notesArrayList.addAll(notes)
             }
+            Collections.sort(notesArrayList,Notes.compareDateTime)
             adapter!!.notifyDataSetChanged()
         }
 
@@ -113,7 +118,7 @@ class NotesFragment : Fragment(), OnNoteListener {
     companion object {
         @JvmField
         var adapter: NotesAdapter? = null
-
+        var notesArrayList = ArrayList<Notes>()
         const val ACTIVITY_ID = 32
         const val buttonText = "New Note"
         const val buttonPic = R.drawable.ic_add_note

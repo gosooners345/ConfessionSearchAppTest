@@ -106,8 +106,8 @@ var time : String?=DateFormat.getInstance().format(timeModified)
         }
 var compareDateTime = java.util.Comparator<Notes>{
     notes1,notes2 ->
-    if(notes1.timeModified!! < notes2.timeModified!!) -1
-        else 1
+    if(notes1.timeModified!! < notes2.timeModified!!) 1
+        else -1
 }
 
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Html
+import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -64,10 +65,10 @@ class SearchResultFragment : Fragment() {
         chNumbBox.text = titleHeader
 
         chapterBox.text = Html.fromHtml(  lineBreak+resultChapter + lineBreak+"Proofs:"+ lineBreak +resultProofs
-                + lineBreak+matchLine+ lineBreak+tagLine
+                + lineBreak+matchLine+ lineBreak+tagLine,FROM_HTML_MODE_LEGACY
         )
-        shareList = chapterBox.text.toString()
-        shareNote = chapterBox.text.toString()
+        shareList = docTitleBox.text.toString()+ "\n" + chNumbBox.text.toString()+ "\r"+ chapterBox.text.toString()
+        shareNote =shareList
         fab.setOnClickListener(shareContent)
         saveFab.setOnClickListener(saveNewNote)
         return view
