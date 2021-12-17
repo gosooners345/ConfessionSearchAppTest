@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.NotesActivity.NotesComposeActivity"
+            android:name=".ui.notes.NotesComposeActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
             android:label="New Note" />
 <activity android:name=".searchhandlers.SearchHandler"

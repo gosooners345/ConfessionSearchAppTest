@@ -2,9 +2,10 @@ package com.confessionsearchapptest.release1.data.notes;
 
 import android.os.AsyncTask;
 
+
 public class DeleteAsync extends AsyncTask<Notes, Void, Void> {
 
-    private NoteDao mNoteDao;
+    private final NoteDao mNoteDao;
 
     public DeleteAsync(NoteDao dao) {
         mNoteDao = dao;
@@ -15,4 +16,4 @@ public class DeleteAsync extends AsyncTask<Notes, Void, Void> {
         mNoteDao.delete(notes);
         return null;
     }
-    }
+}

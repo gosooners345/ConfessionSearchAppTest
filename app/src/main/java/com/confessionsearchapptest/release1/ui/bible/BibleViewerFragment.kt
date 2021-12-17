@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.searchresults.SearchResultFragment
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.confessionsearchapptest.release1.ui.notes.NotesComposeActivity
+import com.confessionsearchapptest.release1.ui.notes.NotesFragment
 
 class BibleViewerFragment : Fragment() {
     private val bibleReaderTitle: String? = null
@@ -68,7 +68,12 @@ class BibleViewerFragment : Fragment() {
         intent.putExtra("search_result_save", shareNote)
         intent.putExtra("activity_ID", BibleViewerFragment.ACTIVITY_ID)
         Log.i(SearchResultFragment.TAG, "Opening new note to save entry")
-        startActivity(intent)
+startActivity(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
     companion object {

@@ -3,7 +3,6 @@ package com.confessionsearchapptest.release1.searchresults
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
 import com.confessionsearchapptest.release1.data.bible.BibleContentsList
 import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
 import com.confessionsearchapptest.release1.R
@@ -12,17 +11,17 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.confessionsearchapptest.release1.helpers.DepthPageTransformer
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
+import com.confessionsearchapptest.release1.ui.notes.NotesComposeActivity
 import com.confessionsearchapptest.release1.ui.bible.BibleViewerFragment
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.confessionsearchapptest.release1.ui.notes.NotesFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import www.sanju.motiontoast.MotionToast
@@ -157,8 +156,7 @@ lateinit var  adapter: BibleReaderAdapter
         val intent = Intent(applicationContext, NotesComposeActivity::class.java)
         intent.putExtra("search_result_save", shareNote)
         intent.putExtra("activity_ID", BibleReaderSearchResults.ACTIVITY_ID)
-        Log.i(SearchResultFragment.TAG, "Opening new note to save entry")
-        startActivity(intent)
+startActivity(intent)
     }
 
     companion object {

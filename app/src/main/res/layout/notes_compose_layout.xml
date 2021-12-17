@@ -138,8 +138,8 @@
                 android:layout_gravity="bottom"
                 android:layout_marginTop="36dp"
                 android:layout_marginEnd="32dp"
-
                 android:layout_marginBottom="32dp"
+                android:onClick="SaveNote"
                 android:text="@string/save_note"
                 app:icon="@android:drawable/ic_menu_save"
                 app:layout_constraintBottom_toBottomOf="parent"

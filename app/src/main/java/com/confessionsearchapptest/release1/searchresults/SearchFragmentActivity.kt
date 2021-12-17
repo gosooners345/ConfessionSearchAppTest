@@ -16,7 +16,7 @@ import com.confessionsearchapptest.release1.data.documents.DocumentList
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class SearchFragmentActivity  //public ViewPager2 vp2;
+class SearchFragmentActivity
     : AppCompatActivity() {
     var adapter: SearchAdapter? = null
     var shareList: String? = null

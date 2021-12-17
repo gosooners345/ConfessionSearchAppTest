@@ -3,6 +3,7 @@ package com.confessionsearchapptest.release1.ui.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.Editable
@@ -16,8 +17,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.MyAdapter
 import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
@@ -28,6 +31,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import www.sanju.motiontoast.MotionToast
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -147,9 +151,49 @@ class SearchFragment : Fragment() {
 //        documentNameSpinner!!.onItemSelectedListener = docTitleSpinnerListener
         topicChip!!.performClick()
         binding.docTypeCB.setSelection(0)
+
+
+
+
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        MainActivity.mainFab?.setOnClickListener{ if (SearchFragment.searchViewModel.query.isBlank() && SearchFragment.readerSearch != true) {
+
+            when (requireContext().resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    MotionToast.darkToast(
+                        requireActivity(), getString(R.string.query_error),
+                        "Enter A topic in the search field!",
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(
+                            requireActivity(),
+                            R.font.helvetica_regular
+                        )
+                    )
+                }
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    MotionToast.createToast(
+                        requireActivity(), getString(R.string.query_error),
+                        "Enter a topic in the search field!",
+                        MotionToast.TOAST_ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(
+                            requireContext(),
+                            R.font.helvetica_regular
+                        )
+                    )
+
+                }
+            }
+        } else
+            Search(SearchFragment.searchViewModel.query, requireContext())}
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

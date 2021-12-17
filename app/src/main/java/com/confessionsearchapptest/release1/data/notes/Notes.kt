@@ -1,6 +1,5 @@
 package com.confessionsearchapptest.release1.data.notes
 
-
 import android.icu.text.DateFormat
 import android.os.Build
 import android.os.Parcel
@@ -10,12 +9,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
 @Entity(tableName = "notes")
-class Notes() : Parcelable, Cloneable,Comparable<Notes> {
-
+class Notes() : Parcelable, Cloneable, Comparable<Notes> {
     @ColumnInfo(name = "title")
-    var name: String? = null
+    var title: String? = null
 
     @JvmField
     @PrimaryKey(autoGenerate = true)
@@ -24,63 +21,57 @@ class Notes() : Parcelable, Cloneable,Comparable<Notes> {
     @ColumnInfo(name = "content")
     var content: String? = null
 
-    constructor(parcel: Parcel) : this() {
-        name = parcel.readString()
-        noteID = parcel.readInt()
-        content = parcel.readString()
-        timeModified=parcel.readLong()
-        time=parcel.readString()
-    }
-
     @ColumnInfo(name = "time_modified")
-   var timeModified : Long?=System.currentTimeMillis()
+    var timeModified: Long? = System.currentTimeMillis()
 
-@RequiresApi(Build.VERSION_CODES.N)
-@ColumnInfo(name ="time_displayed")
-var time : String?=DateFormat.getInstance().format(timeModified)
-
-
-//migrating from old to new
     @RequiresApi(Build.VERSION_CODES.N)
-    constructor(newName: String?, newContent: String?, newNoteID: Int) : this() {
-        name = newName
-        content = newContent
-        this.noteID = newNoteID
-         this.timeModified =System.currentTimeMillis()
-       this.time = DateFormat.getInstance().format(timeModified)
+    @ColumnInfo(name = "time_displayed")
+    var time: String? = DateFormat.getInstance().format(timeModified)
 
-
+    constructor(`in`: Parcel) : this() {
+        title = `in`.readString()
+        noteID = `in`.readInt()
+        content = `in`.readString()
+        time = `in`.readString()
+        timeModified = `in`.readLong()
     }
-   /* @RequiresApi(Build.VERSION_CODES.N)
-    constructor(newName: String?, newContent: String?, newNoteID: Int, timeModified : Long? ) : this() {
-        name = newName
+
+    //Main constructor for Notes Class
+    //Added Timestamp for sorting by date and updating.
+    @RequiresApi(Build.VERSION_CODES.N)
+    constructor(newTitle: String?, newContent: String?, noteID: Int) : this() {
+        title = newTitle
         content = newContent
-        this.noteID = newNoteID
-        this.timeModified=timeModified
-        time=DateFormat.getInstance().format(this.timeModified)
+        this.noteID = noteID
+        this.timeModified = System.currentTimeMillis()
+        this.time = DateFormat.getInstance().format(timeModified)
+    }
 
-    }*/
-
-    override fun toString(): String {
-        return "Notes{" +
-                "name='" + name + '\'' +
-                ", content='" + content + '\'' +
-                   ",time updated '=" + time +'\''+
-                ",time modified '='" + timeModified + '\'' +
-                '}'
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest!!.writeString(title)
+        dest.writeInt(noteID)
+        dest.writeString(content)
+        if (timeModified != null) {
+            dest.writeLong(timeModified!!)
+            dest.writeString(time!!)
+        }
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest!!.writeString(name)
-        dest.writeInt(noteID)
-        dest.writeString(content)
-        dest.writeLong(timeModified!!)
-        dest.writeString(time!!)
+    override fun toString(): String {
+        return "Notes{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ",time updated '=" + time + '\'' +
+                ",time modified '='" + timeModified + '\'' +
+                '}'
+    }
 
+    override fun compareTo(other: Notes): Int {
+        return noteID.compareTo(other.noteID)
     }
 
     @Throws(CloneNotSupportedException::class)
@@ -91,34 +82,12 @@ var time : String?=DateFormat.getInstance().format(timeModified)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Notes) return false
-        return name == other.name && content == other.content && time == other.time && timeModified == other.timeModified
-    }
-
-
-
-    companion object CREATOR : Parcelable.Creator<Notes> {
-        override fun createFromParcel(parcel: Parcel): Notes {
-            return Notes(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Notes?> {
-            return arrayOfNulls(size)
-        }
-var compareDateTime = java.util.Comparator<Notes>{
-    notes1,notes2 ->
-    if(notes1.timeModified!! < notes2.timeModified!!) 1
-        else -1
-}
-
-
-    }
-
-    override fun compareTo(other: Notes): Int {
-        return noteID.compareTo(other.noteID)
+        val notes = other
+        return title == notes.title && content == notes.content //&& time == notes.time
     }
 
     override fun hashCode(): Int {
-        var result = name?.hashCode() ?: 0
+        var result = title?.hashCode() ?: 0
         result = 31 * result + noteID
         result = 31 * result + (content?.hashCode() ?: 0)
         result = 31 * result + (timeModified?.hashCode() ?: 0)
@@ -126,4 +95,28 @@ var compareDateTime = java.util.Comparator<Notes>{
         return result
     }
 
+
+    companion object CREATOR : Parcelable.Creator<Notes?> {
+        override fun createFromParcel(`in`: Parcel): Notes? {
+            return Notes(`in`)
+        }
+
+        override fun newArray(size: Int): Array<Notes?> {
+            return arrayOfNulls(size)
+        }
+
+        var compareDateTime = java.util.Comparator<Notes> { notes1, notes2 ->
+            if (notes1.timeModified == null || notes2.timeModified == null) {
+                notes1.compareTo(notes2)
+            } else {
+                if (notes1.timeModified!! == notes2.timeModified!!) notes1.compareTo(notes2)
+                else if (notes1.timeModified!! < notes2.timeModified!!) 1
+                else -1
+            }
+        }
+        var compareIDs = java.util.Comparator<Notes> { notes1, notes2 ->
+            notes1.noteID.compareTo(notes2.noteID)
+
+        }
+    }
 }

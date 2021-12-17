@@ -14,6 +14,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.DocumentDBClassHelper
 import com.confessionsearchapptest.release1.databinding.FragmentBibleFormBinding
@@ -49,36 +50,35 @@ class BibleFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentBibleFormBinding.inflate(inflater, container, false)
         bibleViewModel = ViewModelProvider(this).get(BibleViewModel::class.java)
         docDBhelper = DocumentDBClassHelper(super.getContext())
 
         documentDB = docDBhelper!!.readableDatabase
-//Translations
+        //Translations
         bibleViewModel.loadTranslations(docDBhelper!!.getAllBibleTranslations(documentDB!!))
         bibleTransList = bibleViewModel.getTranslations()
         val root = binding.root
-        // bibleSelectorSpinner = root.findViewById(R.id.bibleTranslationSelector)
         bibleSelectorAdapter = ArrayAdapter(
             requireContext(),
             R.layout.support_simple_spinner_dropdown_item, bibleTransList
         )
-        binding.bibleTranslationCB.item = bibleTransList as List<Any>?
+        binding.bibleTranslationCB.item = bibleTransList as ArrayList<Any>?
         binding.bibleTranslationCB.onItemSelectedListener = bibleSelectorSpinnerListener
 
-        //bibleSelectorSpinner!!.adapter = bibleSelectorAdapter
-        //bibleSelectorSpinner!!.onItemSelectedListener = bibleSelectorSpinnerListener
-        //bibleBookSelectorComboBox = root.findViewById(R.id.bibleBookSelector)
-        /*bibleChapterSpinner = root.findViewById(R.id.bibleChapterSpinner)
-        bibleVerseSelector = root.findViewById(R.id.verseSpinner)*/
         binding.bibleTranslationCB.setSelection(0)
 
 
 
         return root
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        MainActivity.mainFab?.setOnClickListener{ Submit(requireContext())}
     }
 
     override fun onDestroyView() {

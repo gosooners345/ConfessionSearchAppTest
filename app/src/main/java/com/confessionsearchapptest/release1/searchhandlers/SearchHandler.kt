@@ -1,7 +1,6 @@
 package com.confessionsearchapptest.release1.searchhandlers
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.database.sqlite.SQLiteDatabase
@@ -9,20 +8,14 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.documents.Document
@@ -32,14 +25,11 @@ import com.confessionsearchapptest.release1.helpers.DepthPageTransformer
 import com.confessionsearchapptest.release1.searchresults.SearchAdapter
 import com.confessionsearchapptest.release1.searchresults.SearchFragmentActivity
 import com.confessionsearchapptest.release1.searchresults.SearchResultFragment
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
-import com.example.awesomedialog.*
+import com.confessionsearchapptest.release1.ui.notes.NotesComposeActivity
+import com.confessionsearchapptest.release1.ui.notes.NotesFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.vdx.designertoast.DesignerToast
 import www.sanju.motiontoast.MotionToast
 import java.util.*
 import java.util.regex.Pattern
@@ -468,6 +458,7 @@ class SearchHandler : AppCompatActivity() {
         intent.putExtra("search_result_save", shareNote)
         intent.putExtra("activity_ID", SearchResultFragment.ACTIVITY_ID)
         Log.i(SearchResultFragment.TAG, "Opening new note to save entry")
+       // (this as NotesFragment)!!.startActivityForResult(intent, NotesFragment.newNoteRequestCode)
         startActivity(intent)
     }
 

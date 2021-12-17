@@ -1,17 +1,12 @@
-package com.confessionsearchapptest.release1.ui.NotesActivity
+package com.confessionsearchapptest.release1.ui.notes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.confessionsearchapptest.release1.MainActivity
+import androidx.lifecycle.*
 import com.confessionsearchapptest.release1.data.notes.NoteRepository
 import com.confessionsearchapptest.release1.data.notes.Notes
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesFragment.Companion.adapter
 import java.util.*
 
 class NotesViewModel : ViewModel() {
     var noteRepository: NoteRepository? = null
-
 
     //Delete notes from database
     fun deleteNote(note: Notes) {
@@ -19,10 +14,6 @@ class NotesViewModel : ViewModel() {
         NotesFragment.notesArrayList.remove(note)
         noteRepository!!.deleteNote(note)
         NotesFragment.adapter!!.notifyItemRemoved(notePosition)
-Collections.sort(NotesFragment.notesArrayList,Notes.compareDateTime)
+        Collections.sort(NotesFragment.notesArrayList, Notes.compareDateTime)
     }
-
-    //Load Notes from Database
-
-
 }

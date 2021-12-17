@@ -2,7 +2,6 @@ package com.confessionsearchapptest.release1.searchresults
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Html
 import android.text.Html.FROM_HTML_MODE_LEGACY
@@ -14,9 +13,9 @@ import android.widget.Button
 import android.widget.ShareActionProvider
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.confessionsearchapptest.release1.BuildConfig
 import com.confessionsearchapptest.release1.R
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesComposeActivity
+import com.confessionsearchapptest.release1.ui.notes.NotesComposeActivity
+import com.confessionsearchapptest.release1.ui.notes.NotesFragment
 
 class SearchResultFragment : Fragment() {
     private val documentTitle: String? = null
@@ -88,6 +87,7 @@ class SearchResultFragment : Fragment() {
         intent.putExtra("search_result_save", shareNote)
         intent.putExtra("activity_ID", ACTIVITY_ID)
         Log.i(TAG, "Opening new note to save entry")
+       // (context as NotesFragment)!!.startActivityForResult(intent,NotesFragment.newNoteRequestCode)
         startActivity(intent)
     }
 

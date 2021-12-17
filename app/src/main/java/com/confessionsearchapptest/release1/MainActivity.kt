@@ -1,15 +1,12 @@
 package com.confessionsearchapptest.release1
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
@@ -17,11 +14,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.confessionsearchapptest.release1.data.notes.Notes
 import com.confessionsearchapptest.release1.databinding.ActivityMainBinding
 import com.confessionsearchapptest.release1.ui.bible.BibleFragment
 import com.confessionsearchapptest.release1.ui.home.SearchFragment
-import com.confessionsearchapptest.release1.ui.NotesActivity.NotesFragment
+import com.confessionsearchapptest.release1.ui.notes.NotesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.vdx.designertoast.DesignerToast
@@ -31,16 +27,18 @@ import www.sanju.motiontoast.MotionToast
 class MainActivity : AppCompatActivity() {
 
     val context: Context = this
-    var mainFab: ExtendedFloatingActionButton? = null
+
+
     lateinit var navView: BottomNavigationView
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appContext = applicationContext
         try {
             setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
             var binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
-
+            mainFab = binding.mainFAB
             navView = binding.navView
 
             navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -55,12 +53,12 @@ class MainActivity : AppCompatActivity() {
 
                 )
             )
-            mainFab = findViewById(R.id.mainFAB)
-            mainFab!!.setOnClickListener(mainFabOnClickListener)
+
+           // mainFab!!.setOnClickListener(mainFabOnClickListener)
             navController.addOnDestinationChangedListener(navControllerEvent)
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
-
+            navController.navigate(R.id.navigation_home)
 
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -104,12 +102,14 @@ recreate()
             }
         }
 
+
+
     // Test for fab consolidation
-    var mainFabOnClickListener = View.OnClickListener {
+    private var mainFabOnClickListener = View.OnClickListener {
         when (navView.selectedItemId) {
             R.id.navigation_notes -> {
                 mainFab!!.visibility = View.VISIBLE
-                NotesFragment.NewNote(context)
+                NotesFragment.newNote(context)
             }
             R.id.navigation_home -> {
                 mainFab!!.visibility = View.VISIBLE
@@ -164,11 +164,11 @@ recreate()
 
     //Pass any static variables along here
     companion object {
-
+ lateinit var appContext : Context
         const val  versionName = BuildConfig.VERSION_NAME
     const val appName = BuildConfig.APPLICATION_ID
         const val buildType = BuildConfig.BUILD_TYPE
-
+var mainFab :ExtendedFloatingActionButton? = null
     }
 
 }
