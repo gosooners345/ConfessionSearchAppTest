@@ -28,12 +28,12 @@ class MainActivity : AppCompatActivity() {
 
     val context: Context = this
 
-
+    var mainFab :ExtendedFloatingActionButton? = null
     lateinit var navView: BottomNavigationView
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appContext = applicationContext
+        appContext = context
         try {
             setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
             var binding = ActivityMainBinding.inflate(layoutInflater)
@@ -54,11 +54,11 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-           // mainFab!!.setOnClickListener(mainFabOnClickListener)
+            mainFab!!.setOnClickListener(mainFabOnClickListener)
             navController.addOnDestinationChangedListener(navControllerEvent)
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
-            navController.navigate(R.id.navigation_home)
+          //  navController.navigate(R.id.navigation_home)
 
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -149,7 +149,7 @@ recreate()
             }
             R.id.navigation_bible -> {
                 mainFab!!.visibility = View.VISIBLE
-                BibleFragment.Submit(context)
+                BibleFragment.Submit(appContext)
             }
             R.id.navigation_help -> {
                 mainFab!!.visibility = View.INVISIBLE
@@ -164,11 +164,11 @@ recreate()
 
     //Pass any static variables along here
     companion object {
- lateinit var appContext : Context
+  var appContext : Context? = null
         const val  versionName = BuildConfig.VERSION_NAME
     const val appName = BuildConfig.APPLICATION_ID
         const val buildType = BuildConfig.BUILD_TYPE
-var mainFab :ExtendedFloatingActionButton? = null
+
     }
 
 }

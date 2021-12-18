@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.notes.Notes
-import kotlin.collections.ArrayList
+import java.util.*
 
 class NotesAdapter @SuppressLint("NotifyDataSetChanged") constructor(
     private val noteList: ArrayList<Notes>,

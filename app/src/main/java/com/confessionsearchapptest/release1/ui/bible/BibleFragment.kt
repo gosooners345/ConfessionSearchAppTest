@@ -76,10 +76,7 @@ class BibleFragment : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        MainActivity.mainFab?.setOnClickListener{ Submit(requireContext())}
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

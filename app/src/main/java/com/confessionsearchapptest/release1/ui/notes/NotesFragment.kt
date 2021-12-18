@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.confessionsearchapptest.release1.MainActivity
 import com.confessionsearchapptest.release1.data.notes.Notes
 import com.confessionsearchapptest.release1.R
 import com.confessionsearchapptest.release1.data.notes.NoteRepository
@@ -94,9 +95,10 @@ class NotesFragment : Fragment(), OnNoteListener {
         notesViewModel.noteRepository!!.fetchNotes()!!.observe(viewLifecycleOwner, { notes ->
             if (notesArrayList.size > 0) notesArrayList.clear()
             if (notes != null) {
-                notesArrayList.addAll(notes as ArrayList<*>)
+                notesArrayList.addAll(notes)
             }
-           notesArrayList.sortedWith(Notes.compareDateTime)
+            notesArrayList.sortedWith(Notes.compareDateTime)
+            notesArrayList.reverse()
             //Usually unnecessary code for the purposes of migrating database stuff
 
             adapter!!.notifyDataSetChanged()
@@ -120,13 +122,14 @@ class NotesFragment : Fragment(), OnNoteListener {
                 true
             }
             R.id.updatedAscending -> {
-                Collections.sort(notesArrayList, Notes.compareDateTime)
+                Collections.sort(notesArrayList!!, Notes.compareDateTime)
+
                 notesArrayList.reverse()
                 adapter!!.notifyDataSetChanged()
                 true
             }
             R.id.updatedDescending -> {
-                notesArrayList.sortWith(Notes.compareDateTime)
+                Notes.compareDateTime?.let { notesArrayList.sortWith(it) }
                 adapter!!.notifyDataSetChanged()
                 true
             }
@@ -150,15 +153,13 @@ class NotesFragment : Fragment(), OnNoteListener {
         const val buttonPic = R.drawable.ic_add_note
         fun newNote(context: Context?) {
             val intent = Intent(context, NotesComposeActivity::class.java)
-            intent.putExtra("activity_ID", NotesFragment.ACTIVITY_ID)
+            intent.putExtra("activity_ID", ACTIVITY_ID)
             context!!.startActivity(intent)
         }
 
     }
+
+
+
+
 }
-
-private fun <E> ArrayList<E>.addAll(elements: ArrayList<Any>) {
-
-
-}
-private fun <E> ArrayList<E>.addAll(elements: List<Any>){}

@@ -2,19 +2,19 @@ package com.confessionsearchapptest.release1.data.notes
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.confessionsearchapptest.release1.databasehelpers.notesDBClassHelper
+import com.confessionsearchapptest.release1.databasehelpers.NotesDBClassHelper
 
 
-class NoteRepository {
+class NoteRepository(context: Context?) {
 
-    private var notesDB: notesDBClassHelper? = null
+    private var notesDB: NotesDBClassHelper? = null
 
-    constructor(context: Context?) {
-        notesDB = notesDBClassHelper.getInstance(context!!)
+    init {
+        notesDB = NotesDBClassHelper.getInstance(context!!)
     }
 
     fun insertNote(note: Notes?) {
-        InsertAsync(notesDB!!.getNoteDao()).execute(note)
+        InsertAsync(notesDB!!.getNoteDao()!!).execute(note)
     }
 
     fun updateNote(note: Notes?) {
@@ -22,11 +22,11 @@ class NoteRepository {
     }
 
     fun deleteNote(note: Notes?) {
-        DeleteAsync(notesDB!!.getNoteDao()).execute(note)
+        DeleteAsync(notesDB!!.getNoteDao()!!).execute(note)
     }
 
 
-    fun fetchNotes(): LiveData<List<Notes?>?>? {
+    fun fetchNotes(): LiveData<List<Notes>> {
         return notesDB!!.getNoteDao()!!.fetchNotes()
     }
 }

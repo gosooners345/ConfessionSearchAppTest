@@ -15,17 +15,17 @@ import com.confessionsearchapptest.release1.data.notes.Notes
     autoMigrations = [AutoMigration(from = 2, to = 3)],
     exportSchema = true
 )
-abstract class notesDBClassHelper : RoomDatabase() {
+abstract class NotesDBClassHelper : RoomDatabase() {
     abstract fun getNoteDao(): NoteDao?
 
     companion object {
         const val DATABASE_NAME = "confessionsearchNotes_db"
-        private var instance: notesDBClassHelper? = null
-        fun getInstance(context: Context): notesDBClassHelper? {
+        private var instance: NotesDBClassHelper? = null
+        fun getInstance(context: Context): NotesDBClassHelper? {
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
-                    notesDBClassHelper::class.java, DATABASE_NAME
+                    NotesDBClassHelper::class.java, DATABASE_NAME
                 ).build()
                 return instance
             }

@@ -10,7 +10,7 @@ interface NoteDao {
     fun insertNotes(vararg notes: Notes?): LongArray?
 
     @Query("SELECT * FROM notes")
-    fun fetchNotes(): LiveData<List<Notes?>?>?
+    fun fetchNotes(): LiveData<List<Notes>>
 
     @Delete
     fun delete(vararg notes: Notes?): Int
