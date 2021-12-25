@@ -1,9 +1,12 @@
 package com.confessionsearchapptest.release1.ui.notes
 
+import android.app.SearchManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -18,6 +21,7 @@ import com.confessionsearchapptest.release1.databinding.FragmentNotesBinding
 import com.confessionsearchapptest.release1.helpers.NotesAdapter
 import com.confessionsearchapptest.release1.helpers.OnNoteListener
 import com.confessionsearchapptest.release1.helpers.RecyclerViewSpaceExtender
+import com.confessionsearchapptest.release1.searchhandlers.SearchNotesActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,6 +30,7 @@ class NotesFragment : Fragment(), OnNoteListener {
     private lateinit var notesViewModel: NotesViewModel
     private var _binding: FragmentNotesBinding? = null
     var notesList: RecyclerView? = null
+    var reversed = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -99,6 +104,7 @@ class NotesFragment : Fragment(), OnNoteListener {
             }
             notesArrayList.sortedWith(Notes.compareDateTime)
             notesArrayList.reverse()
+            reversed=true
             //Usually unnecessary code for the purposes of migrating database stuff
 
             adapter!!.notifyDataSetChanged()
@@ -108,39 +114,65 @@ class NotesFragment : Fragment(), OnNoteListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.idAscending -> {
-                Collections.sort(notesArrayList, Notes.compareIDs)
-                adapter!!.notifyDataSetChanged()
-                true
-            }
-            R.id.idDescending
-            -> {
-                Collections.sort(notesArrayList, Notes.compareIDs)
-                notesArrayList.reverse()
-                adapter!!.notifyDataSetChanged()
-                true
-            }
-            R.id.updatedAscending -> {
-                Collections.sort(notesArrayList!!, Notes.compareDateTime)
 
-                notesArrayList.reverse()
+        return when (item.itemId) {
+           /* R.id.dateCreated -> {
+                Collections.sort(notesArrayList, Notes.compareIDs)
                 adapter!!.notifyDataSetChanged()
                 true
+            }*/
+            R.id.dateUpdated
+            -> {
+                Collections.sort(notesArrayList, Notes.compareDateTime)
+                if (!reversed) {
+                  notesArrayList.reverse()
+                  adapter!!.notifyDataSetChanged()
+                  reversed = true
+              }
+                else{
+                //  Collections.sort(notesArrayList, Notes.compareDateTime)
+                  adapter!!.notifyDataSetChanged()
+                  reversed=false
+                }
+                true
             }
-            R.id.updatedDescending -> {
+            R.id.alphabetized -> {
+                if(reversed)
+                {
+                    Collections.sort(notesArrayList!!, Notes.compareAlphabetized)
+                    adapter!!.notifyDataSetChanged()
+                    reversed=false
+                }
+                else{
+                    Collections.sort(notesArrayList!!, Notes.compareAlphabetized)
+                    notesArrayList.reverse()
+                    adapter!!.notifyDataSetChanged()
+                    reversed=true
+                }
+                true
+            }
+            /*R.id.updatedDescending -> {
                 Notes.compareDateTime?.let { notesArrayList.sortWith(it) }
                 adapter!!.notifyDataSetChanged()
                 true
-            }
+            }*/
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
-
         inflater.inflate(R.menu.notes_sort_menu, menu)
+        val searchManager: SearchManager =
+            requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        ((menu.findItem(R.id.menu_search).actionView) as SearchView).apply {
+            setSearchableInfo(
+                searchManager.getSearchableInfo(
+                    ComponentName(
+                        context,
+                        SearchNotesActivity::class.java
+                    )
+                )
+            )}
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
