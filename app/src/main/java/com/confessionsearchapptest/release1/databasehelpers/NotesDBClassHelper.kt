@@ -11,8 +11,8 @@ import com.confessionsearchapptest.release1.data.notes.Notes
 //DatabaseLine
 @Database(
     entities = [Notes::class],
-    version = 3,
-    autoMigrations = [AutoMigration(from = 2, to = 3)],
+    version =4,
+    autoMigrations = [AutoMigration(from = 2, to = 3),AutoMigration(from =3, to =4)],
     exportSchema = true
 )
 abstract class NotesDBClassHelper : RoomDatabase() {

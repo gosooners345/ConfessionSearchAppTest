@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -42,7 +43,6 @@ class NotesFragment : Fragment(), OnNoteListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         notesViewModel =
             ViewModelProvider(this)[NotesViewModel::class.java]
         _binding = FragmentNotesBinding.inflate(inflater, container, false)
@@ -63,10 +63,16 @@ class NotesFragment : Fragment(), OnNoteListener {
         return root
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+
+
+
+
 
     //Load Note for Editing
     override fun onNoteClick(position: Int) {
@@ -74,6 +80,7 @@ class NotesFragment : Fragment(), OnNoteListener {
         intent.putExtra("activity_ID", ACTIVITY_ID)
         intent.putExtra("note_selected", notesArrayList[position])
         startActivity(intent)
+
     }
 
     //Implement delete functionality
@@ -86,12 +93,12 @@ class NotesFragment : Fragment(), OnNoteListener {
             ): Boolean {
                 return false
             }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 notesViewModel.deleteNote(notesArrayList[viewHolder.bindingAdapterPosition])
                 }
-
         }
+
+
 
     //Critical for retrieving notes for the application
     private fun fetchNotes() {
@@ -99,14 +106,8 @@ class NotesFragment : Fragment(), OnNoteListener {
 
         notesViewModel.noteRepository!!.fetchNotes()!!.observe(viewLifecycleOwner, { notes ->
             if (notesArrayList.size > 0) notesArrayList.clear()
-            if (notes != null) {
-                notesArrayList.addAll(notes)
-            }
-            notesArrayList.sortedWith(Notes.compareDateTime)
-            notesArrayList.reverse()
-            reversed=true
-            //Usually unnecessary code for the purposes of migrating database stuff
-
+            notesArrayList.addAll(notes)
+            Collections.sort(notesArrayList,Notes.compareDateTime)
             adapter!!.notifyDataSetChanged()
         }
         )
@@ -116,46 +117,34 @@ class NotesFragment : Fragment(), OnNoteListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         return when (item.itemId) {
-           /* R.id.dateCreated -> {
-                Collections.sort(notesArrayList, Notes.compareIDs)
-                adapter!!.notifyDataSetChanged()
-                true
-            }*/
+
             R.id.dateUpdated
             -> {
                 Collections.sort(notesArrayList, Notes.compareDateTime)
-                if (!reversed) {
-                  notesArrayList.reverse()
-                  adapter!!.notifyDataSetChanged()
-                  reversed = true
-              }
-                else{
-                //  Collections.sort(notesArrayList, Notes.compareDateTime)
-                  adapter!!.notifyDataSetChanged()
-                  reversed=false
+                 if (!reversed) {
+                    notesArrayList.reverse()
+                    adapter!!.notifyDataSetChanged()
+                   reversed=true
+
+                } else {
+                    //  Collections.sort(notesArrayList, Notes.compareDateTime)
+                    adapter!!.notifyDataSetChanged()
+                    reversed=false
                 }
                 true
             }
             R.id.alphabetized -> {
-                if(reversed)
-                {
-                    Collections.sort(notesArrayList!!, Notes.compareAlphabetized)
+                Collections.sort(notesArrayList, Notes.compareAlphabetized)
+                 if (reversed) {
                     adapter!!.notifyDataSetChanged()
-                    reversed=false
-                }
-                else{
-                    Collections.sort(notesArrayList!!, Notes.compareAlphabetized)
+                    reversed = false
+                } else {
                     notesArrayList.reverse()
                     adapter!!.notifyDataSetChanged()
                     reversed=true
                 }
                 true
             }
-            /*R.id.updatedDescending -> {
-                Notes.compareDateTime?.let { notesArrayList.sortWith(it) }
-                adapter!!.notifyDataSetChanged()
-                true
-            }*/
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -188,7 +177,7 @@ class NotesFragment : Fragment(), OnNoteListener {
             intent.putExtra("activity_ID", ACTIVITY_ID)
             context!!.startActivity(intent)
         }
-
+ var onCreated :Boolean? =null
     }
 
 

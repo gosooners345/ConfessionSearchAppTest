@@ -81,40 +81,29 @@
                     android:inputType="textMultiLine|text|textImeMultiLine"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!-- <TextView
-                 android:id="@+id/textView2"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginStart="5dp"
-                 android:layout_marginTop="8dp"
-                 android:text="@string/content"
-                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                 app:layout_constraintStart_toStartOf="parent"
-                 app:layout_constraintTop_toBottomOf="@+id/topicContainer" />
-             <LinearLayout
-                 android:id="@+id/content_container"
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_marginStart="5dp"
-                 android:layout_marginTop="24dp"
-                 android:orientation="vertical"
-                 app:layout_constraintEnd_toEndOf="parent"
-                 app:layout_constraintStart_toStartOf="parent"
-                 app:layout_constraintTop_toBottomOf="@+id/textView2">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagsContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="5dp"
+                android:hint="@string/note_tags"
+                android:layoutDirection="locale"
 
-                 <EditText
-                     android:id="@+id/contentEditText"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:layout_margin="15dp"
-                     android:hint="@string/enter_content_here"
-                     android:imeOptions="normal"
-                     android:inputType="textMultiLine|text|textImeMultiLine"
-                     android:isScrollContainer="true"
-                     android:padding="5dp"
-                     android:scrollbars="vertical"
-                     android:selectAllOnFocus="false" />
-             </LinearLayout>-->
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contentContainer">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tagsTextBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="normal"
+                    android:inputType="textMultiLine|text|textImeMultiLine"
+                    tools:ignore="TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/editButton"
@@ -127,8 +116,8 @@
 
                 app:icon="@drawable/ic_notes_edit"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/contentContainer"
-                app:layout_constraintTop_toBottomOf="@+id/contentContainer"
+                app:layout_constraintStart_toStartOf="@id/tagsContainer"
+                app:layout_constraintTop_toBottomOf="@+id/tagsContainer"
                 app:layout_constraintVertical_bias="0.0" />
 
             <Button
@@ -143,8 +132,8 @@
                 android:text="@string/save_note"
                 app:icon="@android:drawable/ic_menu_save"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/contentContainer"
-                app:layout_constraintTop_toBottomOf="@+id/contentContainer"
+                app:layout_constraintEnd_toEndOf="@id/tagsContainer"
+                app:layout_constraintTop_toBottomOf="@+id/tagsContainer"
                 app:layout_constraintVertical_bias="0.62" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

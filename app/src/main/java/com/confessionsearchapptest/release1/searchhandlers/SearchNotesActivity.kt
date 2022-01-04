@@ -51,6 +51,7 @@ class SearchNotesActivity : AppCompatActivity(), OnNoteListener {
             val searchArray = ArrayList<String>()
             searchArray.add(entry.title!!)
             searchArray.add(entry.content!!)
+            searchArray.add(entry.noteTags!!)
             for (i in 0..searchArray.size - 1) {
                 if (searchArray[i].contains(query)) {
                     counter++
