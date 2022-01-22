@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<PreferenceCategory app:key="display_settings"
+    app:title="Display Settings" app:icon="@drawable/ic_settings_icon">
+
+</PreferenceCategory>
+</PreferenceScreen>
